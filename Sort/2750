@@ -1,0 +1,9 @@
+total = int(input())
+num = []
+for _ in range(total) :
+    number = int(input())
+    num.append(number)
+
+num.sort()
+for word in num :
+    print(word)
