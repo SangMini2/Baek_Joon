@@ -1,0 +1,18 @@
+n,k = map(int, input().split())
+value = []
+for i in range(n) :
+    value.append(int(input()))
+
+total = 0
+
+value.reverse()
+
+for num in value :
+    if k == 0 : break
+
+    if num <= k :
+        while num <= k :
+            k -= num
+            total += 1
+
+print(total)
