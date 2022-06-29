@@ -1,0 +1,13 @@
+import sys
+input = sys.stdin.readline
+
+total = 0
+n = int(input())
+path = list(map(int, input().split()))
+city = list(map(int, input().split()))
+
+minimum = city[0]
+for i in range(n-1) :
+    total += path[i] * minimum
+    minimum = min(minimum, city[i+1])
+print(total)
