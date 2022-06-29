@@ -1,0 +1,17 @@
+sen = input().split('-')
+total = 0
+if len(sen) == 1 :
+    k = sen[0].split("+")
+    for num in k :
+        total += int(num)
+else :
+    first = sen[0].split('+')
+    for l in first :
+        total += int(l)
+
+    for word in sen[1:] :
+        j = word.split("+")
+        for i in j :
+            total -= int(i)
+
+print(total)
