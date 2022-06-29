@@ -1,0 +1,10 @@
+import sys
+input = sys.stdin.readline
+
+n = int(input())
+k = list(map(int, input().split()))
+k.sort()
+total = 0
+for i in range(n) :
+    total += (n-i) * k[i]
+print(total)
