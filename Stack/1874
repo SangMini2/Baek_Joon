@@ -1,0 +1,34 @@
+import sys
+n = int(input())
+stack = []
+output = []
+i = 1
+flag = 0
+
+for _ in range(n) :
+    goal = int(sys.stdin.readline())
+    if goal == i :
+        output.append("+")
+        output.append("-")
+        i += 1
+    elif goal in stack :
+        if goal == stack[-1] :
+            stack.pop()
+            output.append("-")
+        else :
+            flag = 1
+    else :
+        while True :
+            if goal == i :
+                output.append("+")
+                output.append("-")
+                i += 1
+                break
+            stack.append(i)
+            output.append("+")
+            i += 1
+if flag == 0 :
+    for i in output :
+        print(i)
+else :
+    print("NO")
