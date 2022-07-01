@@ -1,0 +1,48 @@
+import sys
+
+def test(word) :
+    stack = []
+    size = 0
+    for i in word :
+        if i == "(" :
+            stack.append(i)
+            size += 1
+        elif i == ")" :
+            if size == 0 :
+                print("no")
+                return 0
+            else :
+                if stack.pop() == '(' :
+                    size -= 1
+                else :
+                    print("no")
+                    return 0
+
+        elif i == '[' :
+            stack.append(i)
+            size += 1
+        elif i == "]" :
+            if size == 0 :
+                print("no")
+                return 0
+            else :
+                if stack.pop() == "[" :
+                    size -= 1
+                else :
+                    print("no")
+                    return 0
+
+
+    if size == 0 :
+        print("yes")
+        return 0
+    else :
+        print("no")
+        return 0
+
+
+while True :
+    input = sys.stdin.readline()
+    if input == '.\n' :
+        break
+    test(input)
