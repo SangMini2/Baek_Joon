@@ -1,0 +1,28 @@
+import sys
+input = sys.stdin.readline
+
+n = int(input())
+
+def test(word) :
+    stack = []
+    size = 0
+    for i in word :
+        if i == "(" :
+            stack.append(i)
+            size += 1
+        else :
+            if size == 0 :
+                print("NO")
+                return 0
+            else :
+                size -= 1
+                stack.pop()
+    if size == 0 :
+        print("YES")
+        return 0
+    else :
+        print("NO")
+        return 0
+
+for _ in range(n) :
+    test(input().strip())
