@@ -1,0 +1,19 @@
+import sys
+input = sys.stdin.readline
+
+n = input().strip()
+
+long = len(n)
+num = n.count("a")
+
+check_list = []
+if num == 0 :
+    check_list.append(0)
+else :
+    queue = [n[i] for i in range(num)]
+    for j in range(long) :
+        check_list.append(queue.count("b"))
+        del queue[0]
+        queue.append(n[(num + j) % long])
+
+print(min(check_list))
