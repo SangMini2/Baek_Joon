@@ -1,0 +1,36 @@
+import sys
+input = sys.stdin.readline
+n = int(input())
+queue = []
+size = 0
+idx = 0
+for _ in range(n) :
+    word = input().strip().split()
+    if len(word) == 1 :
+        order = word[0]
+        if order[0] == 'p' :
+            if size > idx :
+                print(queue[idx])
+                idx += 1
+            else :
+                print(-1)
+        elif order[0] == 's' :
+            print(size - idx)
+        elif order[0] == 'e' :
+            if size == idx :
+                print(1)
+            else :
+                print(0)
+        elif order[0] == 'f' :
+            if size > idx :
+                print(queue[idx])
+            else :
+                print(-1)
+        else :
+            if size > idx :
+                print(queue[-1])
+            else :
+                print(-1)
+    else :
+        queue.append(word[1])
+        size += 1
