@@ -1,0 +1,26 @@
+import sys
+from collections import deque
+input = sys.stdin.readline
+
+n = list(map(int, input().split()))
+goal = deque(list(map(int, input().split())))
+
+deq = deque([i for i in range(1,n[0]+1)])
+total = 0
+plus = -1
+
+while len(goal) != 0 :
+    cnt = 0
+    while True :
+        a = deq.popleft()
+        if a == goal[0] :
+            goal.popleft()
+            if cnt <= int(len(deq) / 2) :
+                total += cnt
+            else :
+                total += (len(deq) - cnt + 1)
+            break
+        cnt += 1
+        deq.append(a)
+
+print(total)
