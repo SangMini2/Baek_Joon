@@ -1,0 +1,31 @@
+import sys
+input = sys.stdin.readline
+
+n = int(input())
+global num_list
+num_list = []
+for _ in range(n) :
+    num_list.append(input().split())
+
+global result
+result = []
+
+def function(x : int,y : int,n : int) :
+    goal = num_list[x][y]
+    flag = 0
+    divide = int(n/2)
+    for i in range(n) :
+        for j in range(n) :
+            if num_list[x + i][y + j] != goal :
+                function(x , y , divide)
+                function(x , y + divide , divide)
+                function(x + divide , y , divide)
+                function(x + divide , y + divide , divide)
+                flag = 1
+                break
+        if flag == 1 : break
+    if flag == 0 :
+        result.append(goal)
+function(0,0,n)
+print(result.count('0'))
+print(result.count('1'))
