@@ -1,0 +1,19 @@
+import sys
+input = sys.stdin.readline
+
+n , m = map(int, input().strip().split())
+num_list = list(map(int, input().strip().split()))
+sum_num_list = []
+total = 0
+for i in num_list :
+    total += i
+    sum_num_list.append(total)
+
+total_list = []
+for i in range(n-m+1) :
+    if i == 0 :
+        total_list.append(sum_num_list[i + m - 1])
+    else :
+        total_list.append(sum_num_list[i + m - 1] - sum_num_list[i-1])
+
+print(max(total_list))
