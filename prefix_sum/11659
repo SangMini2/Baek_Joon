@@ -1,0 +1,31 @@
+#1번째 누적합 알고리즘을 모르고, 그냥 있는 그대로 for문을 두개를 돌려서 합을 구했더니 시간 초과가 나왔다.
+import sys
+input = sys.stdin.readline
+
+n , m = map(int, input().strip().split())
+num_list = list(map(int, input().strip().split()))
+for _ in range(m) :
+    total = 0
+    i , j = map(int, input().strip().split())
+    for k in num_list[i-1 : j] :
+        total += k
+    print(total)
+    
+#2번째 누적합을 쓰니, 누적합을 리스트를 만드는데 쓰이는 for문이 하나이며, 그것을 가지고 빼기만 해주면 값이 나오니 시간 복잡도가 확실히 줄었다.
+import sys
+input = sys.stdin.readline
+
+n , m = map(int, input().strip().split())
+num_list = list(map(int, input().strip().split()))
+sum_num_list = []
+total = 0
+for i in num_list :
+    total += i
+    sum_num_list.append(total)
+
+for _ in range(m) :
+    k, l = map(int, input().strip().split())
+    if k == 1 :
+        print(sum_num_list[l-1])
+    else :
+        print(sum_num_list[l-1] - sum_num_list[k - 2])
