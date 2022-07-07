@@ -1,0 +1,11 @@
+import sys
+input = sys.stdin.readline
+
+def fac(num) :
+    total = 1
+    if num > 0 :
+        total = num * fac(num - 1)
+    return total
+
+n = int(input())
+print(fac(n))
