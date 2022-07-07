@@ -1,0 +1,60 @@
+#1
+import sys
+input = sys.stdin.readline
+
+word = input().strip()
+size = len(word)
+n = int(input())
+order = []
+alphabet = set()
+for _ in range(n) :
+    goal = input().strip().split()
+    alphabet.add(goal[0])
+    order.append(goal)
+
+alphabet = list(alphabet)
+
+total = []
+for j in alphabet :
+    cnt = 0
+    alpha = []
+    for i in range(size) :
+        if j == word[i] :
+            cnt += 1
+        alpha.append(cnt)
+    total.append(alpha)
+
+for j in order :
+    idx = alphabet.index(j[0])
+    start = int(j[1])
+    end = int(j[2])
+    if start == 0 :
+        print(total[idx][end])
+    else :
+        print(total[idx][end] - total[idx][start - 1])
+
+#2
+import sys
+input = sys.stdin.readline
+
+word = input().strip()
+size = len(word)
+n = int(input())
+dic = {}
+
+for char in set(word) :
+    dic[char] = [0]
+    cnt = 0
+    for i in range(size) :
+        if word[i] == char :
+            cnt += 1
+        dic[char].append(cnt)
+
+for _ in range(n) :
+    goal , start, end = input().rstrip().split()
+    start = int(start)
+    end = int(end)
+    try :
+        print(dic[goal][end + 1] - dic[goal][start])
+    except KeyError :
+        print(0)
