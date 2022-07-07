@@ -1,0 +1,27 @@
+import sys
+input = sys.stdin.readline
+from collections import deque
+
+p = int(input())
+for _ in range(p) :
+    n , m = map(int, input().strip().split())
+    total = 1
+    imp = list(map(int, input().strip().split()))
+    goal = [imp[m] , m]
+    q = deque()
+    for i in range(n) :
+        q.append([imp[i] , i])
+    imp.sort(reverse = True)
+    q2 = deque(imp)
+
+    while True :
+        out = q.popleft()
+        if out[0] >= q2[0] and out == goal :
+            print(total)
+            break
+
+        elif out[0] == q2[0] :
+            q2.popleft()
+            total += 1
+        else :
+            q.append(out)
