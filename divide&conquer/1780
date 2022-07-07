@@ -1,0 +1,60 @@
+import sys
+input = sys.stdin.readline
+from collections import deque
+n = int(input())
+arr = []
+for _ in range(n) :
+    a = list(map(int, input().strip().split()))
+    put = ''
+    for i in a :
+        if i >= 0 :
+            put += str(i)
+        else :
+            put += '2'
+    arr.append(put)
+
+
+q = deque()
+def divide(x,y,n) :
+    if n == 1 :
+        q.append(arr[x][y])
+        return 0
+    else :
+        check1, check2 = int(n/3) , int(n*2/3)
+        divide(x, y,check1)
+        divide(x, y + check1, check1)
+        divide(x, y+ check2, check1)
+        divide(x + check1, y, check1)
+        divide(x + check1 , y +check1 , check1)
+        divide(x + check1, y + check2, check1)
+        divide(x + check2, y , check1)
+        divide(x + check2, y + check1, check1)
+        divide(x + check2, y + check2, check1)
+
+
+
+def combine(n) :
+    if n < 1 :
+        want = q.popleft()
+        print(want.count('2'))
+        print(want.count('0'))
+        print(want.count('1'))
+        return 0
+    else :
+        for _ in range(n) :
+            a = ''
+            for _ in range(9) :
+                a += q.popleft()
+            if a == '111111111' :
+                q.append('1')
+            elif a == '000000000' :
+                q.append('0')
+            elif a == '222222222' :
+                q.append('2')
+            else :
+                word = "(" + a + ")"
+                q.append(word)
+        combine(int(n/9))
+
+divide(0,0,n)
+combine(int(n**2 / 9))
