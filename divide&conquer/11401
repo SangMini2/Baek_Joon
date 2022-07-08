@@ -1,0 +1,28 @@
+import sys
+input = sys.stdin.readline
+from collections import deque
+import math
+
+n , k = map(int, input().strip().split())
+p = 1000000007
+
+def fac(n) :
+    total = 1
+    for i in range(n) :
+        total = (total * (i + 1)) % p
+    return total
+
+def power(a,b) :
+    if b == 1 :
+        return a % p
+    else :
+        tmp = power(a,int(b/2))
+        if b % 2 == 0 :
+            return tmp * tmp % p
+        else :
+            return tmp * tmp * a % p
+
+up = fac(n)
+down = fac(n-k) * fac(k) % p
+
+print((up * power(down , p-2))%p)
