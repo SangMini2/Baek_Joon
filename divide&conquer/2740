@@ -1,0 +1,29 @@
+import sys
+input = sys.stdin.readline
+from collections import deque
+import math
+
+n,m = map(int, input().strip().split())
+arr1 = []
+for _ in range(n) :
+    arr1.append(list(map(int, input().strip().split())))
+
+arr2 = []
+m , k = map(int, input().strip().split())
+for _ in range(m) :
+    arr2.append(list(map(int, input().strip().split())))
+
+result = []
+for i in range(n) :
+    plus = []
+    for j in range(k) :
+        a = 0
+        for l in range(m) :
+            a += arr1[i][l] * arr2[l][j]
+        plus.append(a)
+    result.append(plus)
+
+for line in result :
+    for word in line[:-1] :
+        print(word, end = ' ')
+    print(line[-1])
