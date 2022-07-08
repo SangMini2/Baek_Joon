@@ -1,0 +1,19 @@
+import sys
+input = sys.stdin.readline
+from collections import deque
+
+a,b,c = map(int, input().strip().split())
+if a > c :
+    a = a % c
+
+def function(m,n) :
+    if n == 1 :
+        return m
+    else :
+        tmp = function(m, int(n/2))
+        if n % 2 == 0 :
+            return (tmp * tmp) % c
+        else :
+            return (tmp * tmp * m) % c
+
+print(function(a,b))
