@@ -1,0 +1,13 @@
+import sys
+input = sys.stdin.readline
+
+total = 0
+check = 0
+for i in range(9) :
+    what = int(input())
+    if what > total :
+        total = what
+        check = i + 1
+
+print(total)
+print(check)
