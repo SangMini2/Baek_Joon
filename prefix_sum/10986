@@ -1,0 +1,27 @@
+import sys
+input = sys.stdin.readline
+
+n , m = map(int, input().strip().split())
+data = list(map(int, input().strip().split()))
+first = data[0]
+sum_data = [data[0]]
+for i in range(n-1) :
+    first += data[i + 1]
+    sum_data.append(first)
+
+module_list = [0 for _ in range(m)]
+for i in range(n) :
+    module_list[sum_data[i] % m] += 1
+
+count = 0
+if module_list[0] >= 2 :
+    count += module_list[0] * (module_list[0] - 1) / 2
+    count += module_list[0]
+elif module_list[0] == 1 :
+    count += module_list[0]
+
+for i in module_list[1:] :
+    if i >= 2 :
+        count += i * (i-1) /2
+
+print(int(count))
