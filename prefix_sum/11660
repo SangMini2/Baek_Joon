@@ -1,0 +1,23 @@
+import sys
+input = sys.stdin.readline
+
+n , m = map(int, input().strip().split())
+arr = []
+for _ in range(n) :
+    sum_list = []
+    num_list = list(map(int, input().strip().split()))
+    first = 0
+    for j in range(n) :
+        first += num_list[j]
+        sum_list.append(first)
+    arr.append(sum_list)
+
+for _ in range(m) :
+    total = 0
+    box = list(map(int, input().strip().split()))
+    for i in range(box[2] - box[0] + 1) :
+        if box[1] == 1 :
+            total += (arr[box[0] + i - 1][box[3] - 1])
+        else :
+            total += (arr[box[0] + i - 1][box[3] - 1] - arr[box[0] + i - 1][box[1] - 2])
+    print(total)
