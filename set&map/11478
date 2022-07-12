@@ -1,0 +1,11 @@
+import sys
+input = sys.stdin.readline
+
+word = input().strip()
+word_set = set()
+size = len(word)
+for i in range(1,size + 1) : # 1~5 까지
+    for j in range(size + 1 - i) :#
+        word_set.add(word[j : j + i])
+
+print(len(word_set))
