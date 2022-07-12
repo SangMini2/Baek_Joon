@@ -1,0 +1,9 @@
+import sys
+input = sys.stdin.readline
+
+n, m = map(int, input().strip().split())
+
+set1 = set(map(int, input().strip().split()))
+set2 = set(map(int, input().strip().split()))
+
+print(n + m - 2 * len(set1 & set2))
