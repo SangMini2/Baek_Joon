@@ -1,0 +1,30 @@
+import sys
+input = sys.stdin.readline
+
+n = int(input())
+arr = [0 for _ in range(500000)]
+data = [int(input().strip()) for _ in range(n)]
+data.sort()
+data_max = 0
+max_list = []
+for i in data :
+    arr[i] += 1
+    if arr[i] > data_max :
+        data_max = arr[i]
+        max_list.clear()
+        max_list.append(i)
+
+    elif arr[i] == data_max :
+        max_list.append(i)
+
+
+if len(max_list) == 1 :
+    frequency = max_list[0]
+else :
+    max_list.sort()
+    frequency = max_list[1]
+
+print(int(round(sum(data) / n , 0)))
+print(data[int(n/2)])
+print(frequency)
+print(max(data) - min(data))
