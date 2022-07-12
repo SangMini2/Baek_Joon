@@ -1,0 +1,13 @@
+import sys
+input = sys.stdin.readline
+
+n, m = map(int, input().strip().split())
+data1 = set()
+total = 0
+for _ in range(n) :
+    data1.add(input().strip())
+
+for _ in range(m) :
+    if input().strip() in data1 :
+        total += 1
+print(total)
