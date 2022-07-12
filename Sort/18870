@@ -1,0 +1,14 @@
+import sys
+input = sys.stdin.readline
+
+n = int(input())
+data = list(map(int, input().strip().split()))
+arr = []
+data_set = list(set(data))
+data_set.sort()
+dic = {}
+for i in range(len(data_set)) :
+    dic[data_set[i]] = i
+
+for j in data :
+    print(dic[j], end = ' ')
