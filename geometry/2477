@@ -1,0 +1,22 @@
+import sys
+input = sys.stdin.readline
+
+n = int(input())
+total = []
+left_right = []
+up_down = []
+for _ in range(6) :
+    dir , long = map(int, input().strip().split())
+    total.append(long)
+    if dir == 1 or dir == 2 :
+        left_right.append(long)
+    else :
+        up_down.append(long)
+
+max_left_right = max(left_right)
+max_up_down = max(up_down)
+max_lr_idx = total.index(max_left_right)
+max_ud_idx = total.index(max_up_down)
+
+minus = abs(total[(max_lr_idx + 1) % 6] - total[(max_lr_idx - 1) % 6]) * abs(total[(max_ud_idx + 1)%6] - total[(max_ud_idx - 1) % 6])
+print((max_left_right * max_up_down - minus) * n)
