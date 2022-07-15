@@ -1,0 +1,25 @@
+import sys
+input = sys.stdin.readline
+
+n , m = map(int, input().strip().split())
+
+def count_two(n) :
+    num = 0
+    while n != 0 :
+        n = n // 2
+        num += n
+    return num
+
+def count_five(n) :
+    num = 0
+    while n != 0 :
+        n = n // 5
+        num += n
+    return num
+
+num_two = count_two(n) - count_two(m) - count_two(n-m)
+num_five = count_five(n) - count_five(m) - count_five(n-m)
+if num_two > 0 and num_five > 0 :
+    print(min(num_two , num_five))
+else :
+    print(0)
