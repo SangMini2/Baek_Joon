@@ -1,0 +1,17 @@
+import sys
+input = sys.stdin.readline
+
+n = int(input())
+for _ in range(n) :
+    m = int(input())
+    dic = {}
+    for _ in range(m) :
+        name , sort = map(str, input().strip().split())
+        if sort in dic :
+            dic[sort] += 1
+        else :
+            dic[sort] = 1
+    hmm = 1
+    for key in dic.keys() :
+        hmm *= (dic[key] + 1)
+    print(hmm - 1)
