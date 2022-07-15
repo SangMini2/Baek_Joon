@@ -1,0 +1,26 @@
+import sys
+input = sys.stdin.readline
+
+n , k = map(int, input().strip().split())
+
+d = 10007
+
+def fac(m) :
+    total = 1
+    while m > 0 :
+        total = (total * m) % d
+        m -= 1
+    return total
+
+def power(a,b) :
+    if b == 1 :
+        return a % d
+    else :
+        if b % 2 == 0 :
+            return ((power(a, b//2) % d) * (power(a , b//2) % d)) % d
+        else :
+            return ((power(a , b//2) % d) * (power(a, b//2) % d) * (a % d)) %d
+
+up = fac(n)
+down = fac(n-k) * fac(k)
+print((up * power(down , d-2))%d)
