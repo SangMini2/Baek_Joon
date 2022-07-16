@@ -1,0 +1,17 @@
+import sys
+input = sys.stdin.readline
+
+n = int(input())
+total = 0
+for _ in range(n) :
+    word = input().strip()
+    overlap = []
+    for spell in word :
+        if spell not in overlap :
+            overlap.append(spell)
+        elif spell == overlap[-1] : continue
+        else :
+            total += 1
+            break
+
+print(n - total)
