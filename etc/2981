@@ -1,0 +1,37 @@
+import sys
+input = sys.stdin.readline
+
+n = int(input())
+first = int(input())
+data = [abs(first - int(input())) for _ in range(n-1)]
+
+def GCD(a,b) :
+    big = max(a,b)
+    small = min(a,b)
+    r = big % small
+    if r == 0 :
+        return small
+    else :
+        GCD(small, r)
+        return r
+
+def fuc(x) :
+    result = set()
+    y = 2
+    while y <= x :
+        if x % y == 0 :
+            result.add(y)
+        y += 1
+    return list(result)
+
+if len(data) == 1 :
+    for num in fuc(data[0]) :
+        print(num, end = ' ')
+else :
+    want = GCD(data[0] , data[1])
+    for i in range(n-3) :
+        want = GCD(want, data[i+2])
+
+    if len(fuc(want)) != 0 :
+        for num in fuc(want) :
+            print(num, end = ' ')
