@@ -1,0 +1,22 @@
+import sys
+input = sys.stdin.readline
+
+dp = [0] * 101
+dp[1] = 1
+dp[2] = 1
+dp[3] = 1
+dp[4] = 2
+dp[5] = 2
+
+def sol(n) :
+    if n <= 5 :
+        return dp[n]
+    if dp[n] :
+        return dp[n]
+    else :
+        dp[n] = sol(n-1) + sol(n-5)
+        return dp[n]
+n = int(input())
+for _ in range(n) :
+    m = int(input().strip())
+    print(sol(m))
