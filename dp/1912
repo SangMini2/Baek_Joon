@@ -1,0 +1,18 @@
+import sys
+input = sys.stdin.readline
+
+n = int(input())
+data = list(map(int, input().strip().split()))
+max = data[0]
+i = 1
+while i <= n-1 :
+    check = data[i] + data[i-1]
+    if check > max :
+        max = check
+    elif data[i] > max :
+        max = data[i]
+    if data[i] + data[i-1] > data[i] :
+        data[i] = check
+    i += 1
+
+print(max)
