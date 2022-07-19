@@ -1,0 +1,25 @@
+import sys
+input = sys.stdin.readline
+
+n = int(input())
+step = [int(input()) for _ in range(n)]
+result = [[0] * 2 for _ in range(n)]
+step.reverse()
+step.append(None)
+
+if n == 1 :
+    print(step[0])
+elif n == 2 :
+    print(step[0] + step[1])
+else :
+    result[0][0] = step[0]
+    result[0][1] = step[0]
+    result[1][0] = step[0] + step[1]
+    result[1][1] = -10
+    i = 2
+    while True :
+        if step[i] == None : break
+        result[i][0] += (result[i-1][1] + step[i])
+        result[i][1] += (max(result[i-2][0], result[i-2][1]) + step[i])
+        i += 1
+    print(max(result[-1][0] , result[-1][1] , result[-2][0] , result[-2][1]))
