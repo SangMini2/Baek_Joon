@@ -1,0 +1,27 @@
+import sys
+input = sys.stdin.readline
+
+n = int(input())
+data = list(map(int, input().strip().split()))
+dp1 = [0 for _ in range(n)]
+
+for i in range(n) :
+    for j in range(i) :
+        if dp1[j] > dp1[i] and data[i] > data[j] :
+            dp1[i] = dp1[j]
+    dp1[i] += 1
+
+data_reverse = data[:]
+data_reverse.reverse()
+dp2 = [0 for _ in range(n)]
+for i in range(n) :
+    for j in range(i) :
+        if dp2[j] > dp2[i] and data_reverse[i] > data_reverse[j] :
+            dp2[i] = dp2[j]
+    dp2[i] += 1
+dp2.reverse()
+maximum = 0
+for i in range(n) :
+    if dp1[i] + dp2[i] > maximum :
+        maximum = dp1[i] + dp2[i]
+print(maximum - 1)
