@@ -1,0 +1,19 @@
+import sys
+input = sys.stdin.readline
+
+n = int(input())
+maximum = 0
+dp = [0 for _ in range(n)]
+data = [0 for _ in range(n)]
+check = [list(map(int, input().strip().split())) for _ in range(n)]
+check.sort()
+max_increase = 0
+for i in range(n) :
+    for j in range(i) :
+        if check[i][1] > check[j][1] and dp[j] > dp[i] :
+            dp[i] = dp[j]
+    dp[i] += 1
+    if dp[i] > max_increase :
+        max_increase = dp[i]
+
+print(n - max_increase)
