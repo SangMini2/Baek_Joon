@@ -1,0 +1,21 @@
+import sys
+input = sys.stdin.readline
+
+n , m = map(int, input().strip().split())
+data = [i+1 for i in range(n)]
+
+def func(box : list ,b,word) :
+    if b == 1 :
+        for j in box :
+            print_word = word
+            print_word += (str(j) + ' ')
+            print(print_word)
+    else :
+        for i in box :
+            box_re = box[:]
+            box_re.remove(i)
+            put_word = word
+            put_word += (str(i) + ' ')
+            func(box_re , b-1, put_word)
+
+func(data, m , '')
