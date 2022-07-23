@@ -1,0 +1,34 @@
+import sys
+input = sys.stdin.readline
+
+n , m = map(int, input().strip().split())
+data = [i+1 for i in range(n)]
+
+def func(box : list , b , word , start) :
+    if b == 1 :
+        if start == 1 :
+            for k in box :
+                print(k)
+        else :
+            for j in box :
+                print_word = word
+                if print_word == '' :
+                    print_word += (str(j) + ' ')
+                else :
+                    if int(print_word[-2]) < j :
+                        print_word += (str(j) + ' ')
+                print(print_word)
+
+    else :
+        for i in box :
+            put_word = word
+            box_re = box[box.index(i):]
+            box_re.remove(i)
+            if start == 1 :
+                put_word += (str(i) + ' ')
+            else :
+                if int(put_word[-2]) < i :
+                    put_word += (str(i) + ' ')
+            func(box_re, b-1, put_word, start+1)
+
+func(data, m , '', 1)
