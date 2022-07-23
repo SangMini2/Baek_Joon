@@ -12,11 +12,8 @@ def func(box : list , b , word , start) :
         else :
             for j in box :
                 print_word = word
-                if print_word == '' :
+                if int(print_word[-2]) < j :
                     print_word += (str(j) + ' ')
-                else :
-                    if int(print_word[-2]) < j :
-                        print_word += (str(j) + ' ')
                 print(print_word)
 
     else :
