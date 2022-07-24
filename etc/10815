@@ -1,0 +1,13 @@
+import sys
+input = sys.stdin.readline
+
+n = int(input())
+check = set(map(int, input().strip().split()))
+
+m = int(input())
+num_list = list(map(int, input().strip().split()))
+for num in num_list :
+    if num in check :
+        print(1 , end = ' ')
+    else :
+        print(0, end = ' ')
