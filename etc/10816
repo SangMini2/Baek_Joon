@@ -1,0 +1,19 @@
+import sys
+input = sys.stdin.readline
+
+n = int(input())
+data = list(map(int, input().strip().split()))
+check = {}
+for i in data :
+    try :
+        check[i] += 1
+    except KeyError :
+        check[i] = 1
+
+m = int(input())
+data2 = list(map(int,input().strip().split()))
+for j in data2 :
+    try :
+        print(check[j] , end = ' ')
+    except KeyError :
+        print(0, end = ' ')
