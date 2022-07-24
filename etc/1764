@@ -1,0 +1,16 @@
+import sys
+input = sys.stdin.readline
+
+n , m = map(int, input().strip().split())
+check1 = set()
+check2 = set()
+for i in range(n) :
+    check1.add(input().strip())
+for j in range(m) :
+    check2.add(input().strip())
+
+result = sorted(list(check1 & check2))
+
+print(len(result))
+for word in result :
+    print(word)
