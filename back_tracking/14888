@@ -1,0 +1,42 @@
+import sys
+input = sys.stdin.readline
+
+n = int(input())
+num = list(map(int , input().strip().split()))
+op = list(map(int, input().strip().split()))
+
+result = []
+def check(data1 : list , data2 : list) :
+    if len(data1) == 1 :
+        result.append(data1[0])
+        return data1[0]
+    else :
+        for j in range(4) :
+            new_data = data1[:]
+            new_op_data = data2[:]
+            if data2[j] != 0 :
+                new_op_data[j] -= 1
+                if j == 0 :
+                    plus = data1[0] + data1[1]
+                    del new_data[0]
+                    new_data[0] = plus
+                    check(new_data , new_op_data)
+                elif j == 1 :
+                    minus = data1[0] - data1[1]
+                    del new_data[0]
+                    new_data[0] = minus
+                    check(new_data , new_op_data)
+                elif j == 2 :
+                    prod = data1[0] * data1[1]
+                    del new_data[0]
+                    new_data[0] = prod
+                    check(new_data , new_op_data)
+                else :
+                    div = int(data1[0] / data1[1])
+                    del new_data[0]
+                    new_data[0] = div
+                    check(new_data, new_op_data)
+
+check(num , op)
+print(max(result))
+print(min(result))
