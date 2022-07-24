@@ -1,0 +1,12 @@
+import sys
+input = sys.stdin.readline
+
+n , m = map(int, input().strip().split())
+dic = {}
+for i in range(n) :
+    word = input().strip()
+    dic[word] = i+1
+    dic[str(i+1)] = word
+
+for j in range(m) :
+    print(dic[input().strip()])
