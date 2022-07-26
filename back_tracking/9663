@@ -1,0 +1,35 @@
+import sys
+input = sys.stdin.readline
+
+n = int(input())
+goal = 0
+
+check_list = [i for i in range(n)]
+
+def queen(n , result , check : list) :
+    if len(result) == n :
+        global goal
+        goal += 1
+        return 0
+    else :
+        if len(result) == 0 :
+            for i in range(n) :
+                new_check = check[:]
+                new_check.remove(i)
+                queen(n , [i] , new_check)
+        else :
+            for i in check :
+                cnt = 0
+                for j in range(len(result)) :
+                    if result[j] != i and abs(result[j] - i) != abs(len(result) - j) :
+                        cnt += 1
+                if cnt == len(result) :
+                    new_result = result[:]
+                    new_result.append(i)
+                    new_check = check[:]
+                    new_check.remove(i)
+                    queen(n, new_result , new_check)
+
+
+queen(n , [] , check_list)
+print(goal)
