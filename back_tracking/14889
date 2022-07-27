@@ -1,0 +1,24 @@
+import sys
+from itertools import combinations
+input = sys.stdin.readline
+
+n = int(input())
+data = [list(map(int, input().strip().split())) for _ in range(n)]
+result = [i for i in range(n)]
+combi_list = list(combinations(result, n//2))
+combi_list_size = len(combi_list)
+mini = float('inf')
+
+def sum_list(box : tuple , arr : list) :
+    cnt = 0
+    for i in box :
+        box_new = list(box[:])
+        box_new.remove(i)
+        for j in box_new :
+           cnt += arr[i][j]
+    return cnt
+
+for i in range(combi_list_size//2) :
+    mini = min(mini, abs(sum_list(combi_list[i] , data) - sum_list(combi_list[combi_list_size-1-i],data)))
+
+print(mini)
