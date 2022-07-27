@@ -1,0 +1,19 @@
+import sys
+input = sys.stdin.readline
+
+n = int(input())
+dp = [1] * n
+data = []
+for i in range(n) :
+    weight , height = map(int, input().strip().split())
+    cnt = 0
+    for j in range(len(data)) :
+        if data[j][0] < weight and data[j][1] < height :
+            dp[j] += 1
+        elif data[j][0] > weight and data[j][1] > height :
+            cnt += 1
+    if cnt >= 1 :
+        dp[i] += cnt
+    data.append([weight , height])
+
+print(*dp)
