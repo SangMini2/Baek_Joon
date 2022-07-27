@@ -1,0 +1,36 @@
+import sys
+input = sys.stdin.readline
+
+data = [list(map(int, input().split())) for _ in range(9)]
+zero = []
+
+for i in range(9) :
+    for j in range(9) :
+        if data[i][j] == 0 :
+            zero.append([i,j])
+
+def sudoku(x , y , n) :
+    square_x = (x // 3) * 3
+    square_y = (y // 3) * 3
+    for i in range(9) :
+        if data[x][i] == n :
+            return 0
+        if data[i][y] == n :
+            return 0
+        if data[square_x + i // 3][square_y + i % 3] == n :
+            return 0
+    return 1
+
+def dfs(idx) :
+    if idx == len(zero) :
+        for j in range(9) :
+            print(*data[j])
+        exit(0)
+    x , y = zero[idx]
+    for i in range(1,10) :
+        if sudoku(x,y,i) :
+            data[x][y] = i
+            dfs(idx + 1)
+            data[x][y] = 0
+
+dfs(0)
