@@ -1,0 +1,52 @@
+import sys
+input = sys.stdin.readline
+
+n , m = map(int, input().strip().split())
+arr = [list(map(int, input().strip().split())) for _ in range(n)]
+d = 1000
+for i in range(n) :
+    for j in range(n) :
+        arr[i][j] = arr[i][j] % d
+
+def product(matrix1 : list, matrix2 : list , k) :
+    new_matrix = []
+    for i in range(k) :
+        plus = []
+        for j in range(k) :
+            cnt = 0
+            for l in range(k) :
+                cnt += (matrix1[i][l] * matrix2[l][j]) % d
+            plus.append(cnt % d)
+        new_matrix.append(plus)
+    return new_matrix
+
+dp = [0] * 1000000
+
+
+def power(matrix , b) :
+    if b == 1 :
+        return matrix
+    else :
+        global n
+        if b % 2 == 1 :
+            if b <= 1000000 :
+                if dp[b] :
+                    return dp[b]
+                else :
+                    dp[b] = product(product(power(matrix , b//2) , power(matrix, b//2) , n) , matrix , n)
+                    return product(product(power(matrix , b//2) , power(matrix, b//2) , n) , matrix , n)
+            else :
+                return product(product(power(matrix, b // 2), power(matrix, b // 2), n), matrix, n)
+        else :
+            if b <= 1000000 :
+                if dp[b] :
+                    return dp[b]
+                else :
+                    dp[b] = product(power(matrix, b//2) ,power(matrix, b//2) , n)
+                    return product(power(matrix, b//2) ,power(matrix, b//2) , n)
+            else :
+                return product(power(matrix, b // 2), power(matrix, b // 2), n)
+
+result = power(arr , m)
+for line in result :
+    print(*line)
