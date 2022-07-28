@@ -1,0 +1,31 @@
+import sys
+input = sys.stdin.readline
+sys.setrecursionlimit(1000000000)
+
+n = int(input())
+d = 1000000007
+
+arr = [[1,1] , [1,0]]
+sys.setrecursionlimit(100000)
+def multi(matrix1 , matrix2) :
+    result = [[0]*2 for _ in range(2)]
+    for i in range(2) :
+        for j in range(2) :
+            plus = 0
+            for k in range(2) :
+                plus += matrix1[i][k] * matrix2[k][j]
+            result[i][j] = plus % d
+    return result
+
+def power(a,b) :
+    if b == 1 :
+        return a
+    else :
+        tmp = power(a , b//2)
+        if b % 2 == 0 :
+            return multi(tmp, tmp)
+        else :
+            return multi(multi(tmp, tmp) , a)
+if n == 1 : print(1)
+else :
+    print(power(arr , n-1)[0][0])
