@@ -1,0 +1,27 @@
+import sys
+input = sys.stdin.readline
+import heapq
+
+heap1 = [] #minus
+heap2 = [] #plus
+
+n = int(input())
+for _ in range(n) :
+    put = int(input())
+    if put == 0 :
+        if len(heap1) == 0 and len(heap2) == 0 :
+            print(0)
+        else :
+            if len(heap1) != 0 and len(heap2) != 0 :
+                if abs(heap1[0]) <= abs(heap2[0]) :
+                    print(-heapq.heappop(heap1))
+                else :
+                    print(heapq.heappop(heap2))
+            elif len(heap1) == 0 :
+                print(heapq.heappop(heap2))
+            else :
+                print(-heapq.heappop(heap1))
+    elif put < 0 :
+        heapq.heappush(heap1, -put)
+    else :
+        heapq.heappush(heap2, put)
