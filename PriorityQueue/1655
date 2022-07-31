@@ -1,0 +1,37 @@
+import sys
+input = sys.stdin.readline
+import heapq
+
+heap1 = [] 
+heap2 = [] 
+
+n = int(input())
+mid = int(input())
+print(mid)
+time = 1
+heap1_size = 0
+heap2_size = 0
+for _ in range(n-1) :
+    put = int(input())
+    time += 1
+    if put > mid :
+        heapq.heappush(heap2, put)
+        heap2_size += 1
+    else :
+        heapq.heappush(heap1, -put)
+        heap1_size += 1
+
+    if heap1_size == heap2_size or heap1_size + 1 == heap2_size:
+        print(mid)
+    elif heap1_size > heap2_size :
+        heapq.heappush(heap2, mid)
+        mid = -heapq.heappop(heap1)
+        heap1_size -= 1
+        heap2_size += 1
+        print(mid)
+    else :
+        heapq.heappush(heap1, -mid)
+        mid = heapq.heappop(heap2)
+        heap1_size += 1
+        heap2_size -= 1
+        print(mid)
