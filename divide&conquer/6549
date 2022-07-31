@@ -1,0 +1,47 @@
+import sys
+input = sys.stdin.readline
+from collections import deque
+
+while True :
+    data = list(map(int, input().strip().split()))
+    stack = deque()
+    if data[0] == 0 : break
+    data = data[1:]
+    maxi = data[0]
+    stack.append([data[0] , 1])
+    for num in data[1:] :
+        if num > stack[-1][0] :
+            stack.append([num , 1])
+        elif num == stack[-1][0] :
+            put = stack.pop()
+            put[1] += 1
+            stack.append(put)
+        else :
+            cnt = 0
+            while True :
+                if len(stack) == 0 :
+                    stack.append([num, cnt + 1])
+                    break
+                new_put = stack.pop()
+                if new_put[0] > num :
+                    new_put[1] += cnt
+                    maxi = max(new_put[0] * new_put[1] , maxi)
+                    cnt = new_put[1]
+                elif new_put[0] == num :
+                    cnt += 1
+                    new_put[1] += cnt
+                    stack.append(new_put)
+                    break
+                else :
+                    cnt += 1
+                    stack.append(new_put)
+                    stack.append([num , cnt])
+                    break
+    new_cnt = 0
+    while stack :
+        plus = stack.pop()
+        plus[1] += new_cnt
+        if plus[0] * plus[1] >= maxi :
+            maxi = plus[0] * plus[1]
+        new_cnt = plus[1]
+    print(maxi)
