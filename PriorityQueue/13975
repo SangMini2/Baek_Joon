@@ -1,0 +1,19 @@
+import sys
+input = sys.stdin.readline
+import heapq
+
+n = int(input())
+for _ in range(n) :
+    m = int(input())
+    dp = list(map(int, input().strip().split()))
+    cnt = 0
+    heapq.heapify(dp)
+
+    while m > 1 :
+        a = heapq.heappop(dp)
+        b = heapq.heappop(dp)
+        cnt += (a + b)
+        heapq.heappush(dp, a+b)
+        m -= 1
+
+    print(cnt)    
