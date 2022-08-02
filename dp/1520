@@ -1,0 +1,29 @@
+import sys
+input = sys.stdin.readline
+sys.setrecursionlimit(10**9)
+
+n, m = map(int, input().strip().split())
+data = [list(map(int, input().strip().split())) for _ in range(n)]
+dx , dy = (-1, 1, 0, 0) , (0,0,-1,1)
+
+
+def dfs(start_x , start_y) :
+    if start_x == n-1 and start_y == m-1 :
+        return 1
+    if dp[start_x][start_y] != -1:
+        return dp[start_x][start_y]
+    plus = 0
+    for i in range(4) :
+        new_x = start_x + dx[i]
+        new_y = start_y + dy[i]
+        if new_x <= n -1 and new_x >= 0 and new_y  <= m - 1 and new_y >= 0 and data[new_x][new_y] < data[start_x][start_y] :
+            plus += dfs(new_x , new_y)
+    dp[start_x][start_y] = plus
+    return plus
+
+
+dp = [[-1] * m for _ in range(n)]
+print(dfs(0, 0))
+
+#dp의 값들을 0으로 두었을 때와 -1로 두었을 때 시간차이가 발생해서 오래 걸린 문제였다.
+#왜 시간 차이가 나는지 모르겠으며, 공부를 해보아야 할 것 같다.
