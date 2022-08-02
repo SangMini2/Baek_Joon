@@ -1,0 +1,25 @@
+import sys
+input = sys.stdin.readline
+
+n = int(input())
+data = [list(map(int, input().strip().split())) for _ in range(n)]
+dp = [[0]*n for _ in range(n)]
+matrix = [[0] * n for _ in range(n)]
+for i in range(n-1) :
+    dp[i][i+1] = data[i][0] * data[i][1] * data[i+1][1]
+
+for i in range(n) :
+    for j in range(n-i) :
+        matrix[i][i+j] = [data[i][0], data[i+j][1]]
+
+for i in range(2,n) : #뒤에서 2번째부터
+    for j in range(i-1) : #j는 갯수
+        mini = float('inf')
+        for k in range(j+2) :
+            compare = dp[n-i-1][n-i-1+k] + dp[n-i+k][n-i+1+j] + matrix[n-i-1][n-i-1+k][0] * matrix[n-i-1][n-i-1+k][1] * matrix[n-i+k][n-i+1+j][1]
+            if mini > compare :
+                mini = compare
+                dp[n-i-1][n-i+1+j] = mini
+                matrix[n-i-1][n-i+1+j] = [data[n-i-1][0], data[n-i+1+j][1]]
+
+print(dp[0][-1])
