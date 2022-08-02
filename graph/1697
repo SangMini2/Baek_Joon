@@ -1,0 +1,20 @@
+import sys
+input = sys.stdin.readline
+from collections import deque
+
+n, k = map(int, input().strip().split())
+q = deque([n])
+max = 100000
+arr = [0 for _ in range(max+1)]
+visited = set()
+while q :
+    x = q.popleft()
+    if x == k :
+        print(arr[x])
+        break
+    plus = arr[x]
+    for nx in [x*2, x+1, x-1] :
+        if nx <= max and nx not in visited and nx >= 0:
+            arr[nx] = plus + 1
+            q.append(nx)
+            visited.add(nx)
