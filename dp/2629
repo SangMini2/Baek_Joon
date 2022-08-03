@@ -1,0 +1,22 @@
+import sys
+input = sys.stdin.readline
+
+n = int(input())
+weight = list(map(int, input().strip().split()))
+m = int(input())
+check = list(map(int, input().strip().split()))
+dp = set()
+dp.add(weight[0])
+for chu in weight[1:] :
+    plus = set()
+    plus.add(chu)
+    for compare in dp :
+        plus.add(abs(compare - chu))
+        plus.add(abs(compare + chu))
+    dp = dp.union(plus)
+
+for num in check :
+    if num in dp :
+        print("Y" , end = ' ')
+    else :
+        print("N", end = ' ')
