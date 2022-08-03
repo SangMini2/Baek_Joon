@@ -1,0 +1,23 @@
+import sys
+input = sys.stdin.readline
+
+n = int(input())
+data = list(map(int, input().strip().split()))
+m = int(input())
+dp = [[0]*n for _ in range(n)]
+dp[-1][-1] = 1
+for i in range(n-1) :
+    dp[i][i] = 1
+    if data[i] == data[i+1] :
+        dp[i][i+1] = 1
+
+for i in range(2,n) :
+    for j in range(i-1) :
+        if data[n-i-1] == data[n-i+1+j] and dp[n-i][n-i+j] == 1 :
+            dp[n-i-1][n-i+1+j] = 1
+
+for _ in range(m) :
+    s , e = map(int, input().strip().split())
+    s -= 1
+    e -= 1
+    print(dp[s][e])
