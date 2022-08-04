@@ -1,0 +1,19 @@
+import sys
+input = sys.stdin.readline
+from collections import deque
+from copy import deepcopy
+
+n , m = map(int, input().strip().split())
+a = list(map(int, input().strip().split()))
+c = list(map(int, input().strip().split()))
+b = sum(c)
+dp_list = [0] * (b+ 1)
+for i in range(n) :
+    new_dp_list = dp_list[:]
+    for j in range(b - c[i] + 1) :
+        dp_list[j + c[i]] = max(new_dp_list[j + c[i]] , new_dp_list[j] + a[i])
+
+for i in range(b+1) :
+    if dp_list[i] >= m :
+        print(i)
+        break
