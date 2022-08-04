@@ -1,0 +1,31 @@
+import sys
+input = sys.stdin.readline
+sys.setrecursionlimit(10**9)
+
+n , m , r = map(int, input().strip().split())
+line = [[] for _ in range(n+1)]
+
+for i in range(m) :
+    some = list(map(int, input().strip().split()))
+    line[some[0]].append(some[1])
+    line[some[1]].append(some[0])
+
+for i in line :
+    i.sort(reverse = True)
+
+point = [0 for i in range(n+1)]
+visited = [0] * (n + 1)
+check = [r]
+def dfs(E, R) :
+    visited[R] = 1
+    for i in line[R] :
+        if visited[i] == 0 :
+            check.append(i)
+            dfs(E,i)
+
+dfs(line, r)
+for i in range(len(check)) :
+    point[check[i]] = i + 1
+
+for j in point[1:] :
+    print(j)
