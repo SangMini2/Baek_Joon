@@ -1,0 +1,51 @@
+import sys
+input = sys.stdin.readline
+sys.setrecursionlimit(10**9)
+from copy import deepcopy
+from collections import deque
+
+n , m , r = map(int, input().strip().split())
+data = [[] for _ in range(n+1)]
+q = deque()
+for _ in range(m) :
+    k , l = map(int, input().strip().split())
+    data[k].append(l)
+    data[l].append(k)
+
+for i in data :
+    i.sort()
+
+data2 = deepcopy(data)
+#DFS
+visited2 = [0]*(n+1)
+result_dfs = []
+def dfs(start) :
+    visited2[start] = 1
+    lst = data[start]
+    result_dfs.append(start)
+    for i in lst :
+        if visited2[i] == 0 :
+            dfs(i)
+
+dfs(r)
+
+
+#BFS
+q.append(r)
+visited1 = [0] * (n + 1)
+result_bfs = []
+while q :
+    check = q.popleft()
+    if visited1[check] == 0 :
+        visited1[check] = 1
+        result_bfs.append(check)
+        lst = data[check]
+        for some in lst :
+            if visited1[some] == 0 :
+                q.append(some)
+
+for i in result_dfs :
+    print(i, end = ' ')
+print("")
+for j in result_bfs :
+    print(j, end = ' ')
