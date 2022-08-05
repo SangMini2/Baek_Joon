@@ -1,0 +1,41 @@
+import sys
+input = sys.stdin.readline
+from copy import deepcopy
+from collections import deque
+
+n , m ,h = map(int, input().strip().split())
+data = []
+for _ in range(h) :
+    plus = [list(map(int, input().strip().split())) for _ in range(m)]
+    data.append(plus)
+
+one_list = deque()
+minus = 0
+for k in range(h) :
+    for i in range(m) :
+        for j in range(n) :
+            if data[k][i][j] == 1 :
+                one_list.append((k,i,j))
+
+dx = (-1, 1, 0, 0, 0 ,0)
+dy = (0, 0, -1, 1, 0, 0)
+dz = (0, 0, 0, 0, -1, 1)
+def bfs(q : deque) :
+    while q :
+        check = q.popleft()
+        z , x , y = check[0] , check[1] , check[2]
+        for i in range(6) :
+            nx , ny , nz = x + dx[i] , y + dy[i] , z + dz[i]
+            if nx >= 0 and nx < m and ny >= 0 and ny < n and nz >= 0 and nz < h and data[nz][nx][ny] == 0 :
+                data[nz][nx][ny] += (data[z][x][y] + 1)
+                q.append((nz , nx , ny))
+
+bfs(one_list)
+cnt = 0
+for i in data :
+    for j in i :
+        if 0 in j :
+            print(-1)
+            exit(0)
+        cnt = max(cnt, max(j))
+print(cnt - 1)
