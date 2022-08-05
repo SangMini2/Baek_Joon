@@ -1,0 +1,51 @@
+import sys
+input = sys.stdin.readline
+sys.setrecursionlimit(10**9)
+from copy import deepcopy
+from collections import deque
+
+n , m = map(int, input().strip().split())
+data = [list(map(int, input().strip().split())) for _ in range(m)]
+one_list = deque()
+minus = 0
+for i in range(m) :
+    for j in range(n) :
+        if data[i][j] == 1 :
+            one_list.append((i,j))
+        elif data[i][j] == -1 :
+            minus += 1
+
+cnt = 0
+dx = (-1, 1, 0, 0)
+dy = (0, 0, -1, 1)
+count = 0
+def bfs(q : deque) :
+    global cnt
+    global count
+    cnt += 1
+    lst = deque()
+    while q :
+        check = q.popleft()
+        count += 1
+        x , y = check[0] , check[1]
+        for i in range(4) :
+            nx , ny = x + dx[i] , y + dy[i]
+            if nx >= 0 and nx < m and ny >= 0 and ny < n and data[nx][ny] == 0 :
+                data[nx][ny] += (data[x][y] +1)
+                q.append((nx , ny))
+    if not lst :
+        return 0
+    else :
+        return bfs(lst)
+
+bfs(one_list)
+flag = 0
+for i in data :
+    if 0 in i :
+        flag = 1
+        break
+
+if flag == 1 :
+    print(-1)
+else :
+    print(max(map(max, data)) - 1)
