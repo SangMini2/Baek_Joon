@@ -1,0 +1,36 @@
+import sys
+input = sys.stdin.readline
+sys.setrecursionlimit(10**9)
+from copy import deepcopy
+from collections import deque
+
+def chess(x , start) :
+    q = deque()
+    q.append(start)
+    #data[start[0]][start[1]] = 1
+    dx = (-1, -1, -2, -2, 1, 1, 2, 2)
+    dy = (-2, 2, -1, 1, -2, 2, -1, 1)
+    while q :
+        thing = q.popleft()
+        px , py = thing[0] , thing[1]
+        for i in range(8) :
+            nx , ny = px + dx[i] , py + dy[i]
+            if nx >= 0 and nx < x and ny >= 0 and ny < x and data[nx][ny] == 0 :
+                data[nx][ny] += (data[px][py] + 1)
+                q.append([nx,ny])
+
+
+
+
+n = int(input())
+for _ in range(n) :
+    m = int(input())
+    cnt = 0
+    first = list(map(int, input().strip().split()))
+    goal = list(map(int, input().strip().split()))
+    if first == goal :
+        print(0)
+    else :
+        data = [[0]*m for _ in range(m)]
+        chess(m , first)
+        print(data[goal[0]][goal[1]])
