@@ -1,0 +1,43 @@
+import sys
+input = sys.stdin.readline
+sys.setrecursionlimit(10**9)
+from copy import deepcopy
+from collections import deque
+
+n , m = map(int, input().strip().split())
+ladder = []
+snake = dict()
+ladder = dict()
+for _ in range(n) :
+    put = list(map(int, input().strip().split()))
+    ladder[put[0]] = put[1]
+
+for _ in range(m) :
+    put2 = list(map(int, input().strip().split()))
+    snake[put2[0]] = put2[1]
+
+def die(start) :
+    q = deque()
+    q.append(start)
+    while q :
+        change = q.popleft()
+        for i in range(1,7) :
+            new = change + i
+            if new <= 100 and arr[new] == 0:
+                if new in ladder.keys():
+                    moving_point = ladder[new]
+                    if arr[moving_point] == 0 :
+                        arr[moving_point] = arr[change] + 1
+                        q.append(moving_point)
+                elif new in snake.keys() :
+                    moving_point = snake[new]
+                    if arr[moving_point] == 0 :
+                        arr[moving_point] = arr[change] + 1
+                        q.append(moving_point)
+                else :
+                    arr[new] = arr[change] + 1
+                    q.append(new)
+
+arr = [0] * 101
+die(1)
+print(arr[100])
