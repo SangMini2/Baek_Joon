@@ -1,0 +1,40 @@
+import sys
+input = sys.stdin.readline
+
+from copy import deepcopy
+from collections import deque
+
+n , m = map(int, input().strip().split())
+data = []
+for i in range(n) :
+    plus = []
+    check = input().strip()
+    for i in check :
+        plus.append(int(i))
+    data.append(plus)
+
+visited = [[[0]*2 for _ in range(m)] for _ in range(n)]
+visited[0][0][0] = 1
+def bfs() :
+    q = deque()
+    q.append([0,0,0])
+    dx = (-1, 1, 0, 0)
+    dy = (0, 0, -1, 1)
+    while q :
+        px , py , w = q.popleft()
+        if px == n-1 and py == m-1 :
+            return visited[px][py][w]
+
+        for i in range(4) :
+            nx , ny = px + dx[i] , py + dy[i]
+            if 0<= nx < n and 0<= ny < m :
+                if data[nx][ny] == 0 and visited[nx][ny][w] == 0 :
+                    visited[nx][ny][w] = visited[px][py][w] + 1
+                    q.append([nx,ny,w])
+
+                elif data[nx][ny] == 1 and w == 0 :
+                    visited[nx][ny][w+1] = visited[px][py][w] + 1
+                    q.append([nx , ny , w+1])
+    return -1
+
+print(bfs())
