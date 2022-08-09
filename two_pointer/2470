@@ -1,0 +1,33 @@
+import sys
+input = sys.stdin.readline
+sys.setrecursionlimit(10**9)
+
+n = int(input())
+lst = list(map(int, input().strip().split()))
+lst.sort()
+mini = float("inf")
+result = []
+
+def finding(start, end) :
+    global mini
+    if start >= end :
+        return 0
+    else :
+        in_mini = float('inf')
+        while True :
+            check = abs(lst[start] + lst[end])
+            if check > in_mini or start == end :
+                break
+            else :
+                in_mini = check
+                end -= 1
+
+        if in_mini < mini :
+            mini = in_mini
+            result.append((lst[start] , lst[end + 1]))
+
+        finding(start + 1 , end+1)
+
+
+finding(0,n-1)
+print(*result[-1])
