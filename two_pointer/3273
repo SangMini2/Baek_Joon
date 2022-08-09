@@ -1,0 +1,33 @@
+import sys
+input = sys.stdin.readline
+sys.setrecursionlimit(10**9)
+
+n = int(input())
+lst = list(map(int, input().strip().split()))
+x = int(input())
+lst.sort()
+cnt = 0
+def finding(start, end) :
+    global cnt
+    if start >= end :
+        return 0
+    else :
+        check = x - lst[start]
+        check_end = end
+        while True :
+            if lst[check_end] == check :
+                cnt += 1
+                flag = 1
+                break
+            elif lst[check_end] < check :
+                flag = 0
+                break
+            else :
+                check_end -= 1
+        if flag == 1 :
+            finding(start+1 , check_end - 1)
+        else :
+            finding(start + 1 , end)
+
+finding(0, n-1)
+print(cnt)
