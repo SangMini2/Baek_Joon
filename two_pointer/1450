@@ -1,0 +1,47 @@
+import sys
+input = sys.stdin.readline
+from collections import deque
+from itertools import combinations
+
+n , c = map(int, input().strip().split())
+lst = list(map(int, input().strip().split()))
+
+a_lst = lst[ : n // 2]
+b_lst = lst[n//2 : ]
+
+sub_a = []
+sub_b = []
+
+for i in range(len(a_lst) + 1) :
+    comb_a = combinations(a_lst , i)
+    for comb in comb_a :
+        sub_a.append(sum(comb))
+
+for j in range(len(b_lst) + 1) :
+    comb_b = combinations(b_lst , j)
+    for comb in comb_b :
+        sub_b.append(sum(comb))
+
+sub_b.sort()
+cnt = 0
+size = len(sub_b)
+
+for num in sub_a :
+    flag = c - num
+    if flag < 0 :
+        continue
+    elif flag == 0 :
+        cnt += 1
+    else :
+        start = 0
+        end = len(sub_b) - 1
+        while start <= end :
+            mid = (start + end) // 2
+
+            if sub_b[mid] > flag :
+                end = mid - 1
+            else :
+                start = mid + 1
+        cnt += (end + 1)
+        
+print(cnt)
