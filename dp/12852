@@ -1,0 +1,36 @@
+import sys
+input = sys.stdin.readline
+from collections import deque
+
+n = int(input())
+q = deque()
+q.append(n)
+dp = [0] * (10 ** 6 + 1)
+memory = [0] * (10 ** 6 + 1)
+while True :
+    check = q.popleft()
+    if check == 1 : break
+    if check % 3 == 0 :
+        q.append(check // 3)
+        if dp[check // 3] == 0 :
+            dp[check // 3] = dp[check] + 1
+            memory[check // 3] = check
+    if check % 2 == 0 :
+        q.append(check // 2)
+        if dp[check // 2] == 0 :
+            dp[check // 2] = dp[check] + 1
+            memory[check // 2] = check
+    q.append(check - 1)
+    if dp[check - 1] == 0 :
+        dp[check - 1] = dp[check] + 1
+        memory[check - 1] = check
+
+print(dp[1])
+check_list = [1]
+i = 1
+while True :
+    if memory[i] == 0 : break
+    check_list.append(memory[i])
+    i = memory[i]
+check_list.reverse()
+print(*check_list)
