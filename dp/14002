@@ -1,0 +1,29 @@
+import sys
+input = sys.stdin.readline
+from collections import deque
+
+n = int(input())
+data = list(map(int, input().strip().split()))
+dp = [0]*n
+way = [-1] * n
+maximum = 0
+maximum_idx = 0
+for i in range(n) :
+    for j in range(i) :
+        if data[i] > data[j] and dp[i] < dp[j] :
+            dp[i] = dp[j]
+            way[i] = j
+    dp[i] += 1
+    if dp[i] > maximum :
+        maximum = dp[i]
+        maximum_idx = i
+
+print(maximum)
+result = [data[maximum_idx]]
+check = way[maximum_idx]
+while True :
+    if check == -1: break
+    result.append(data[check])
+    check = way[check]
+result.reverse()
+print(*result)
