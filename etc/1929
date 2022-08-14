@@ -1,0 +1,15 @@
+import sys
+input = sys.stdin.readline
+
+start , end = map(int, input().strip().split())
+
+dp = [False] * (end + 1)
+dp[0] , dp[1] = True, True
+for i in range(end + 1) :
+    if dp[i] == False :
+        for j in range(2*i, end+1, i) :
+            dp[j] = True
+
+for i in range(start,end+1) :
+    if dp[i] == False :
+        print(i)
