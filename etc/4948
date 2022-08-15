@@ -1,0 +1,20 @@
+import sys
+input = sys.stdin.readline
+
+k = 123457
+dp = [0] *  (2*k + 1)
+dp[0] , dp[1] = 1 , 1
+for i in range(len(dp)) :
+    if dp[i] == 0 :
+        for j in range(2*i, len(dp) , i) :
+            dp[j] = 1
+
+while True :
+    num = int(input())
+    if num == 0 : break
+    check = 0
+    for i in range(num+1 , 2 * num + 1) :
+        if dp[i] == 0 :
+            check += 1
+
+    print(check)
