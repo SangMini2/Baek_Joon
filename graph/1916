@@ -1,0 +1,31 @@
+import sys
+input = sys.stdin.readline
+import heapq
+
+n = int(input())
+e = int(input())
+dp = [[] for _ in range(n+1)]
+for i in range(e) :
+    go , stop , weight = map(int, input().strip().split())
+    dp[go].append([stop, weight])
+
+check_start, check_end = map(int,input().strip().split())
+
+def quick(start,end) :
+    distance = [float('inf')] * (n+1)
+    heap = []
+    distance[start] = 0
+    for i in dp[start] :
+        heapq.heappush(heap, [i[1] , i[0]])
+
+    while heap :
+        check = heapq.heappop(heap)
+        if distance[check[1]] == float('inf') :
+            distance[check[1]] = check[0]
+            for j in dp[check[1]] :
+                if distance[j[0]] == float('inf') :
+                    heapq.heappush(heap, [j[1] + check[0] , j[0]])
+
+    return distance[end]
+
+print(quick(check_start, check_end))
