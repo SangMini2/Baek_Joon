@@ -1,0 +1,26 @@
+import sys
+input = sys.stdin.readline
+from collections import deque
+
+start, end = map(int, input().strip().split())
+dp = [0] * 100001
+visited = [0] * 100001
+q = deque()
+visited[start] = 1
+q.append(start)
+while q :
+    check = q.popleft()
+    if 2 * check <= 100000 and visited[2*check] == 0 :
+        q.appendleft(2 * check)
+        visited[2*check] = 1
+        dp[2*check] = dp[check]
+    if check + 1 <= 100000 and visited[check + 1] == 0 :
+        q.append(check + 1)
+        visited[check + 1] = 1
+        dp[check + 1] = dp[check] + 1
+    if check - 1 >= 0 and visited[check - 1] == 0 :
+        q.append(check - 1)
+        visited[check - 1] = 1
+        dp[check - 1] = dp[check] + 1
+
+print(dp[end])
