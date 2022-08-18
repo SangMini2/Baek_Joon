@@ -1,0 +1,31 @@
+import sys
+input = sys.stdin.readline
+from collections import deque
+
+word = input().strip()
+bomb = input().strip()
+size = len(bomb)
+stack = deque()
+
+for i in word :
+    stack.append(i)
+    j = -1
+    if i == bomb[j] :
+        pop_list = []
+        flag = 0
+        while len(stack) >= 0 and j >= -size :
+            check = stack.pop()
+            pop_list.append(check)
+            if check != bomb[j] or (len(stack) == 0 and j > -size):
+                flag = 1
+                break
+            j -= 1
+
+        if flag == 1 :
+            while pop_list :
+                stack.append(pop_list.pop())
+
+if stack :
+    print(''.join(stack))
+else :
+    print("FRULA")
