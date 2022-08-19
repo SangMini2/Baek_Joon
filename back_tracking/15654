@@ -1,0 +1,17 @@
+import sys
+input = sys.stdin.readline
+
+n , m = map(int, input().strip().split())
+data = list(map(int, input().strip().split()))
+data.sort()
+def show(arr , num , char) :
+    if num == 1 :
+        for i in arr :
+            print(char + str(i))
+    else :
+        for j in arr :
+            new_arr = arr[:]
+            new_arr.remove(j)
+            show(new_arr , num - 1 , char + str(j) + " ")
+
+show(data,m,"")
