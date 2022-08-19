@@ -1,0 +1,14 @@
+import sys
+input = sys.stdin.readline
+
+n , m = map(int, input().strip().split())
+if n - m < m :
+    m = n - m
+
+up = 1
+for i in range(m) :
+    up *= (n - i)
+bot = 1
+for j in range(m) :
+    bot *= (j+1)
+print(up//bot)
