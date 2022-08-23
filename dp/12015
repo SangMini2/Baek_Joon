@@ -1,0 +1,17 @@
+import sys
+input = sys.stdin.readline
+from bisect import bisect_left, bisect_right
+
+n = int(input())
+data = list(map(int, input().strip().split()))
+dp = [0] * n
+cp = [-float('inf')]
+maximum = 0
+for i in range(n) :
+    if data[i] > cp[-1] :
+        cp.append(data[i])
+        dp[i] = len(cp) - 1
+    else :
+        dp[i] = bisect_left(cp, data[i])
+        cp[dp[i]] = data[i]
+print(len(cp) - 1)
