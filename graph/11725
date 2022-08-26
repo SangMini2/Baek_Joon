@@ -1,0 +1,24 @@
+import sys
+input = sys.stdin.readline
+from collections import defaultdict
+from collections import deque
+
+n = int(input())
+dic = defaultdict(list)
+
+for i in range(n-1) :
+    x , y = map(int, input().strip().split())
+    dic[x].append(y)
+    dic[y].append(x)
+
+dp = [0] * (n+1)
+q = deque()
+q.append(1)
+while q :
+    start = q.popleft()
+    for i in dic[start] :
+        dp[i] = start
+        dic[i].remove(start)
+        q.append(i)
+for i in dp[2:] :
+    print(i)
