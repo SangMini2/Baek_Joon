@@ -1,0 +1,32 @@
+import sys
+input = sys.stdin.readline
+from collections import defaultdict
+from collections import deque
+import heapq
+from copy import deepcopy
+
+n = int(input())
+m = int(input())
+lst = []
+dp = [[float('inf')] * (n+1) for _ in range(n+1)]
+for i in range(m) :
+    start , end , weight = map(int, input().strip().split())
+    dp[start][end] = min(weight , dp[start][end])
+
+for i in range(1,n+1) :
+    for j in range(1,n+1) :
+        for k in range(1,n+1) :
+            if i == j :
+                dp[j][i] = 0
+            else :
+                dp[j][k] = min(dp[j][k] , dp[i][k] + dp[j][i])
+
+result = dp[1:]
+for i in result :
+    for j in i[1:] :
+        if j == float('inf') :
+            print(0, end = ' ')
+        else :
+            print(j, end = ' ')
+    print('')
+
