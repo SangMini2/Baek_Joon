@@ -1,0 +1,43 @@
+import sys
+input = sys.stdin.readline
+from collections import deque
+
+sen = input().strip()
+stack = deque()
+plus_minus = set(["+" , "-"])
+multi_divide = set(["*" , "/"])
+
+for word in sen :
+    if word.isalpha() :
+        print(word,end="")
+    else :
+        if word == ")" :
+            while True :
+                check = stack.pop()
+                if check == "(" :
+                    break
+                else :
+                    print(check,end="")
+        elif word in plus_minus :
+            while stack :
+                check2 = stack.pop()
+                if check2 == "(" :
+                    stack.append(check2)
+                    break
+                print(check2,end="")
+            stack.append(word)
+        elif word in multi_divide :
+            if stack :
+                check3 = stack.pop()
+                if check3 in multi_divide :
+                    print(check3,end="")
+                else :
+                    stack.append(check3)
+            stack.append(word)
+
+        else :
+            stack.append(word)
+
+if stack :
+    while stack :
+        print(stack.pop(),end="")
