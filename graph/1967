@@ -1,0 +1,48 @@
+import sys
+input = sys.stdin.readline
+sys.setrecursionlimit(10**8)
+
+dic = dict()
+m = int(input())
+if m != 1 :
+    for _ in range(m-1) :
+        start, end , weight = map(int, input().strip().split())
+        if start in dic.keys() :
+            dic[start].append([end, weight])
+        else :
+            dic[start] = []
+            dic[start].append([end,weight])
+
+        if end in dic.keys() :
+            dic[end].append([start, weight])
+        else :
+            dic[end] = []
+            dic[end].append([start, weight])
+
+    answer = 0
+    answer_idx = -1
+    def check(num, dictionary, check_set : set , cnt) :
+        global answer
+        global answer_idx
+
+        if num not in check_set :
+            check_set.add(num)
+            for i in dictionary[num] :
+                if i[0] in check_set :
+                    if cnt > answer :
+                        answer_idx = num
+                        answer = cnt
+                else :
+                    new_cnt = cnt + i[1]
+                    check(i[0] , dictionary, check_set, new_cnt)
+        else :
+            if cnt > answer :
+                answer_idx = num
+                answer = cnt
+            return 0
+
+    check(1,dic,set(),0)
+    check(answer_idx, dic, set(), 0)
+    print(answer)
+else :
+    print(0)
