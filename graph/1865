@@ -1,0 +1,38 @@
+import sys
+input = sys.stdin.readline
+
+def bf(start) :
+    dis = [1000001] * (n+1)
+    dis[start] = 0
+
+    for i in range(n) :
+        for edge in edges :
+            cur = edge[0]
+            next = edge[1]
+            weight = edge[2]
+
+            if dis[next] > weight + dis[cur] :
+                dis[next] = weight + dis[cur]
+
+                if i == n - 1 :
+                    return True
+    return False
+
+
+for _ in range(int(input())):
+    n,m,w = map(int,input().strip().split())
+    edges = []
+    for _ in range(m) :
+        s,e,t = map(int,input().strip().split())
+        edges.append((s,e,t))
+        edges.append((e,s,t))
+
+    for _ in range(w) :
+        s,e,t = map(int, input().strip().split())
+        edges.append((s,e,-t))
+
+
+    if bf(1) :
+        print("YES")
+    else :
+        print("NO")
