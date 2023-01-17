@@ -1,0 +1,53 @@
+import sys
+input = sys.stdin.readline
+from collections import deque
+
+def result(num) :
+    if num == 0 :
+        return "No trees."
+    elif num == 1 :
+        return "There is one tree."
+    else :
+        return f"A forest of {num} trees."
+
+case_num = 1
+while True :
+    node_num , n = map(int, input().strip().split())
+    if node_num == 0 and n == 0 : break
+
+    lst = deque()
+    for i in range(node_num) :
+        lst.append({i + 1})
+
+
+    for i in range(n) :
+        left , right = map(int, input().split())
+        left_set = set()
+        while True :
+            check_set = lst.popleft()
+            if left in check_set :
+                left_set = check_set
+                break
+            lst.append(check_set)
+
+        if right in left_set :
+            left_set.add(-1)
+            lst.append(left_set)
+        else :
+            while True :
+                check_set = lst.popleft()
+                if right in check_set :
+                    right_set = check_set
+                    break
+                lst.append(check_set)
+
+            plus_set = left_set | right_set
+            lst.append(plus_set)
+    cnt = 0
+    while lst :
+        check = lst.popleft()
+        if -1 not in check :
+            cnt += 1
+    print(f"Case {case_num}: ",end = "")
+    print(result(cnt))
+    case_num += 1
