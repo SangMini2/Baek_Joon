@@ -1,0 +1,26 @@
+import sys
+input = sys.stdin.readline
+from collections import deque
+sys.setrecursionlimit(10**6)
+
+lst = []
+while True :
+    try :
+        num = int(input())
+        lst.append(num)
+    except Exception :
+        break
+
+def postorder(first, end) :
+    if first > end :
+        return
+    mid = end + 1
+    for i in range(first + 1, end + 1) :
+        if lst[i] > lst[first] :
+            mid = i
+            break
+    postorder(first+1, mid-1)
+    postorder(mid , end)
+    print(lst[first])
+
+postorder(0, len(lst)-1)
