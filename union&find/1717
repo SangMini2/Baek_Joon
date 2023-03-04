@@ -1,0 +1,34 @@
+import sys
+sys.setrecursionlimit(10**9)
+input = sys.stdin.readline
+
+n , m = map(int, input().strip().split())
+total = list(range(n+1))
+
+def check(put) :
+    if total[put] == put :
+        return total[put]
+    p = check(total[put])
+    total[put] = p
+    return total[put]
+
+def union(x,y) :
+    x = check(x)
+    y = check(y)
+    if x == y :
+        return
+    if x < y :
+        total[y] = x
+    else :
+        total[x] = y
+
+
+for _ in range(m) :
+    a,b,c = map(int, input().strip().split())
+    if a == 0 :
+        union(b,c)
+    else :
+        if check(b) == check(c) :
+            print("YES")
+        else :
+            print("NO")
