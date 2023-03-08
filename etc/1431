@@ -1,0 +1,34 @@
+import sys
+input = sys.stdin.readline
+from collections import defaultdict
+
+n = int(input())
+answer = []
+dic = defaultdict(list)
+for i in range(n) :
+    check = input().strip()
+    dic[len(check)].append(check)
+
+index = sorted(list(dic.keys()))
+
+for i in index :
+    before_answer = defaultdict(list)
+    for j in dic[i] :
+        plus = 0
+        for k in j :
+            if k.isdigit() :
+                plus += int(k)
+        before_answer[plus].append(j)
+    sorted_before_answer = list(before_answer.keys())
+    sorted_before_answer.sort()
+    for l in sorted_before_answer :
+        if len(before_answer[l]) >= 2 :
+            plus_lst = before_answer[l]
+            plus_lst.sort()
+            for m in plus_lst :
+                answer.append(m)
+        else :
+            answer.append(before_answer[l][0])
+
+for ans in answer :
+    print(ans)
