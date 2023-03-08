@@ -1,0 +1,17 @@
+import sys
+input = sys.stdin.readline
+from collections import defaultdict
+
+dic = defaultdict(int)
+total_num = 0
+while True :
+    put = input().strip()
+    if not put :
+        break
+    total_num += 1
+    dic[put] += 1
+
+index = list(dic.keys())
+index.sort()
+for name in index :
+    print(f"{name} {dic[name] / total_num * 100 :.4f}")
