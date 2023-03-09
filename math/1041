@@ -1,0 +1,39 @@
+import sys
+input = sys.stdin.readline
+
+n = int(input())
+a,b,c,d,e,f = map(int, input().strip().split())
+combi_lst = [a,b,c,d,e,f]
+pair1 = [a,f]
+pair2 = [c,d]
+pair3 = [b,e]
+
+two = set()
+for i in pair1 :
+    for j in pair2 :
+        two.add(i+j)
+    for k in pair3 :
+        two.add(i+k)
+
+for i in pair2 :
+    for j in pair3 :
+        two.add(i+j)
+two_min = min(list(two))
+
+three_min = 151
+for i in pair1 :
+    for j in pair2 :
+        for k in pair3 :
+            plus = i + j + k
+            if three_min > plus :
+                three_min = plus
+
+
+if n == 1 :
+    print(sum(combi_lst) - max(combi_lst))
+else :
+    mini = min(combi_lst)
+    one_total = (n-2)*(5*n - 6) * mini
+    two_total = two_min * 4 * (2*n - 3)
+    three_total = three_min * 4
+    print(one_total + two_total + three_total)
