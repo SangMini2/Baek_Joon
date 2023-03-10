@@ -1,0 +1,48 @@
+import sys
+input = sys.stdin.readline
+
+n = int(input())
+first = [-1]
+switch = list(map(int, input().strip().split()))
+switch = first + switch
+
+num = int(input())
+
+def change(onoff) :
+    if onoff == 1 :
+        return 0
+    if onoff == 0 :
+        return 1
+
+for _ in range(num) :
+    sex , number = map(int, input().strip().split())
+    if sex == 1 :
+        idx = number
+        while True :
+            if idx > n :
+                break
+            switch[idx] = change(switch[idx])
+            idx += number
+
+    else :
+        switch[number] = change(switch[number])
+        left = number - 1
+        right = number + 1
+        while True :
+            if left == 0 or right > n or switch[left] != switch[right] :
+                break
+            switch[left] = change(switch[left])
+            switch[right] = change(switch[right])
+            left -= 1
+            right += 1
+
+switch = switch[1:]
+
+flag = 20
+start = 0
+end = 1
+while True :
+    if flag * start >= n : break
+    print(*switch[flag * start : flag * end])
+    start += 1
+    end += 1
