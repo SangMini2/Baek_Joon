@@ -1,0 +1,27 @@
+import sys
+input = sys.stdin.readline
+from itertools import combinations
+must = set(['a' , 'e' , 'o' , 'i' , 'u'])
+
+l,c = map(int, input().strip().split())
+lst = list(input().strip().split())
+ans = []
+for i in list(combinations(lst , l)) :
+    j = list(i)
+    j.sort()
+    plus = "".join(j)
+    ans.append(plus)
+
+ans.sort()
+for check in ans :
+    num1 = 0
+    num2 = 0
+    for spell in check :
+        if spell in must :
+            num1 += 1
+        else :
+            num2 += 1
+
+        if num1 >= 1 and num2 >= 2 : break
+    if num1 >= 1 and num2 >= 2 :
+        print(check)
