@@ -1,0 +1,33 @@
+import sys
+input = sys.stdin.readline
+from collections import defaultdict
+
+word = input().strip()
+dic = defaultdict(int)
+
+for i in word :
+    dic[i] += 1
+
+odd_num = 0
+dic_key_lst = list(dic.keys())
+dic_key_lst.sort()
+odd_char = ""
+flag = 0
+for i in dic_key_lst :
+    if dic[i] % 2 == 1 :
+        odd_num += 1
+        odd_char = i
+
+    if odd_num > 1 :
+        flag = 1
+        print("I'm Sorry Hansoo")
+        break
+
+ans_word = ""
+if flag != 1 :
+    for word in dic_key_lst :
+        rep = dic[word] // 2
+        ans_word += word * rep
+    put_word = ans_word[::-1]
+    ans_word += (odd_char + put_word)
+    print(ans_word)
