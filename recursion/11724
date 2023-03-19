@@ -1,0 +1,29 @@
+import sys
+input = sys.stdin.readline
+
+n , m = map(int, input().strip().split())
+
+arr = [i for i in range(n+1)]
+
+def check(num) :
+    if arr[num] == num :
+        return num
+    return check(arr[num])
+
+for _ in range(m) :
+    a,b = map(int, input().strip().split())
+    check_a = check(a)
+    check_b = check(b)
+    if check_a < check_b :
+        arr[b] = check_a
+        arr[check_b] = check_a
+    else :
+        arr[a] = check_b
+        arr[check_a] = check_b
+
+ans_set = set()
+
+for j in range(1,n+1) :
+    ans_set.add(check(j))
+
+print(len(ans_set))
