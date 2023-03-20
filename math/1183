@@ -1,0 +1,20 @@
+import sys
+input = sys.stdin.readline
+
+n = int(input())
+arr = []
+
+for _ in range(n) :
+    a , b = map(int, input().strip().split())
+    flag = a - b
+    arr.append(flag)
+
+if n % 2 == 0 :
+    arr.sort()
+    flag = n // 2
+    ans = arr[flag] - arr[flag - 1] + 1
+
+else :
+    ans = 1
+
+print(ans)
