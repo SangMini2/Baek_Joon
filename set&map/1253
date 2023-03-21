@@ -1,0 +1,43 @@
+import sys
+input = sys.stdin.readline
+n = int(input())
+lst = list(map(int, input().strip().split()))
+change_lst = lst[:]
+check_set = set()
+zero_set = set()
+zero_cnt = 0
+zero_idx = []
+for i , num in enumerate(lst) :
+    if num == 0 :
+        zero_idx.append(i)
+        zero_cnt += 1
+
+tmp = 0
+for i in zero_idx[1:] :
+    del change_lst[i + tmp]
+    tmp -= 1
+
+if zero_cnt >= 3 :
+    check_set.add(0)
+
+for i, num1 in enumerate(change_lst) :
+    for num2 in change_lst[i+1:] :
+        plus = num1 + num2
+        if num1 == 0 or num2 == 0 :
+            if plus in zero_set :
+                check_set.add(plus)
+            else :
+                zero_set.add(plus)
+        else :
+            check_set.add(plus)
+
+
+if n <= 2 :
+    cnt = 0
+else :
+    cnt = 0
+    for check in lst :
+        if check in check_set :
+            cnt += 1
+
+print(cnt)
