@@ -1,0 +1,23 @@
+import sys
+input = sys.stdin.readline
+
+lst = input().strip()
+check = input().strip()
+check_num = len(check)
+cnt = 0
+
+start = 0
+while start + check_num <= len(lst) :
+    flag = 0
+    for i, char in enumerate(check) :
+        if char != lst[start + i] :
+            flag = 1
+            break
+    
+    if flag == 0 :
+        cnt += 1
+        start += check_num
+    else :
+        start += 1
+
+print(cnt)
