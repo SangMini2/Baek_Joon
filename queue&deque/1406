@@ -1,0 +1,30 @@
+import sys
+input = sys.stdin.readline
+from collections import deque
+
+first = list(input().strip())
+q1 = deque(first)
+q2 = deque()
+n = int(input())
+
+for _ in range(n) :
+    a = input().strip().split()
+    if a[0] == "P" :
+        q1.append(a[1])
+
+    elif a[0] == "L" :
+        if q1 :
+            move = q1.pop()
+            q2.appendleft(move)
+    
+    elif a[0] == "D" :
+        if q2 :
+            move = q2.popleft()
+            q1.append(move)
+
+    else :
+        if q1 :
+            q1.pop()
+
+ans = "".join(q1 + q2)
+print(ans)
