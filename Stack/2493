@@ -1,0 +1,24 @@
+import sys
+input = sys.stdin.readline
+from collections import deque
+
+n = int(input())
+arr = list(map(int, input().strip().split()))
+q = deque()
+ans = []
+for idx , value in enumerate(arr) :
+    flag = 0
+    while q :
+        check_idx , check_value = q.pop()
+        if check_value >= value :
+            q.append((check_idx , check_value))
+            q.append((idx, value))
+            ans.append(check_idx + 1)
+            flag = 1
+            break
+    
+    if flag == 0 :
+        q.append((idx, value))
+        ans.append(0)
+
+print(*ans)
