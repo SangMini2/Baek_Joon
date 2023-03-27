@@ -1,0 +1,38 @@
+import sys
+input = sys.stdin.readline
+from collections import deque
+
+m,n = map(int, input().strip().split())
+
+arr = []
+for _ in range(n) :
+    arr.append(list(input()))
+visited = []
+for _ in range(n) :
+    visited.append([10000] * m)
+
+dx = [0,0,-1,1]
+dy = [1,-1,0,0]
+
+start = (0,0,0)
+q = deque()
+ans = set()
+q.append(start)
+while q :
+    x , y , num = q.popleft()
+    if x == n-1 and y == m-1 :
+        ans.add(num)
+
+    for i in range(4) :
+        next_x = x + dx[i]
+        next_y = y + dy[i]
+        change_num = num
+        if next_x >= 0 and next_x < n and next_y >= 0 and next_y < m :
+            if arr[next_x][next_y] == '1' :
+                change_num += 1
+
+            if visited[next_x][next_y] > change_num :
+                visited[next_x][next_y] = change_num
+                q.append((next_x , next_y , change_num))
+
+print(min(ans))
