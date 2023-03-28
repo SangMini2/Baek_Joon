@@ -1,0 +1,45 @@
+import sys
+input = sys.stdin.readline
+from collections import defaultdict
+from copy import deepcopy
+from collections import deque
+from heapq import heappop, heappush
+
+n,m,x = map(int, input().strip().split())
+dic = defaultdict(deque)
+for _ in range(m) :
+    start , end , t = map(int, input().strip().split())
+    dic[start].append((t,end))
+
+use_dic = deepcopy(dic)
+
+def find(start_point , use_dic , goal) :
+    heap = []
+    heappush(heap, (0 , start_point))
+    checked = [float('inf')] * (n+1)
+    checked[start_point] = 0
+
+    while heap :
+        time , pos = heappop(heap)
+        while use_dic[pos] :
+            plus_t , next_pos = use_dic[pos].pop()
+
+            if checked[next_pos] > time + plus_t :
+                heappush(heap , (time + plus_t , next_pos))
+                checked[next_pos] = time + plus_t
+    return checked , checked[goal]
+
+ans , _ = find(x , use_dic, 0) 
+maximum = 0
+arr = []
+for i in range(n) :
+    if i + 1 != x :
+        arr.append(i+1)
+for j in arr :
+    use_dic = deepcopy(dic)
+    _, flag = find(j, use_dic, x)
+    check = flag + ans[j]
+    if check > maximum :
+        maximum = check
+
+print(maximum)
