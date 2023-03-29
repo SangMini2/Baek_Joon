@@ -1,0 +1,30 @@
+import sys
+input = sys.stdin.readline
+
+n = int(input())
+lst = list(map(int, input().strip().split()))
+left = 0
+right = n - 1
+ans_lst = []
+minimum = float('inf')
+flag = 0
+while left < right :
+    total = lst[left] + lst[right]
+    if total < 0 :
+        if abs(total) < minimum :
+            ans_lst = [lst[left], lst[right]]
+            minimum = abs(total)
+        left += 1
+
+    elif total > 0 :
+        if total < minimum :
+            ans_lst = [lst[left], lst[right]]
+            minimum = total
+        right -= 1
+    else :
+        print(lst[left], lst[right])
+        flag = 1
+        break
+
+if flag == 0 :
+    print(*ans_lst)
