@@ -1,0 +1,30 @@
+import sys
+input = sys.stdin.readline
+from collections import deque
+
+n,m = map(int , input().strip().split())
+arr = []
+for _ in range(n) :
+    arr.append(list(input().strip()))
+
+dx = [-1,1,0,0]
+dy = [0,0,-1,1]
+maximum = 0
+q = set()
+q.add((0,0,arr[0][0] , 1)) 
+'''
+핵심1. q를 set으로 두어 중복 제거
+핵심2. 튜플에 가장 마지막 원소를 set이나 list로 두지 못해, 그냥 글자를 중복 제거 역할로 둔다.
+핵심3. x>=0 and x<n 보다 0<= x < n 으로 표현한 식이 계산이 빠르다.
+'''
+
+while q :
+    x, y, visited, cnt = q.pop()
+    maximum = max(maximum , cnt)
+    for i in range(4) :
+        new_x = x + dx[i]
+        new_y = y + dy[i]
+        if new_x >= 0 and new_x < n and new_y >= 0 and new_y < m and arr[new_x][new_y] not in visited :
+            q.add((new_x , new_y , visited + arr[new_x][new_y] , cnt + 1))
+
+print(maximum)
