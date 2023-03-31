@@ -1,0 +1,32 @@
+import sys
+input = sys.stdin.readline
+from heapq import heappush , heappop
+
+v,e = map(int , input().strip().split())
+
+total_dic = dict()
+
+for _ in range(e) :
+    a,b,c = map(int, input().strip().split())
+    if a not in total_dic.keys() :
+        total_dic[a] = []
+    total_dic[a].append((c,b))
+
+    if b not in total_dic.keys() :
+        total_dic[b] = []
+    total_dic[b].append((c,a))
+
+lst = [(0 , 1)]
+visited = set()
+ans = set([i+1 for i in range(v)])
+cnt = 0
+while lst :
+    num , pos = heappop(lst)
+    if pos not in visited :
+        visited.add(pos)
+        cnt += num
+        while total_dic[pos] :
+            heappush(lst , heappop(total_dic[pos]))
+    if visited == ans : break
+
+print(cnt)
