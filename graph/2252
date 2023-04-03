@@ -1,0 +1,31 @@
+import sys
+input = sys.stdin.readline
+sys.setrecursionlimit(10**7)
+
+n , m = map(int, input().strip().split())
+
+visited = set()
+arr = [-1] * (n+1)
+for _ in range(m) :
+    a,b = map(int, input().strip().split())
+    if arr[b] == -1 :
+        arr[b] = [a]
+    else :
+        arr[b].append(a)
+
+def func(start) :
+    global visited
+    if start not in visited :
+        if arr[start] == -1 :
+            print(start, end = " ")
+            visited.add(start)
+            return 0
+        else :
+            for i in arr[start] :
+                func(i)
+            print(start, end = " ")
+            visited.add(start)
+            return 0
+        
+for i in range(n) :
+    func(i+1)
