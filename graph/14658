@@ -1,0 +1,23 @@
+import sys
+input = sys.stdin.readline
+from collections import deque
+
+n,m,l,k = map(int, input().strip().split())
+lst = []
+for _ in range(k) :
+    lst.append(list(map(int, input().strip().split())))
+
+x_sort = sorted(lst, key = lambda x : x[0])
+y_sort = sorted(lst, key = lambda x : x[1])
+ans = 0
+for arr_x in x_sort :
+    for arr_y in y_sort :
+        cnt = 0
+        for check in lst :
+            x = arr_x[0]
+            y = arr_y[1]
+            if x <= check[0] <= x + l and y <= check[1] <= y + l :
+                cnt += 1
+        ans = max(ans, cnt)
+
+print(k - ans)
