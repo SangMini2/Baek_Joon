@@ -1,0 +1,125 @@
+import sys
+input = sys.stdin.readline
+from copy import deepcopy
+from collections import deque
+
+n = int(input())
+lst = []
+for _ in range(n) :
+    lst.append(list(map(int, input().strip().split())))
+
+def left(input_arr , cnt : int) :
+    arr = deepcopy(input_arr)
+    for i in range(n) :
+        flag = 0
+        for j in range(1,n) :
+            if arr[i][j] == 0 :
+                continue
+            else : # 다음 숫자가 0이 아닐 때
+                if arr[i][flag] == 0 :
+                    arr[i][flag] = arr[i][j]
+                    arr[i][j] = 0
+
+                elif arr[i][j] == arr[i][flag] :
+                    arr[i][flag] *= 2
+                    arr[i][j] = 0
+                    flag += 1
+                
+                else :
+                    flag += 1
+                    arr[i][flag] = arr[i][j]
+                    if flag != j :
+                        arr[i][j] = 0
+    next_cnt = cnt + 1
+    return arr , next_cnt
+
+def right(input_arr , cnt) :
+    arr = deepcopy(input_arr)
+    for i in range(n) :
+        flag = -1
+        for j in range(n-2,-1,-1) : # 거꾸로
+            if arr[i][j] == 0 :
+                continue
+            else :
+                if arr[i][flag] == 0 : # 오른쪽이 0인 경우 채워 넣어야 함
+                    arr[i][flag] = arr[i][j]
+                    arr[i][j] = 0
+
+                elif arr[i][flag] == arr[i][j] : # 같으면 두 배 !
+                    arr[i][flag] *= 2
+                    arr[i][j] = 0
+                    flag -= 1
+                
+                else : # 같지도 않고 채워넣어야 하는 상황도 아닌 경우 ex) 4 0 2
+                    flag -= 1
+                    arr[i][flag] = arr[i][j]
+                    if n + flag != j :
+                        arr[i][j] = 0
+    next_cnt = cnt + 1
+    return arr, next_cnt
+
+def up(input_arr, cnt) :
+    arr = deepcopy(input_arr)
+    for i in range(n) :
+        flag = 0
+        for j in range(1,n) :
+            if arr[j][i] == 0 : continue
+            else :
+                if arr[flag][i] == 0 :
+                    arr[flag][i] = arr[j][i]
+                    arr[j][i] = 0
+
+                elif arr[j][i] == arr[flag][i] :
+                    arr[flag][i] *= 2
+                    arr[j][i] = 0
+                    flag += 1
+                
+                else :
+                    flag += 1
+                    arr[flag][i] = arr[j][i]
+                    if flag != j :
+                        arr[j][i] = 0
+    next_cnt = cnt + 1
+    return arr , next_cnt
+
+
+def down(input_arr , cnt) :
+    arr = deepcopy(input_arr)
+    for i in range(n) :
+        flag = -1
+        for j in range(n-2,-1,-1) : # 거꾸로
+            if arr[j][i] == 0 :
+                continue
+            else :
+                if arr[flag][i] == 0 : # 오른쪽이 0인 경우 채워 넣어야 함
+                    arr[flag][i] = arr[j][i]
+                    arr[j][i] = 0
+
+                elif arr[flag][i] == arr[j][i] : # 같으면 두 배 !
+                    arr[flag][i] *= 2
+                    arr[j][i] = 0
+                    flag -= 1
+                
+                else : # 같지도 않고 채워넣어야 하는 상황도 아닌 경우 ex) 4 0 2
+                    flag -= 1
+                    arr[flag][i] = arr[j][i]
+                    if n + flag != j :
+                        arr[j][i] = 0
+
+    next_cnt = cnt + 1
+    return arr, next_cnt
+
+q = deque()
+q.append((lst,0))
+maximum = 0
+while q :
+    ar , cnt = q.popleft()
+    if cnt == 5 :
+        maximum = max(max(map(max, ar)) , maximum)
+    else :
+        q.append(up(ar, cnt))
+        q.append(down(ar, cnt))
+        q.append(left(ar, cnt))
+        q.append(right(ar, cnt))
+
+print(maximum)
