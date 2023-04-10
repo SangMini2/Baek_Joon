@@ -1,0 +1,63 @@
+import sys
+input = sys.stdin.readline
+from copy import deepcopy
+from collections import deque
+
+n = int(input())
+for i in range(n) :
+    a , b , c = input().strip().split()
+    dic_a = dict()
+    dic_b = dict()
+    a_q_afirst = deque(list(a))
+    b_q_afirst = deque(list(b))
+    a_q_bfirst = deque(list(a))
+    b_q_bfirst = deque(list(b))
+    flag_a = 0
+    flag_b = 0
+
+    for spell in c :
+        if flag_a == 1 and flag_b == 1 : break
+        flag_a = 0
+        flag_b = 0
+
+        if a_q_afirst and b_q_afirst : # 둘 다 채워져 있을 때
+            a_pop_a = a_q_afirst.popleft()
+            if spell != a_pop_a :
+                a_q_afirst.appendleft(a_pop_a)
+                b_pop_a = b_q_afirst.popleft()
+                if b_pop_a != spell :
+                    flag_a = 1
+
+        elif a_q_afirst : # a만 있을 때
+            a_pop_a = a_q_afirst.popleft()
+            if spell != a_pop_a :
+                flag_a = 1
+
+        else : # b만 있을 때
+            b_pop_a = b_q_afirst.popleft()
+            if spell != b_pop_a :
+                flag_a = 1
+        
+        if a_q_bfirst and b_q_bfirst : # 둘 다 채워져 있을 때
+            b_pop_b = b_q_bfirst.popleft()
+            if spell != b_pop_b :
+                b_q_bfirst.appendleft(b_pop_b)
+                a_pop_b = a_q_bfirst.popleft()
+                if a_pop_b != spell :
+                    flag_b = 1
+        
+        elif b_q_bfirst :
+            b_pop_b = b_q_bfirst.popleft()
+            if spell != b_pop_b :
+                flag_b = 1
+        
+        else :
+            a_pop_b = a_q_bfirst.popleft()
+            if spell != a_pop_b :
+                flag_b = 1
+        
+
+    if flag_a == 1 and flag_b == 1 :
+        print(f"Data set {i+1}: no")
+    else :
+        print(f"Data set {i+1}: yes")
