@@ -1,0 +1,233 @@
+from copy import deepcopy
+from collections import deque
+import sys
+input = sys.stdin.readline
+
+n, m = map(int, input().strip().split())
+arr = []
+for _ in range(n):
+    arr.append(list(input().strip()))
+
+r_pos = [-1, -1]
+b_pos = [-1, -1]
+goal_pos = [-1, -1]
+
+for i in range(n):
+    if r_pos != [-1, -1] and b_pos != [-1, -1] and goal_pos != [-1, -1]:
+        break
+    for j in range(m):
+        if arr[i][j] == "R":
+            r_pos = [i, j]
+        if arr[i][j] == "B":
+            b_pos = [i, j]
+        if arr[i][j] == "O":
+            goal_pos = [i, j]
+
+
+def right(red: list, blue: list, goal: list, red_in, blue_in, cnt):
+    red_x, blue_x = red[1], blue[1]
+
+    if red_x > blue_x:
+        while arr[red[0]][red_x] != "#" and arr[red[0]][red_x] != "O":
+            red_x += 1
+        red = [red[0], red_x]
+        if red == goal:
+            red_in = 1
+        else:
+            red = [red[0], red[1] - 1]
+
+        while arr[blue[0]][blue_x] != "#" and arr[blue[0]][blue_x] != "O" and [blue[0], blue_x] != red:
+            blue_x += 1
+        blue = [blue[0], blue_x]
+        if blue == goal:
+            blue_in = 1
+        else:
+            blue = [blue[0], blue[1] - 1]
+
+    else:
+        while arr[blue[0]][blue_x] != "#" and arr[blue[0]][blue_x] != "O":
+            blue_x += 1
+        blue = [blue[0], blue_x]
+        if blue == goal:
+            blue_in = 1
+        else:
+            blue = [blue[0], blue_x - 1]
+
+        while arr[red[0]][red_x] != "#" and arr[red[0]][red_x] != "O" and [red[0], red_x] != blue:
+            red_x += 1
+        red = [red[0], red_x]
+        if red == goal:
+            red_in = 1
+        else:
+            red = [red[0], red_x - 1]
+
+    return red, blue, goal, red_in, blue_in, cnt+1
+
+
+def left(red: list, blue: list, goal: list, red_in, blue_in, cnt):
+    red_x, blue_x = red[1], blue[1]
+    if red_x < blue_x:
+        while arr[red[0]][red_x] != "#" and arr[red[0]][red_x] != "O":
+            red_x -= 1
+
+        red = [red[0], red_x]
+
+        if goal == red:
+            red_in = 1
+        else:
+            red = [red[0], red_x + 1]
+
+        while arr[blue[0]][blue_x] != "#" and arr[blue[0]][blue_x] != "O" and [blue[0], blue_x] != red:
+            blue_x -= 1
+        blue = [blue[0], blue_x]
+
+        if goal == blue:
+            blue_in = 1
+        else:
+            blue = [blue[0], blue_x + 1]
+
+    else:
+        while arr[blue[0]][blue_x] != "#" and arr[blue[0]][blue_x] != "O":
+            blue_x -= 1
+        blue = [blue[0], blue_x]
+        if goal == blue:
+            blue_in = 1
+        else:
+            blue = [blue[0], blue_x + 1]
+
+        while arr[red[0]][red_x] != "#" and arr[red[0]][red_x] != "O" and [red[0], red_x] != blue:
+            red_x -= 1
+        red = [red[0], red_x]
+        if goal == red:
+            red_in = 1
+        else:
+            red = [red[0], red_x + 1]
+
+    return red, blue, goal, red_in, blue_in, cnt+1
+
+
+def down(red: list, blue: list, goal: list, red_in, blue_in, cnt):
+    red_y, blue_y = red[0], blue[0]
+    if red_y > blue_y:
+        while arr[red_y][red[1]] != "#" and arr[red_y][red[1]] != "O":
+            red_y += 1
+        red = [red_y, red[1]]
+
+        if red == goal:
+            red_in = 1
+        else:
+            red = [red_y - 1, red[1]]
+
+        while arr[blue_y][blue[1]] != "#" and arr[blue_y][blue[1]] != 'O' and [blue_y, blue[1]] != red:
+            blue_y += 1
+        blue = [blue_y, blue[1]]
+
+        if blue == goal:
+            blue_in = 1
+        else:
+            blue = [blue_y - 1, blue[1]]
+    else:
+        while arr[blue_y][blue[1]] != "#" and arr[blue_y][blue[1]] != "O":
+            blue_y += 1
+        blue = [blue_y, blue[1]]
+
+        if blue == goal:
+            blue_in = 1
+        else:
+            blue = [blue_y - 1, blue[1]]
+
+        while arr[red_y][red[1]] != "#" and arr[red_y][red[1]] != 'O' and [red_y, red[1]] != blue:
+            red_y += 1
+        red = [red_y, red[1]]
+
+        if red == goal:
+            red_in = 1
+        else:
+            red = [red_y - 1, red[1]]
+
+    return red, blue, goal, red_in, blue_in, cnt+1
+
+
+def up(red: list, blue: list, goal: list, red_in, blue_in, cnt):
+    red_y, blue_y = red[0], blue[0]
+    if red_y < blue_y:
+        while arr[red_y][red[1]] != '#' and arr[red_y][red[1]] != 'O':
+            red_y -= 1
+        red = [red_y, red[1]]
+
+        if red == goal:
+            red_in = 1
+        else:
+            red = [red_y + 1, red[1]]
+
+        while arr[blue_y][blue[1]] != "#" and arr[blue_y][blue[1]] != "O" and [blue_y, blue[1]] != red:
+            blue_y -= 1
+        blue = [blue_y, blue[1]]
+
+        if blue == goal:
+            blue_in = 1
+        else:
+            blue = [blue_y + 1, blue[1]]
+
+    else:
+        while arr[blue_y][blue[1]] != "#" and arr[blue_y][blue[1]] != "O":
+            blue_y -= 1
+        blue = [blue_y, blue[1]]
+
+        if blue == goal:
+            blue_in = 1
+        else:
+            blue = [blue_y + 1, blue[1]]
+
+        while arr[red_y][red[1]] != '#' and arr[red_y][red[1]] != 'O' and [red_y, red[1]] != blue:
+            red_y -= 1
+        red = [red_y, red[1]]
+
+        if red == goal:
+            red_in = 1
+        else:
+            red = [red_y + 1, red[1]]
+
+    return red, blue, goal, red_in, blue_in, cnt+1
+
+
+q = deque()
+q.append((r_pos, b_pos, goal_pos, 0, 0, 0))
+flag = 0
+
+while q:
+    output = q.popleft()
+    if output[-1] == 10:
+        break
+
+    left_output = left(*deepcopy(output))
+    if left_output[:-1] != output[:-1] and left_output[4] != 1:
+        if left_output[3] == 1:
+            flag = 1
+            print(left_output[-1])
+            break
+        q.append(left_output)
+    right_output = right(*deepcopy(output))
+    if right_output[:-1] != output[:-1] and right_output[4] != 1:
+        if right_output[3] == 1:
+            flag = 1
+            print(right_output[-1])
+            break
+        q.append(right_output)
+    up_output = up(*deepcopy(output))
+    if up_output[:-1] != output[:-1] and up_output[4] != 1:
+        if up_output[3] == 1:
+            flag = 1
+            print(up_output[-1])
+            break
+        q.append(up_output)
+    down_output = down(*deepcopy(output))
+    if down_output[:-1] != output[:-1] and down_output[4] != 1:
+        if down_output[3] == 1:
+            flag = 1
+            print(down_output[-1])
+            break
+        q.append(down_output)
+
+if flag == 0:
+    print(-1)
