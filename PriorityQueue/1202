@@ -1,0 +1,24 @@
+import sys
+from heapq import heappop, heappush
+from collections import deque
+
+input = sys.stdin.readline
+# 결국 가방이 하나의 보물이라도 가져가야 한다.
+n, k = map(int, input().strip().split())
+jews = [list(map(int, input().strip().split())) for _ in range(n)]  # 무게, 가격
+bags = [int(input()) for _ in range(k)]
+jews.sort()
+bags.sort()
+jews = deque(jews)
+tmp = []
+ans = 0
+'''원리 bag수용량 보다 작은 jews들을 다 넣고(가격 정보만 넣는다 높은 순으로), 그리고 bag 한 번당 한 번 ans에 더해주는데'''
+'''그래서 bag 수용량 안의 모든 jews 중 가장 가치가 높은 것들을 우선 순위로 빼주어 정답을 도출한다'''
+for bag in bags:
+    while jews and (jews[0][0] <= bag):
+        jew_w, jew_p = jews.popleft()
+        heappush(tmp, -jew_p)  # 가격이 높은 순으로 정렬 해야 하니까
+
+    if tmp:
+        ans -= heappop(tmp)
+print(ans)
