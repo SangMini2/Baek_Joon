@@ -1,0 +1,25 @@
+import sys
+from heapq import heappush, heappop
+input = sys.stdin.readline
+
+n = int(input())
+lst_x = []
+lst_y = []
+for i in range(n) :
+    x,y = map(int, input().strip().split())
+    lst_x.append(x)
+    lst_y.append(y)
+
+up_x = lst_x[:]
+up_y = lst_y[1:] + [lst_y[0]]
+down_y = lst_y[:]
+down_x = lst_x[1:] + [lst_x[0]]
+
+up = 0
+down = 0
+for i in range(n) :
+    up += (up_x[i] * up_y[i])
+    down += (down_x[i] * down_y[i])
+
+ans = abs(up - down) / 2
+print(ans)
