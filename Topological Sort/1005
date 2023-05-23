@@ -1,0 +1,36 @@
+import sys
+from heapq import heappush, heappop
+input = sys.stdin.readline
+from collections import defaultdict
+
+for _ in range(int(input())) :
+    n, k = map(int, input().strip().split())
+    cost = [0] + list(map(int, input().strip().split()))
+    result = [0] * (n+1)
+    in_lst = [0] * (n+1)
+    out_lst = [0] * (n+1)
+    dic = defaultdict(list)
+    plus_cost = [0] * (n+1)
+    for _ in range(k) :
+        a,b = map(int, input().strip().split())
+        out_lst[a] += 1
+        in_lst[b] += 1
+        dic[a].append(b)
+    
+    goal = int(input())
+
+    ans = []
+    for i in range(1,n+1) :
+        heappush(ans, (in_lst[i], out_lst[i], i))
+
+    while True :
+        
+        in_num, out_num, idx = heappop(ans)
+        cost[idx] += plus_cost[idx]
+        if idx == goal : break
+        for plus_idx in dic[idx] :
+            plus_cost[plus_idx] = max(plus_cost[plus_idx] , cost[idx])
+            in_lst[plus_idx] -= 1
+            heappush(ans, (in_lst[plus_idx], out_lst[plus_idx], plus_idx))
+            
+    print(cost[goal])
