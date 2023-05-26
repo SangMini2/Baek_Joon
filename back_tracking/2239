@@ -1,0 +1,53 @@
+import sys
+from collections import deque
+input = sys.stdin.readline
+from copy import deepcopy
+
+fill_q = []
+sudoku = []
+
+for i in range(9) :
+    lst = list(map(int , list(input().strip())))
+    sudoku.append(lst)
+    for j in range(9) :
+        if lst[j] == 0 :
+            fill_q.append((i,j))
+
+def check_row_column(arr : list, row_num, column_num, original : set) :
+    for i in range(9) :
+        original.discard(arr[row_num][i]) # 행 체크
+        original.discard(arr[i][column_num]) # 열 체크
+        
+    return original
+
+def check_section(arr : list, put_x, put_y , original : set) :
+    x, y = (put_x // 3) * 3 , (put_y // 3) * 3
+    
+    for i in range(3) :
+        for j in range(3) :
+            original.discard(arr[x+i][y+j])
+            
+    return original
+            
+
+def complete(sudoku_in,queue) :
+    if not queue :
+        for i in sudoku_in :
+            for j in i :
+                print(j,end="")
+            print("")
+        exit()
+        return 0
+    else :
+        check_x, check_y = queue[0]
+        total = set([1,2,3,4,5,6,7,8,9])
+        after_row_column_total = check_row_column(sudoku_in,check_x,check_y,total)
+        final = check_section(sudoku_in, check_x, check_y, after_row_column_total)
+        final = list(final)
+        final.sort()
+        for i in final :
+            sudoku_in[check_x][check_y] = i
+            complete(sudoku_in, queue[1:])
+            sudoku_in[check_x][check_y] = 0
+        
+complete(sudoku, fill_q)
