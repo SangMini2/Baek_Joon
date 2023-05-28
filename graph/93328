@@ -1,0 +1,61 @@
+import sys
+from collections import deque
+from copy import deepcopy
+input = sys.stdin.readline
+
+for _ in range(int(input())) :
+    n,m = map(int, input().strip().split())
+    arr = []
+    arr.append(['.'] * (m+2))
+    for _ in range(n) :
+        lst = ['.'] + list(input().strip()) + ['.']
+        arr.append(lst)
+    arr.append(['.'] * (m+2))
+    
+    key = input().strip()
+    if key == '0' :
+        keys = set()
+    else :
+        keys = set(list(key))
+    
+    start = (0,0)
+    q = deque()
+    q.append(start)
+    dx = [-1,1,0,0]
+    dy = [0,0,-1,1]
+    visited = [[0]*(m+2) for _ in range(n+2)]
+    answer = 0
+    while q :
+        x, y = q.popleft()
+        for i in range(4) :
+            nx, ny = x + dx[i] , y + dy[i]
+            if 0<=nx<n+2 and 0<=ny<m+2 and arr[nx][ny] != '*' and visited[nx][ny] == 0:
+                if arr[nx][ny] == "$" :
+                    answer += 1
+                    arr[nx][ny] = '.'
+                    visited[nx][ny] = 1
+                    q.append((nx,ny))
+                        
+                elif arr[nx][ny].isupper() : # 대문자이면 ?
+                    if arr[nx][ny].lower() in keys :
+                        arr[nx][ny] = "."
+                        visited[nx][ny] = 1
+                        q.append((nx,ny))
+                
+                elif arr[nx][ny].islower() :
+                    if arr[nx][ny] in keys :
+                        arr[nx][ny] = '.'
+
+                    else :
+                        keys.add(arr[nx][ny])
+                        arr[nx][ny] = '.'
+                        q = deque()
+                        visited = [[0]*(m+2) for _ in range(n+2)]
+                    visited[nx][ny] = 1
+                    q.append((nx,ny))
+                
+                else : # .일 때
+                    visited[nx][ny] = 1
+                    q.append((nx,ny))
+    
+    print(answer)
