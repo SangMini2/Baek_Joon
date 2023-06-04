@@ -1,0 +1,33 @@
+import sys
+input = sys.stdin.readline
+
+n = int(input())
+arr = list(map(int, input().strip().split()))
+arr.sort()
+mini = float('inf')
+
+for i in range(n-2) :
+    start = i
+    l_p = i + 1
+    r_p = n - 1
+    
+    while l_p < r_p :
+        check = arr[start] + arr[l_p] + arr[r_p]
+        if check < 0 :
+            if abs(check) < mini :
+                mini = abs(check)
+                corr = (arr[start], arr[l_p], arr[r_p])
+                
+            l_p += 1
+            
+        elif check > 0 :
+            if abs(check) < mini :
+                mini = abs(check)
+                corr = (arr[start], arr[l_p], arr[r_p])
+
+            r_p -= 1
+        else :
+            print(arr[start], arr[l_p], arr[r_p])
+            exit()
+
+print(*corr)
