@@ -1,0 +1,26 @@
+import sys
+input = sys.stdin.readline
+
+L1 = list(map(int, input().strip().split()))
+L2 = list(map(int, input().strip().split()))
+L1 = [(L1[0],L1[1]) , (L1[2],L1[3])]
+L2 = [(L2[0],L2[1]) , (L2[2],L2[3])]
+
+def short(point1, point2, check) :
+    result = (point2[1] - point1[1]) * (check[0] - point1[0]) + (point1[1] - check[1]) * (point2[0] - point1[0])
+    return result
+
+
+def check(L1_1,L1_2,L2_1,L2_2) : 
+    check1 = 0
+    check2 = 0
+    if min(L1_1[0],L1_2[0]) <= max(L2_1[0], L2_2[0]) and min(L2_1[0] , L2_2[0]) <= max(L1_1[0] , L1_2[0]) and min(L1_1[1],L1_2[1]) <= max(L2_1[1], L2_2[1]) and min(L2_1[1] , L2_2[1]) <= max(L1_1[1] , L1_2[1]) : 
+        if short(L1_1,L1_2,L2_1) * short(L1_1,L1_2,L2_2) <= 0 :
+            check1 = 1   
+        if short(L2_1, L2_2, L1_1) * short(L2_1, L2_2, L1_2) <= 0 :
+            check2 = 1
+    
+    return check1 * check2
+
+
+print(check(L1[0] , L1[1] , L2[0], L2[1]))
