@@ -1,0 +1,15 @@
+import sys
+input = sys.stdin.readline
+from itertools import permutations
+
+n,m = map(int, input().strip().split())
+lst = list(map(int, input().strip().split()))
+answer = set()
+
+for i in permutations(lst,m) :
+    answer.add(i)    
+    
+answer = sorted(list(answer))
+
+for i in answer :
+    print(*i)
