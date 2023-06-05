@@ -1,0 +1,26 @@
+import sys
+input = sys.stdin.readline
+
+n,m = map(int, input().strip().split())
+lst = sorted([int(input()) for i in range(n)])
+lst.sort()
+# 길이를 이분 탐색으로 가야한다
+min_len = 1
+max_len = lst[-1] - lst[0]
+
+while min_len <= max_len :
+    cnt = 1 # 처음 것에 세우니까 1개 세우고 시작
+    mid = (min_len + max_len) // 2
+    wifi = lst[0]
+    for i in range(1,len(lst)) :
+        if lst[i] >= wifi + mid :
+            wifi = lst[i]
+            cnt += 1
+    
+    if m > cnt : # 나눠야할 것이 더 많으면 길이를 줄여야 한다.
+        max_len = mid - 1
+        
+    else : # 내가 지나가면서 찍어서 나눈 것 보다, 원하는 나누는게 적으면 길이를 늘려야 한다!
+        min_len = mid + 1
+        answer = mid
+print(answer)         
