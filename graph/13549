@@ -3,24 +3,32 @@ input = sys.stdin.readline
 from collections import deque
 
 start, end = map(int, input().strip().split())
-dp = [0] * 100001
-visited = [0] * 100001
-q = deque()
-visited[start] = 1
-q.append(start)
-while q :
-    check = q.popleft()
-    if 2 * check <= 100000 and visited[2*check] == 0 :
-        q.appendleft(2 * check)
-        visited[2*check] = 1
-        dp[2*check] = dp[check]
-    if check + 1 <= 100000 and visited[check + 1] == 0 :
-        q.append(check + 1)
-        visited[check + 1] = 1
-        dp[check + 1] = dp[check] + 1
-    if check - 1 >= 0 and visited[check - 1] == 0 :
-        q.append(check - 1)
-        visited[check - 1] = 1
-        dp[check - 1] = dp[check] + 1
 
-print(dp[end])
+max_dis = abs(end - start)
+limit = max(start, end) + max_dis
+
+q = deque()
+dp = [float('inf')] * (limit + 1)
+
+q.append((0, start))
+
+while q:
+    time, pos = q.popleft()
+    if pos == end:
+        print(time)
+        break
+    
+    if dp[pos] < time :
+        continue
+    else:
+        dp[pos] = time
+        
+        if pos >= limit:
+            continue
+        else:
+            if pos * 2 < limit and pos != 0:
+                q.appendleft((time, pos * 2))
+            if pos + 1 < limit:
+                q.append((time + 1, pos + 1))
+            if pos - 1 >= 0:
+                q.append((time + 1, pos - 1))
