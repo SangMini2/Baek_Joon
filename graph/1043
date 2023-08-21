@@ -1,0 +1,46 @@
+import sys
+input = sys.stdin.readline
+from collections import deque
+### 과장된 이야기를 할 수 있는!
+n, m = map(int, input().strip().split())
+num = input().strip()
+if num == "0":
+    num = int(num)
+    for i in range(m):
+        input()
+    print(m)
+
+else:
+    lst = list(map(int, num.split()))
+    truth_num = lst[0]
+    truth = set(lst[1:])
+    ans = 0
+    
+    check_lst = []
+    dp = [set()] * (n + 1)
+    check_dp = [0] * (n + 1)
+    for i in range(m):
+        party = list(map(int, input().strip().split()))
+        party_num = party[0]
+        party_set = set(party[1:])
+        check_lst.append(party_set)
+        for j in party[1:]:
+            dp[int(j)] = dp[int(j)] | party_set
+    
+    q = deque()
+    q.append(truth)
+    
+    while q:
+        popped = q.popleft()
+        for i in popped:
+            if check_dp[i] == 0:
+                q.append(dp[i])
+                check_dp[i] = 1
+        
+        truth |= popped
+
+    for i in range(m):
+        if len(check_lst[i] & truth) == 0:
+            ans += 1
+        
+    print(ans)
