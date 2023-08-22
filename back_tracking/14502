@@ -1,0 +1,57 @@
+import sys
+input = sys.stdin.readline
+from collections import deque
+from itertools import combinations
+
+n, m = map(int, input().strip().split())
+arr = []
+for i in range(n):
+    arr.append(list(map(int, input().strip().split())))
+
+lst_2 = []
+lst_1 = []
+lst_0 = []
+
+for i in range(n):
+    for j in range(m):
+        if arr[i][j] == 2:
+            lst_2.append((i,j))
+        elif arr[i][j] == 1:
+            lst_1.append((i,j))
+        else:
+            lst_0.append((i,j))
+
+num_0 = len(lst_0)
+
+nCr = list(combinations(lst_0, 3))
+
+dx = [-1, 1, 0, 0]
+dy = [0, 0, -1, 1]
+
+ans = 0
+for first, second, third in nCr:
+    arr[first[0]][first[1]] = 1
+    arr[second[0]][second[1]] = 1
+    arr[third[0]][third[1]] = 1
+    
+    q = deque(lst_2)
+    visited = [[0] * m for _ in range(n)]
+    changed = 0
+    while q:
+        x, y = q.popleft()
+        for i in range(4):
+            new_x = x + dx[i]
+            new_y = y + dy[i]
+            if 0 <= new_x < n and 0 <= new_y < m and arr[new_x][new_y] == 0 and visited[new_x][new_y] == 0:
+                q.append((new_x, new_y))
+                visited[new_x][new_y] = 1
+                changed += 1
+                
+    arr[first[0]][first[1]] = 0
+    arr[second[0]][second[1]] = 0
+    arr[third[0]][third[1]] = 0
+        
+    ans = max(ans, num_0 - changed)
+
+
+print(ans - 3)
