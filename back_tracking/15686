@@ -1,0 +1,43 @@
+import sys
+input = sys.stdin.readline
+from itertools import combinations
+
+n, m = map(int, input().strip().split())
+arr = []
+for i in range(n):
+    arr.append(list(map(int, input().strip().split())))
+    
+house = []
+chicken = []
+
+for i in range(n):
+    for j in range(n):
+        if arr[i][j] == 1:
+            house.append((i,j))
+        elif arr[i][j] == 2:
+            chicken.append((i,j))
+
+check_lst = []
+for x, y in house:
+    plus_lst = []
+    for chicken_x, chicken_y in chicken:
+        dis = abs(x - chicken_x) + abs(y - chicken_y)
+        plus_lst.append(dis)
+
+    check_lst.append(plus_lst)
+
+before_combination_list = [i for i in range(len(chicken))]
+combinations_list = list(combinations(before_combination_list, m))
+
+ans = float('inf')
+for combi_lst in combinations_list:
+    total = 0
+    for lst in check_lst:
+        make_mini = []
+        for idx in combi_lst:
+            make_mini.append(lst[idx])
+        total += min(make_mini)
+    
+    ans = min(total, ans)
+
+print(ans)
