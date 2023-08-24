@@ -1,0 +1,73 @@
+import sys
+input = sys.stdin.readline
+from collections import deque
+
+time = 0
+n = int(input())
+arr = []
+for i in range(n):
+    arr.append(list(map(int, input().strip().split())))
+
+fish = []
+shark_size = 2
+eaten = 0
+
+for i in range(n):
+    for j in range(n):
+        if arr[i][j] == 9:
+            shark_pos = (i,j,0)
+            arr[i][j] = 0
+        
+        elif arr[i][j] != 0:
+            fish.append((i,j,arr[i][j]))
+
+dx = [-1, 1, 0, 0]
+dy = [0, 0, -1, 1]
+past_points = []
+while True:
+    q = deque([shark_pos])
+    visited = [[0] * n for _ in range(n)]
+    flag = 0
+    
+    while q:
+        x, y, dis = q.popleft()
+
+        if visited[x][y] == 0:
+            visited[x][y] = 1
+            
+            if arr[x][y] != 0 and arr[x][y] < shark_size: # Gotcha
+                flag = 1
+                while q:
+                    check_x, check_y, check_dis = q.popleft()
+                    if check_dis > dis: break
+                    
+                    if check_x < x and arr[check_x][check_y] != 0 and arr[check_x][check_y] < shark_size:
+                        x, y, dis = check_x, check_y, check_dis
+                    
+                    elif check_x == x and arr[check_x][check_y] != 0 and arr[check_x][check_y] < shark_size:
+                        if check_y < y:
+                            x, y, dis = check_x, check_y, check_dis
+                
+                eaten += 1
+                if eaten == shark_size:
+                    shark_size += 1
+                    eaten = 0
+                    
+                arr[x][y] = 0
+                time += dis
+                past_points.append((x,y))
+            
+            if flag == 1:
+                break             
+                        
+            for i in range(4):
+                new_x, new_y = x + dx[i], y + dy[i]
+                
+                if 0 <= new_x < n and 0 <= new_y < n and arr[new_x][new_y] <= shark_size and visited[new_x][new_y] == 0:
+                    q.append((new_x, new_y, dis + 1))
+
+    if flag == 0: break
+    else:
+        shark_pos = (x, y, 0)
+
+print(time)
