@@ -1,0 +1,12 @@
+import sys
+input = sys.stdin.readline
+from itertools import combinations_with_replacement
+
+n, m = map(int, input().strip().split())
+
+lst = set(map(int, input().strip().split()))
+lst = list(lst)
+lst.sort()
+
+for ans in combinations_with_replacement(lst, m):
+    print(*ans)
