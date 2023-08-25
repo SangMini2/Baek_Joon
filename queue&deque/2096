@@ -1,0 +1,33 @@
+import sys
+input = sys.stdin.readline
+from collections import deque
+
+n = int(input())
+
+first = list(map(int, input().strip().split()))
+
+max_q = deque([first])
+min_q = deque([first])
+
+for i in range(1,n):
+    input_0, input_1, input_2 = map(int, input().strip().split())
+    
+    max_lst = max_q.popleft()
+    min_lst = min_q.popleft()
+    
+    max_0 = max(max_lst[0], max_lst[1]) + input_0
+    max_1 = max(max_lst) + input_1
+    max_2 = max(max_lst[1], max_lst[2]) + input_2
+    
+    min_0 = min(min_lst[0], min_lst[1]) + input_0
+    min_1 = min(min_lst) + input_1
+    min_2 = min(min_lst[1], min_lst[2]) + input_2
+    
+    max_q.append([max_0, max_1, max_2])
+    min_q.append([min_0, min_1, min_2])
+
+max_ans = max(max_q.pop())
+min_ans = min(min_q.pop())
+
+print(max_ans, end = " ")
+print(min_ans)
