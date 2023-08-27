@@ -1,0 +1,28 @@
+import sys
+input = sys.stdin.readline
+
+n = int(input())
+arr = [list(map(int, input().strip().split())) for _ in range(n)]
+dp = [[[0] * 3 for _ in range(n)] for _ in range(n)] # 가로 : 0, 세로 : 1, 대각 : 2
+
+ans = 0
+
+# 끝에 맞추자
+
+# 가로면 [0]이면, 저번의 가로와 대각
+# 세로면 [1]이면, 저번의 세로와 대각
+# 대각이면 [2]이면, 저번의 가로와 세로와 대각
+
+for i in range(1,n):
+    if arr[0][i] == 1: break
+    dp[0][i][0] = 1
+
+for i in range(1,n):
+    for j in range(1,n):
+        if arr[i][j] != 1:
+            dp[i][j][0] = dp[i][j-1][2] + dp[i][j-1][0] # 가로
+            dp[i][j][1] = dp[i-1][j][2] + dp[i-1][j][1] # 세로
+            if arr[i-1][j] != 1 and arr[i][j-1] != 1:
+                dp[i][j][2] = dp[i-1][j-1][2] + dp[i-1][j-1][0] + dp[i-1][j-1][1] # 대각
+
+print(sum(dp[-1][-1]))
