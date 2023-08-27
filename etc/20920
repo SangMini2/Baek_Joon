@@ -1,0 +1,17 @@
+import sys
+input = sys.stdin.readline
+from collections import Counter
+
+n, m = map(int, input().strip().split())
+lst = []
+
+for i in range(n):
+    lst.append(input().strip())
+
+
+sort_lst = Counter(lst).items()
+sorted_lst = sorted(sort_lst, key=lambda x : (-x[1], -len(x[0]), x[0]))
+
+for word, freq in sorted_lst:
+    if len(word) >= m:
+        print(word)
