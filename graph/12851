@@ -1,0 +1,48 @@
+import sys
+input = sys.stdin.readline
+from collections import deque
+
+start, end = map(int, input().strip().split())
+
+max_dis = abs(end - start)
+limit = max(start, end) + max_dis
+
+q = deque()
+dp = [float('inf')] * (limit + 1)
+
+q.append((0, start))
+
+times = []
+while q:
+    time, pos = q.popleft()
+    if pos == end:
+        times.append(time)
+        # print(time)
+        # break
+    
+    if dp[pos] < time :
+        continue
+    else:
+        dp[pos] = time
+        
+        if pos >= limit:
+            continue
+        else:
+            if pos * 2 < limit and pos != 0:
+                q.appendleft((time + 1, pos * 2))
+            if pos + 1 < limit:
+                q.append((time + 1, pos + 1))
+            if pos - 1 >= 0:
+                q.append((time + 1, pos - 1))
+                
+
+num_times = 1
+first = times[0]
+for num in times[1:]:
+    if num == first:
+        num_times += 1
+    else:
+        break
+
+print(first)
+print(num_times)
