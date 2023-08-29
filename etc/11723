@@ -1,0 +1,29 @@
+import sys
+input = sys.stdin.readline
+
+n = int(input())
+check = set()
+
+for _ in range(n):
+    word = input().strip().split()
+    if len(word) == 1:
+        if word[0] == 'all':
+            check = set([i for i in range(1,21)])
+        else:
+            check = set()
+            
+    else:
+        order, num = word[0], int(word[1])
+        if order == 'add':
+            check.add(num)
+        elif order == "check":
+            print(1 if num in check else 0)
+
+        elif order == 'remove':
+            check.discard(num)
+        
+        elif order == 'toggle':
+            if num in check:
+                check.remove(num)
+            else:
+                check.add(num)
