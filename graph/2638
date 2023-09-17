@@ -1,0 +1,87 @@
+import sys
+input = sys.stdin.readline
+from collections import deque
+
+n, m = map(int, input().strip().split())
+arr = []
+cheese = deque()
+zero = deque()
+visited = [[0] * m for _ in range(n)]
+
+for i in range(n):
+    plus_arr = list(map(int,input().strip().split()))
+    for j, num in enumerate(plus_arr):
+        if num == 1:
+            cheese.append((i,j))
+            
+    arr.append(plus_arr)
+
+# 가장 자리 체크
+check = deque([(0,0)])
+
+dx = [-1, 1, 0, 0]
+dy = [0, 0, -1, 1]
+
+while check:
+    x,y = check.popleft()
+    if visited[x][y] == 0:
+        if arr[x][y] == 0:
+            arr[x][y] = 2
+            for i in range(4):
+                nx = x + dx[i]
+                ny = y + dy[i]
+                if 0 <= nx < n and 0 <= ny < m:
+                    check.append((nx, ny))
+        visited[x][y] = 1
+
+
+disappear = deque()
+new_cheese = []
+ans = 0
+while True:
+    ans += 1
+    while cheese:
+        x,y = cheese.popleft()
+        cnt = 0
+        
+        for i in range(4):
+            nx = x + dx[i]
+            ny = y + dy[i]
+            if 0 <= nx < n and 0 <= ny < m:
+                if arr[nx][ny] == 2:
+                    cnt += 1
+        
+        if cnt >= 2:
+            disappear.append((x,y))
+        else:
+            new_cheese.append((x,y))
+    
+    while disappear:
+        q = deque()
+        dis_x, dis_y = disappear.popleft()
+        arr[dis_x][dis_y] = 2
+        for i in range(4):
+            new_x = dis_x + dx[i]
+            new_y = dis_y + dy[i]
+            if arr[new_x][new_y] == 0:
+                q.append((new_x, new_y))
+        
+        while q:
+            old_x, old_y = q.popleft()
+            arr[old_x][old_y] = 2
+        
+            for i in range(4):
+                new_old_x = old_x + dx[i]
+                new_old_y = old_y + dy[i]
+
+                if arr[new_old_x][new_old_y] == 0:
+                    q.append((new_old_x, new_old_y))  
+    
+    
+    if not new_cheese:
+        break
+    
+    cheese = deque(new_cheese)
+    new_cheese = []
+            
+print(ans)
