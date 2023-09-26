@@ -1,0 +1,65 @@
+import sys
+input = sys.stdin.readline
+from collections import deque
+
+n = int(input())
+
+arr = [input().strip() for _ in range(n)]
+visited = [[[0] * 2 for _ in range(n)] for _ in range(n)]
+
+dx = [-1, 1, 0, 0]
+dy = [0, 0, -1, 1]
+
+cnt_normal = 0
+cnt_RG = 0
+q = deque()
+
+for i in range(n):
+    for j in range(n):
+        if visited[i][j][0] == 0: # [x][y][normal or RG]
+            q.append((i,j))
+            visited[i][j][0] = 1
+            cnt_normal += 1
+            while q:
+                x,y = q.popleft()
+                for k in range(4):
+                    nx, ny = x + dx[k], y + dy[k]
+                    if 0 <= nx < n and 0 <= ny < n and visited[nx][ny][0] == 0 and arr[nx][ny] == arr[i][j]:
+                        q.append((nx, ny))
+                        visited[nx][ny][0] = 1
+            
+        if visited[i][j][1] == 0:
+            q.append((i,j))
+            visited[i][j][1] = 1
+            cnt_RG += 1
+            if arr[i][j] == "B":
+                while q:
+                    x,y = q.popleft()
+                    
+                    for k in range(4):
+                        nx, ny = x + dx[k], y + dy[k]
+                        if 0 <= nx < n and 0 <= ny < n and visited[nx][ny][1] == 0 and arr[nx][ny] == "B":
+                                q.append((nx,ny))
+                                visited[nx][ny][1] = 1
+            else:
+                while q:
+                    x,y = q.popleft()
+                    
+                    for k in range(4):
+                        nx, ny = x + dx[k], y + dy[k]
+                        if 0 <= nx < n and 0 <= ny < n and visited[nx][ny][1] == 0 and arr[nx][ny] != "B":
+                                q.append((nx,ny))
+                                visited[nx][ny][1] = 1
+
+print(cnt_normal, end = " ")
+print(cnt_RG)
+
+'''
+여기서 포인트는 q.popleft() 한 x,y를 만든 후
+visited[x][y]=1로 visisted 를 True로 만드는 것이 아닌
+
+nx,ny 에서 q에 (nx,ny)를 넣을 때, visited[nx][ny] = 1 로 바꾸어주어 계속 q에 축척되는 값들을 줄이는 것이다.
+q에 포함되자마자 사실 결국 count가 되는건데 위처럼 q.popleft() 하면서 visited를 바꾸어주면, 
+q에 포함되었지만 아직 visited 되지 않은 값이라 생각이 되어서, 중복된 값들이 계속해서 q에 쌓일 수 있다.
+-> 이것이 계속해서 시간 초과를 야기했다.
+'''
