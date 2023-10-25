@@ -1,0 +1,67 @@
+import sys
+input = sys.stdin.readline
+from heapq import heappush, heappop
+
+n = int(input())
+m = int(input())
+arr = [[float('inf')] * n for _ in range(n)]
+
+for i in range(n):
+    arr[i][i] = 0
+
+for _ in range(m):
+    a, b, c = map(int, input().strip().split())
+    a -= 1
+    b -= 1
+
+    arr[a][b] = min(c, arr[a][b])
+    
+start, end = map(int, input().strip().split())
+start -= 1; end -= 1
+
+
+q = []
+all_set = set([k for k in range(n)])
+all_set.remove(start)
+
+for i in all_set:
+    heappush(q, (arr[start][i], i))
+
+dic = dict()
+for i in range(n):
+    dic[i] = [start]
+
+
+while all_set and q:
+    dis, point = heappop(q)
+    
+    for j in all_set:
+        original = arr[start][j] 
+        new = arr[start][point] + arr[point][j]
+        if new < original:
+            arr[start][j] = new
+            dic[j] = [start]
+            for l in dic[point][1:]:
+                dic[j].append(l)
+            dic[j].append(point)
+            heappush(q, (new,j))
+            
+    check_minimum = float('inf')
+    idx_minimum = -1
+    for k in all_set:
+        if arr[start][k] < check_minimum:
+            idx_minimum = k
+            check_minimum = arr[start][k]
+    
+    if idx_minimum != -1:
+        all_set.remove(idx_minimum)
+            
+    
+if start != end:
+    dic[end].append(end)
+
+
+print(arr[start][end])
+print(len(dic[end]))
+for node in dic[end]:
+    print(node + 1, end = " ")
