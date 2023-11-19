@@ -1,0 +1,38 @@
+import sys
+input = sys.stdin.readline
+
+n = int(input())
+arr = [list(map(int, input().strip().split())) for _ in range(n)]
+
+inf = 1000000 * n
+
+dp = [[inf] * (1 << n) for _ in range(n)]
+
+# 결국 dp[x][visited]의 의미는 현재 x이고, visited를 방문했다. 앞으로 0까지 남은 비용
+
+def dfs(cur, visited):
+    if visited == (1 << n) - 1:  # 방문을 완료했다. 이러면 남은 길은 cur -> 0
+        if arr[cur][0]:
+            return arr[cur][0]
+        else:  # 길이 없으면, 무한대를 반환하라
+            return float('inf')
+
+    if dp[cur][visited] != inf:
+        return dp[cur][visited]
+
+    for i in range(1, n):
+        # 만약에 길이 안겹쳐졌고, cur -> i 까지의 길이 있다면 체크해 볼 필요가 있겠지
+        if visited & (1 << i) == 0 and arr[cur][i] != 0:
+            dp[cur][visited] = min(dp[cur][visited], dfs(
+                i, visited | (1 << i)) + arr[cur][i])
+    if dp[cur][visited] == inf:
+        dp[cur][visited] = float('inf')
+        # 즉, 현재 계산된 값이 작으냐 아니면 (cur부터 i까지 가는 값 + i부터 시작해서 i와 cur을 뺀 곳을 도는데 필요한 비용)이 더 작으냐
+    return dp[cur][visited]  # 즉, 지금 위치에서 다 돌았을 때의 값을 반환해라!
+
+
+print(dfs(0, 1 << 0))
+
+# 계속 틀린 포인트는, 핵심 문구는 28,29 line이다.
+# 길이 없어서 inf가 나온건지, 계산을 안해봐서 inf가 나온지 체크를 해줘야한다. 즉, 길이 없는 경우 계속해서 사이클이 돌게 되므로 시간 초과가 난다.
+# 돌아봤는데 길이 없었다면 다른 식으로 표시를 해줘서, 확인한 것이라는 것을 보여주어야 한다.
