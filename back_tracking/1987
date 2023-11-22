@@ -1,0 +1,42 @@
+import sys
+input = sys.stdin.readline
+
+n, c = map(int, input().strip().split())
+arr = [list(input().strip()) for _ in range(n)]
+
+dx = [1, -1, 0, 0]
+dy = [0, 0, 1, -1]
+
+visited = [0] * 26  # 알파벳 수
+ans = 1
+ord_a = ord("A")
+visited[ord(arr[0][0]) - ord_a] = 1
+'''
+차이점은 set에서 겹쳐지는 것을 찾는 것이 아닌, list로 해서 바로바로 찾을 수 있게 해줬다.
+
+-> 유의미한 차이 발생!!
+set 보다 메모리만 괜찮으면, list로 중복을 체크하는 것이 더 빠르다..
+
+뭐.. 조금만 생각해도 당연히 그럴 것 같지만.. 하핳
+'''
+
+def dfs(start, cnt, visited):
+    global ans
+    x, y = start[0], start[1]
+
+    for i in range(4):
+        nx, ny = x + dx[i], y + dy[i]
+
+        if 0 <= nx < n and 0 <= ny < c and visited[ord(arr[nx][ny]) - ord_a] == 0:
+            check_num = ord(arr[nx][ny]) - ord_a
+            visited[check_num] = 1
+            dfs((nx, ny), cnt + 1, visited)
+            visited[check_num] = 0
+
+        else:
+            ans = max(ans, cnt)
+
+
+dfs((0, 0), 1, visited)
+
+print(ans)
