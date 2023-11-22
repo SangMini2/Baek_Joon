@@ -1,0 +1,36 @@
+import sys
+from collections import defaultdict
+sys.setrecursionlimit(10 ** 9)
+input = sys.stdin.readline
+
+n = int(input())
+
+dic = defaultdict(set)
+
+# 0 부분이 해당 숫자가 early adapter가 아닐 때, 1 부분이 해당 숫자가 early adapter 일 때
+dp = [[0, 1] for _ in range(n)]
+# 그렇기에 내 자식 node의 값에 따라 바뀌고,
+# dp[node][0] -> early adapter가 아닐 때, 나와 내 자식 node의 early adapter 의 최소
+# dp[node][1] -> early adapter일 때, 나와 내 자식 node의 early adapter 의 최소
+
+for _ in range(n-1):
+    a, b = map(int, input().strip().split())
+    a -= 1
+    b -= 1
+    dic[a].add(b)
+    dic[b].add(a)
+
+visited = [0] * n
+
+
+def dfs(start):
+    visited[start] = 1
+    for node in dic[start]:
+        if visited[node] == 0:
+            dfs(node)
+            dp[start][0] += dp[node][1]
+            dp[start][1] += min(dp[node])
+
+dfs(0)
+
+print(min(dp[0]))
