@@ -1,0 +1,32 @@
+from collections import defaultdict
+import sys
+input = sys.stdin.readline
+
+
+n = int(input())
+dic = dict()
+
+for _ in range(n):
+    input_lst = list(input().strip().split())
+    num = int(input_lst[0])
+    arr = input_lst[1:]
+    if arr[0] not in dic.keys():
+        dic[arr[0]] = dict()
+
+    check_dic = dic[arr[0]]
+
+    for i in arr[1:]:
+        if i not in check_dic.keys():
+            check_dic[i] = dict()
+
+        check_dic = check_dic[i]
+
+def tree(dictionary, cnt):
+    lst = sorted(dictionary.keys())
+
+    for name in lst:
+        print("--" * cnt, name, sep="")
+        tree(dictionary[name], cnt + 1)
+
+
+tree(dic, 0)
