@@ -1,0 +1,70 @@
+import sys
+input = sys.stdin.readline
+
+n, m, k = map(int, input().strip().split())
+lst = [0]
+for _ in range(n):
+    lst.append(int(input()))
+tree = [0] * (4 * n)
+
+mod = 1000000007
+
+
+def build_tree(node, left, right):  # left가 왼쪽부터, right가 오른쪽까지
+    if left == right:
+        tree[node] = lst[left]
+        return tree[node]
+
+    mid = left + (right - left) // 2
+    # 왼쪽
+    left_val = build_tree(node * 2, left, mid)
+
+    # 오른쪽
+    right_val = build_tree(node * 2 + 1, mid + 1, right)
+
+    tree[node] = (left_val * right_val) % mod
+
+    return tree[node]
+
+
+build_tree(1, 1, n)
+
+
+def change_tree(node, left, right, change_index, change_num):
+    if change_index < left or right < change_index:
+        return 1
+
+    if left == right:
+        tree[node] = change_num
+
+    else:
+        mid = left + (right - left) // 2
+        change_tree(2 * node, left, mid, change_index, change_num)
+        change_tree(2 * node + 1, mid + 1, right, change_index, change_num)
+
+        tree[node] = (tree[2 * node] * tree[2 * node + 1]) % mod
+
+
+def find(node, start, end, left, right):  # left, right가 내가 찾아야하는 구간
+    if end < left or start > right:
+        return 1
+
+    if left <= start and end <= right:
+        return tree[node]
+
+    mid = start + (end - start) // 2
+    # 왼쪽
+    left_val = find(2 * node, start, mid, left, right)
+
+    # 오른쪽
+    right_val = find(2 * node + 1, mid + 1, end, left, right)
+    return (left_val * right_val) % mod
+
+
+for _ in range(m+k):
+    a, b, c = map(int, input().strip().split())
+
+    if a == 1:  # 수 바꾸기
+        change_tree(1, 1, n, b, c)
+    else:
+        print(find(1, 1, n, b, c))
