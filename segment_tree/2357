@@ -1,0 +1,44 @@
+import sys
+input = sys.stdin.readline
+
+n, m = map(int, input().strip().split())
+lst = [0]
+for _ in range(n):
+    lst.append(int(input()))
+
+tree = [[0, 0] for _ in range(4*n)]  # [min, max]
+
+def init_tree(node, left, right):
+    if left == right:
+        tree[node] = [lst[left], lst[left]]
+        return tree[node]
+    mid = (left + right) // 2
+    left_val = init_tree(2 * node, left, mid)
+    right_val = init_tree(2 * node + 1, mid + 1, right)
+
+    tree[node][0] = min(left_val[0], right_val[0])
+    tree[node][1] = max(left_val[1], right_val[1])
+
+    return tree[node]
+
+
+def find(node, left, right, start, end):  # left, right가 내가 원하는 구간. start, end가 찾고 있는 구간
+    if right < start or end < left:
+        return [float('inf'), -float('inf')]
+
+    if left <= start and end <= right:  # 지금 찾고 있는 구간이 내가 찾는 구간 사이에 있다면, 바로 나와서 check 할 수 있어야 추가적인 계산이 감소
+        return tree[node]
+
+    mid = (start + end) // 2
+    left_val = find(2 * node, left, right, start, mid)
+    right_val = find(2 * node + 1, left, right, mid + 1, end)
+
+    output = [min(left_val[0], right_val[0]), max(left_val[1], right_val[1])]
+    return output
+
+
+init_tree(1, 1, n)
+
+for _ in range(m):
+    a, b = map(int, input().strip().split())
+    print(*find(1, a, b, 1, n))
