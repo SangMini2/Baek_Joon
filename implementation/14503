@@ -1,0 +1,54 @@
+import sys
+input = sys.stdin.readline
+n, m = map(int, input().strip().split())
+x, y, dir = map(int, input().strip().split())
+arr = [list(map(int, input().strip().split())) for _ in range(n)]
+# 북:0, 동:1, 남:2, 서:3
+arr[x][y] = 2
+
+total = 0
+for i in range(len(arr)):
+    for j in range(len(arr[0])):
+        if arr[i][j] == 0:
+            total += 1
+
+
+dir_change = {1: 0, 0: 3, 3: 2, 2: 1}
+
+
+def moving(dir, x, y):
+    if dir == 1:
+        return x, y + 1
+    if dir == 2:
+        return x + 1, y
+    if dir == 3:
+        return x, y - 1
+    if dir == 0:
+        return x - 1, y
+
+
+back = {1: 3, 3: 1, 0: 2, 2: 0}
+
+dx = [-1, 1, 0, 0]
+dy = [0, 0, -1, 1]
+
+cnt = 1
+while True:
+    flag = 0
+    for _ in range(4):
+        dir = dir_change[dir]
+        nx, ny = moving(dir, x, y)
+        if 0 <= nx < n and 0 <= ny < m and arr[nx][ny] == 0:
+            cnt += 1
+            x, y = nx, ny
+            flag = 1
+            arr[nx][ny] = 2
+            break
+
+    if flag == 0:
+        x, y = moving(back[dir], x, y)
+        if arr[x][y] == 1:
+            break
+
+
+print(cnt)
