@@ -1,0 +1,31 @@
+from collections import deque
+import sys
+input = sys.stdin.readline
+
+n = int(input())
+q = deque()
+
+q.append([int(input()), 1])
+ans = 0
+
+for _ in range(n-1):
+    m = int(input())
+
+    while q and q[-1][0] < m:  # 큰 경우니까 겹쳐진 것들은 다 보여질 수 있다.
+        num, cnt = q.pop()
+        ans += cnt
+
+    if q and q[-1][0] == m:
+        ans += q[-1][1]
+        q[-1][1] += 1
+
+        if len(q) >= 2:
+            ans += 1
+
+    else:
+        if q:
+            ans += 1
+
+        q.append([m, 1])
+
+print(ans)
