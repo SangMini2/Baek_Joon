@@ -1,0 +1,36 @@
+import sys
+input = sys.stdin.readline
+
+n = int(input())
+arr = [list(map(int, input().strip().split())) for _ in range(n)]
+visited = [[0] * n for _ in range(n)]
+
+
+dx = [-1, 1, 0, 0]
+dy = [0, 0, -1, 1]
+
+def dfs(x, y):
+    if visited[x][y]: return visited[x][y]
+    
+    visited[x][y] = 1
+    
+    for i in range(4):
+        nx, ny = x + dx[i], y + dy[i]
+        if 0 <= nx < n and 0 <= ny < n and arr[x][y] < arr[nx][ny]:
+            visited[x][y] = max(dfs(nx, ny) + 1, visited[x][y]) # 동,서,남,북으로 체크~ 
+            '''
+            dfs(nx, ny) -> 앞으로 가질 수 있는 값이니까
+            dfs(nx, ny) + 1을 해야 자기 자신까지 카운트가 가능!
+            결국 visited[x][y]는 자기자신부터 앞으로 시퀀스가 얼마나 이어질지니까 앞부터 자기 자신까지 카운트만 하면 된다
+            그러면 이를 이용해서 자기 전의 visited가 + 1을 할거니까
+            '''            
+    
+    return visited[x][y]
+
+ans = 0
+for j in range(n):
+    for k in range(n):
+        ans = max(ans, dfs(j, k))
+
+
+print(ans)
