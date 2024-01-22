@@ -1,0 +1,35 @@
+import sys
+input = sys.stdin.readline
+
+n = int(input()) # 도시의 수
+m = int(input()) # 여행 계획에 속한 도시들의 수
+
+dic = dict()
+for i in range(n):
+    dic[i] = set([i])
+
+for i in range(n):
+    lst = list(map(int, input().strip().split()))
+    
+    for j in range(n):
+        if lst[j] == 1:
+            all = dic[i] | dic[j]
+            
+            for i_item in dic[i]:
+                dic[i_item] = all
+            
+            for j_item in dic[j]:
+                dic[j_item] = all
+
+goal = list(map(int, input().strip().split()))
+goal_set = set()
+
+for goal_item in goal:
+    goal_set.add(goal_item - 1)
+
+first_check = goal_set.pop()
+goal_set.add(first_check)
+if goal_set - dic[first_check] == set():
+    print("YES")
+else:
+    print("NO")
