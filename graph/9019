@@ -1,0 +1,65 @@
+import sys
+input = sys.stdin.readline
+from collections import deque
+
+n = int(input())
+
+# D : n을 2배로 바꾼다, 값이 9999보다 큰 경우 10000로 나눈 나머지를 취한다.
+# S : n-1을 저장, 값이 0보다 작아진다면 9999반환. 즉, n=0이고 S가 오면, 9999변환
+# L : 왼쪽으로 밀기
+# R : 오른쪽으로 밀기
+
+def position(num:str): # 4자리수를 만들어주는 함수
+    ans = str(num)
+    
+    while len(ans) != 4:
+        ans = '0' + ans
+        
+    return ans
+
+def D(num:int):
+    num = 2 * num
+    if num > 9999:
+        num = num % 10000
+    
+    return num
+
+def S(num):
+    num = num - 1
+    if num < 0:
+        num = 9999
+    
+    return num
+
+def L(num:int):
+    num = position(num)
+    ans = num[1:] + num[0]
+    return int(ans)
+
+def R(num:int):
+    num = position(num)
+    ans = num[-1] + num[:-1]
+    return int(ans)
+
+func_list = [(L, "L"), (R,"R"), (D,"D"), (S,"S")]
+
+for _ in range(n):
+    A, B = map(int, input().strip().split())
+    visited = [0] * 10000
+    
+    q = deque()
+    q.append([A, ""]) # [숫자, 이때까지 이동한 것]
+    visited[A] = 1
+    while q:
+        check_num, move = q.popleft()
+        if check_num == B:
+            break
+        
+        for things in func_list:
+            func, char = things
+            new_num = func(check_num)
+            if visited[new_num] == 0:
+                q.append([new_num, move+char])
+                visited[new_num] = 1
+    
+    print(move)
