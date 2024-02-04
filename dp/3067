@@ -1,0 +1,18 @@
+import sys
+input = sys.stdin.readline
+sys.setrecursionlimit(10 ** 5)
+
+for _ in range(int(input())):
+    n = int(input())
+    lst = list(map(int, input().strip().split()))
+    money = int(input())
+    
+    ans_lst = [0] * (money + 1)
+    
+    for i in range(n):
+        coin = lst[i]
+        ans_lst[coin] += 1
+        for j in range(coin, money + 1):
+            ans_lst[j] += ans_lst[j - coin]
+    
+    print(ans_lst[-1])
