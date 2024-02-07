@@ -1,0 +1,58 @@
+import sys
+input = sys.stdin.readline
+from collections import defaultdict
+
+'''
+parents와 size?
+결국 parents를 찾으면 그 자식들의 size를 다 더하면 된다?
+
+더 작은 것을 parent로!
+'''
+
+class Node:
+    def __init__(self, parent, me, size=1):
+        self.parent = parent
+        self.me = me
+        self.size = size
+
+def find_parent(node):
+    if node.parent == node.me:
+        return node, node.parent, node.size
+    else:
+        return find_parent(node.parent)
+
+
+for _ in range(int(input())):
+    f = int(input())
+    dic = dict()
+    
+    for _ in range(f):
+        a, b = input().strip().split()
+        if a not in dic.keys():
+            node_a = Node(a, a)
+        else:
+            node_a = dic[a]
+            
+        if b not in dic.keys():
+            node_b = Node(b, b)
+        else:
+            node_b = dic[b]
+        
+        final_a_node, final_a, a_size = find_parent(node_a)
+        final_b_node, final_b, b_size = find_parent(node_b)
+        
+        if final_a != final_b:
+            if final_a < final_b:
+                final_b_node.parent = final_a_node
+                final_a_node.size += b_size
+                print(final_a_node.size)
+            
+            else: # a > b
+                final_a_node.parent = final_b_node
+                final_b_node.size += a_size
+                print(final_b_node.size)
+            
+            dic[a] = node_a
+            dic[b] = node_b
+        else:
+            print(a_size)    
