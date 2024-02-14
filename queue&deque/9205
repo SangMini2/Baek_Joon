@@ -1,0 +1,38 @@
+import sys
+input = sys.stdin.readline
+from collections import deque
+
+
+def bfs(start, goal):
+    global visited_set
+    
+    q = deque()
+    q.append(start)
+    while q:
+        x, y = q.popleft()
+        if abs(x - goal[0]) + abs(y - goal[1]) <= 1000:
+            print("happy")
+            return 0
+        
+        for store in stores:
+            if abs(x - store[0]) + abs(y - store[1]) <= 1000 and store not in visited_set:
+                q.append(store)
+                visited_set.add(store)
+    
+    print("sad")
+                
+            
+            
+for _ in range(int(input())):
+    n = int(input())
+    stores = []
+    home = list(map(int, input().strip().split()))
+    
+    for _ in range(n):
+        x, y = map(int, input().strip().split())
+        stores.append((x, y))
+    
+    festival = list(map(int, input().strip().split()))
+    visited_set = set()
+    
+    bfs(home, festival)
