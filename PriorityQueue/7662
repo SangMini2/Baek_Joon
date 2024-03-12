@@ -1,0 +1,54 @@
+import sys
+input = sys.stdin.readline
+from heapq import heappop, heappush
+from collections import defaultdict
+
+for _ in range(int(input())):
+    max_lst = []
+    min_lst = []
+    n = int(input())
+    d = 0
+    i = 0
+    check_dic = defaultdict(int)
+    
+    for _ in range(n):
+        char, num = input().split()
+        
+        if char == "I":
+            num = int(num)
+            heappush(min_lst, num)
+            heappush(max_lst, -num)
+            check_dic[num] += 1
+            i += 1
+            
+        else:
+            if i > d:
+                d += 1
+                if num == "-1": # 최솟값 삭제
+                    while True:
+                        min_del = heappop(min_lst)
+                        if check_dic[min_del] > 0:
+                            check_dic[min_del] -= 1
+                            break
+                    
+                else: # 최댓값 삭제
+                    while True:
+                        max_del = -heappop(max_lst)
+                        if check_dic[max_del] > 0:
+                            check_dic[max_del] -= 1
+                            break
+            
+    if i <= d:
+        print("EMPTY")
+    else:
+        while max_lst:
+            max_num = -heappop(max_lst)
+            if check_dic[max_num] > 0:
+                break
+        
+        while min_lst:
+            min_num = heappop(min_lst)
+            if check_dic[min_num] > 0:
+                break
+                
+        print(max_num, min_num)
