@@ -1,0 +1,49 @@
+import sys
+input = sys.stdin.readline
+from heapq import heappush, heappop
+
+n, m = map(int, input().strip().split())
+lst = []
+
+for _ in range(m):
+    a, b, c = map(int, input().strip().split())
+    a -= 1; b -= 1
+    heappush(lst, (c, a, b))
+
+parent_node = [i for i in range(n)]
+
+def find(node):
+    if node == parent_node[node]:
+        return node
+    
+    return find(parent_node[node])
+
+def change_parent(node, change):
+    if node == change:
+        return -1
+    
+    next_node = parent_node[node]
+    parent_node[node] = change
+    
+    return change_parent(next_node, change)
+    
+
+
+ans = 0
+cnt = 0
+while cnt != (n-2):
+    dis, node_a, node_b = heappop(lst)
+    parent_a = find(node_a)
+    parent_b = find(node_b)
+    
+    if parent_a != parent_b:
+        if parent_a < parent_b: # 작은쪽을 parent로!
+            change_parent(node_b, parent_a)
+            
+        else:
+            change_parent(node_a, parent_b)
+
+        ans += dis
+        cnt += 1
+
+print(ans)
