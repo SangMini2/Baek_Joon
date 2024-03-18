@@ -1,0 +1,40 @@
+import sys
+input = sys.stdin.readline
+
+n, m = map(int, input().strip().split())
+
+tree_node = [i for i in range(n)] # parent
+
+def parent(x):
+    if x == tree_node[x]:
+        return x
+    p = parent(tree_node[x])
+    tree_node[x] = p
+    return tree_node[x]
+
+
+def union(x, goal):
+    if x == goal:
+        return -1
+    p = tree_node[x]
+    tree_node[x] = goal
+    return union(p, goal)
+        
+flag = 0
+for j in range(m):
+    x, y = map(int, input().strip().split())
+    parent_x = parent(x)
+    parent_y = parent(y)
+    
+    if parent_x == parent_y:
+        flag = j+1
+        break
+    
+    if parent_x < parent_y: # 작은 수로 정렬
+        union(parent_y, parent_x)
+        
+    else:
+        union(parent_x, parent_y)
+    
+
+print(flag)
