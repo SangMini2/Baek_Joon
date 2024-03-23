@@ -1,0 +1,55 @@
+import sys
+input = sys.stdin.readline
+import math
+from itertools import combinations
+from heapq import heappush, heappop
+
+n = int(input())
+
+def distance(node1, node2):
+    return round(math.sqrt((node1[0] - node2[0]) **2 + (node1[1] - node2[1])**2), 2)
+
+visited = [0] * n
+
+nodes = []
+for _ in range(n):
+    a, b = map(float, input().strip().split())
+    nodes.append((a,b))
+
+parent_nodes = [i for i in range(n)]
+
+def find(x):
+    if x == parent_nodes[x]:
+        return x
+    return find(parent_nodes[x])
+
+def union(x, goal):
+    if x == goal:
+        return
+
+    tmp = parent_nodes[x]
+    parent_nodes[x] = goal
+    return union(tmp, goal)
+
+heap = []
+for idx1, idx2 in combinations([i for i in range(n)], 2):
+    node_1 = nodes[idx1]; node_2 = nodes[idx2]
+    dis = distance(node_1, node_2)
+    heappush(heap, (dis, idx1, idx2))
+
+flag = set([i for i in range(n)])
+ans = 0
+
+while heap:
+    dist, idx_a, idx_b = heappop(heap)
+    parent_a = find(idx_a)
+    parent_b = find(idx_b)
+    if parent_a != parent_b:
+        ans += dist
+        if parent_a < parent_b: # 작은거에 맞춰준다.
+            union(idx_b, parent_a)
+        else:
+            union(idx_a, parent_b)
+
+
+print(ans)
