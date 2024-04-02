@@ -1,0 +1,37 @@
+import sys
+input = sys.stdin.readline
+
+N, e, w, s, n = map(int, input().strip().split())
+e = e / 100; w = w / 100; s = s / 100; n = n / 100
+
+visited = [[0] * (2 * N + 1) for _ in range(2 * N + 1)]
+start_point = (N-1, N-1)
+
+prob_lst = [n, s, w, e]
+dx = [-1,1,0,0]
+dy = [0,0,-1,1]
+
+ans = 0
+cnt_all = 0
+visited[N][N] = 1
+
+def dfs(cnt, x, y, prob):
+    global ans, cnt_all
+    
+    if cnt == 0:
+        ans += prob
+        cnt_all += 1
+        return
+    
+    for i in range(4):
+        nx = x + dx[i]
+        ny = y + dy[i]
+        n_prob = prob_lst[i]
+        if 0 <= nx < (2*N + 1) and 0 <= ny < (2*N + 1) and visited[nx][ny] == 0:
+            visited[nx][ny] = 1
+            dfs(cnt - 1, nx, ny, prob * n_prob)
+            visited[nx][ny] = 0
+
+
+dfs(N, N, N, 1)
+print(ans)
