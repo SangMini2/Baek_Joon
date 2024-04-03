@@ -1,0 +1,88 @@
+import sys
+input = sys.stdin.readline
+from itertools import combinations
+
+n, m, d = map(int, input().strip().split())
+
+arr = [list(map(int, input().strip().split())) for _ in range(n)]
+
+pos = []
+global_enemies = set()
+for i in range(n):
+    for j in range(m):
+        if arr[i][j] == 1:
+            global_enemies.add((i,j))
+
+for k in range(m):
+    pos.append((n, k))
+
+comb = list(combinations(pos, 3))
+
+ans = 0
+
+def cal_dis(node1, node2):
+    return abs(node1[0] - node2[0]) + abs(node1[1] - node2[1])
+
+for one, two, three in comb:
+    
+    cnt = 0
+    enemies = global_enemies
+    
+    while enemies:
+        # print(enemies)
+        next_enemies = set()
+        one_remove = (0, float('inf'))
+        two_remove = (0, float('inf'))
+        three_remove = (0, float('inf'))
+        one_dis = float('inf'); two_dis = float('inf'); three_dis = float('inf')
+        
+        for enemy in enemies:
+            dis1 = cal_dis(one, enemy)
+            dis2 = cal_dis(two, enemy)
+            dis3 = cal_dis(three, enemy)
+            # print(f"enemey: {enemy}, dis --> {dis1, dis2, dis3}")
+            # print(f"removes ---> {one_remove, two_remove, three_remove}")
+            # print(f"distance ---> {one_dis, two_dis, three_dis}")
+            
+            if dis1 <= d:
+                if dis1 < one_dis: # 거리가 더 짧으면 change
+                    one_remove = (enemy[0] + 1, enemy[1])
+                    one_dis = dis1
+                elif dis1 == one_dis: # 같으면 더 왼쪽에 있는 거 check
+                    if enemy[1] < one_remove[1]:
+                        one_remove = (enemy[0] + 1, enemy[1])
+            
+            if dis2 <= d:
+                if dis2 < two_dis: # 거리가 더 짧으면 change
+                    two_remove = (enemy[0] + 1, enemy[1])
+                    two_dis = dis2
+                elif dis2 == two_dis: # 같으면 더 왼쪽에 있는 거 check
+                    if enemy[1] < two_remove[1]:
+                        two_remove = (enemy[0] + 1, enemy[1])
+            
+            if dis3 <= d:
+                if dis3 < three_dis: # 거리가 더 짧으면 change
+                    three_remove = (enemy[0] + 1, enemy[1])
+                    three_dis = dis3
+                elif dis3 == three_dis: # 같으면 더 왼쪽에 있는 거 check
+                    if enemy[1] < three_remove[1]:
+                        three_remove = (enemy[0] + 1, enemy[1])
+            
+            
+            if enemy[0] + 1 < n:
+                next_enemies.add((enemy[0] + 1, enemy[1]))
+        
+        
+        die = set([one_remove, two_remove, three_remove])
+        
+        die.discard((1, float('inf')))
+        die.discard((0, float('inf')))
+        cnt += len(die)
+        
+        next_enemies -= die
+        # print(f"one, two, three: {one,two,three}, remove: {one_remove, two_remove, three_remove}")
+        # print(f"next_enemies? {next_enemies}")
+        enemies = next_enemies
+    ans = max(ans, cnt)
+        
+print(ans)
