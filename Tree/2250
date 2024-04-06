@@ -1,0 +1,81 @@
+import sys
+input = sys.stdin.readline
+from collections import deque, defaultdict
+
+class Node:
+    def __init__(self, me):
+        self.me = me
+        self.left = -1
+        self.right = -1
+
+def inorder(num):
+    global cnt, pos
+
+    if nodes[num].left != -1:
+        inorder(nodes[num].left)
+
+    pos[num] = cnt
+    # print(cnt)
+    cnt += 1
+
+    if nodes[num].right != -1:
+        inorder(nodes[num].right)
+
+
+n = int(input())
+pos = [-1] * (n+1)
+cnt = 1
+
+nodes = [-1]
+for i in range(1,n+1):
+    nodes.append(Node(i))
+
+find_root_node_set = set([i for i in range(1,n+1)])
+
+for _ in range(n):
+    a, b, c = map(int, input().strip().split())
+    nodes[a].left = b
+    nodes[a].right = c
+    find_root_node_set.discard(b)
+    find_root_node_set.discard(c)
+
+
+# height
+heights = [0] * (n + 1)
+q = deque()
+root_node = find_root_node_set.pop()
+q.append(root_node)
+heights[root_node] = 1
+
+while q:
+    level = q.popleft()
+    left = nodes[level].left
+    right = nodes[level].right
+    if left != -1:
+        heights[left] = heights[level] + 1
+        q.append(left)
+    if right != -1:
+        heights[right] = heights[level] + 1
+        q.append(right)
+
+'''height는 level, inorder을 통해서 x축 위치, dic은 해당 level에 위치하고 있는 node들의 x축 위치 반환'''
+
+inorder(root_node) # 위치 반환
+dic = defaultdict(list) # level 간, node들의 위치
+
+for i in range(1, n+1):
+    dic[heights[i]].append(pos[i])
+
+ans_level = 0
+ans = 0
+for key, value in dic.items():
+    value.sort()
+    max_dis = value[-1] - value[0] + 1
+    if max_dis > ans:
+        ans = max_dis
+        ans_level = key
+    elif max_dis == ans:
+        if key < ans_level:
+            ans_level = key
+
+print(ans_level, ans)
