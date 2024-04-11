@@ -1,0 +1,73 @@
+import sys
+input = sys.stdin.readline
+
+# 문제에서 주어진 최대 깊이를 기준으로
+# 2분탐색으로 탐색하므로 log값 구하기
+max_depth = 100000
+LOG = 21
+# while True:
+#     if 2 ** LOG > max_depth:
+#         LOG += 1
+#         break
+#
+#     LOG += 1
+
+n = int(input())
+
+# 그래프 형태로 입력받기
+graph = [[] for _ in range(n+1)]
+
+for _ in range(n-1):
+    a, b = map(int, input().strip().split())
+    graph[a].append(b)
+    graph[b].append(a)
+
+
+# 트리형태에서 부모노드와 자신의 레벨을 저장
+tree = [[0 for _ in range(LOG)] for _ in range(n+1)]
+
+visit = [1]
+level = [-1 for _ in range(n+1)]
+level[1] = 0
+
+while visit:
+    now = visit.pop()
+
+    for next_node in graph[now]:
+        if level[next_node] != -1:
+            continue
+
+        level[next_node] = level[now] + 1
+        tree[next_node][0] = now # 바로 위의 부모 노드
+        visit.append(next_node)
+
+for j in range(1, LOG):
+    for i in range(1, n+1):
+        tree[i][j] = tree[tree[i][j-1]][j-1]
+
+
+def LCA2(a, b): # a의 level이 더 낮다고 생각해보자.
+    for i in range(LOG-1,-1,-1): # 20부터 거꾸로 와야함
+        if level[b] - level[a] >= 2 ** i:
+            b = tree[b][i]
+
+    if a == b:
+        return a
+    for j in range(LOG-1, -1, -1):
+        if tree[a][j] != tree[b][j]: # 다르면, 즉 달라지기 시작하면 해당 부분부터 다시 부모 노드를 찾아야한다.
+            a = tree[a][j]
+            b = tree[b][j]
+
+    return tree[a][0] # 결국 마지막까지 다른 지점을 찾고, 가장 마지막까지 다르니까 그 위는 같다. 결국 같기 전 가장 마지막 노드들을 찾은 것
+
+
+
+m = int(input())
+for _ in range(m):
+    a, b = map(int, input().strip().split())
+    if level[a] <= level[b]:
+        print(LCA2(a,b))
+    else:
+        print(LCA2(b,a))
+
+
