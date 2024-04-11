@@ -1,0 +1,38 @@
+import sys
+input = sys.stdin.readline
+
+n, m = map(int, input().strip().split()) # n명, m개의 놀이기구
+lst = list(map(int, input().strip().split())) # 각 놀이기구의 운행 시간
+'''마지막 아이가 타게되는 놀이기구의 번호를 출력(index 아님, 번호임)'''
+
+end = max(lst) * (n+1)
+start = 0
+
+if n < m:
+    print(n)
+else:
+    while start <= end: # 결국
+        mid = (start + end) // 2
+        tmp = m
+        for i in range(m):
+            tmp += (mid // lst[i])
+
+        if tmp >= n:
+            end = mid - 1
+            remember_second = mid
+
+        else:
+            start = mid + 1
+
+
+    ans_tmp = m
+
+    for j in range(m):
+        ans_tmp += (remember_second-1) // lst[j]
+
+    for k in range(m):
+        if remember_second % lst[k] == 0:
+            ans_tmp += 1
+        if ans_tmp == n:
+            print(k+1)
+            break
