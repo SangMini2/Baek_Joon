@@ -1,0 +1,32 @@
+import sys
+input = sys.stdin.readline
+from heapq import heappush, heappop
+
+n = int(input())
+arr = []
+for _ in range(n):
+    a, b = map(int, input().strip().split())
+    '''작은 것이 앞으로 가게'''
+    if a <= b:
+        arr.append((a,b))
+    else:
+        arr.append((b,a))
+
+d = int(input())
+
+
+arr = sorted(arr, key=lambda x:x[1]) # end point 기준으로 정렬 해야함
+'''이유: start 기준으로 정렬하면, end 값이 더 큰 값이 먼저 들어오면 그 전의 값들이 빠지기 때문'''
+
+ans = 0
+heap = []
+
+for start, end in arr:
+    if end - start <= d: # 그 범위 안에 들어갈 수 있는 것. 일단 가능하면 넣어줌
+        heappush(heap, (start, end))
+
+    while heap and heap[0][0] + d < end: # end값이 가장 작은 부분이 start + d(=start에서 시작했을 때의 범위)보다 작아진다면, 빼야함. -> 현재 범위: [heap[0][0], heap[0][0]+d]
+        heappop(heap)
+    ans = max(ans, len(heap))
+
+print(ans)
