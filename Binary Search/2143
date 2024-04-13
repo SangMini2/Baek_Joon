@@ -1,0 +1,64 @@
+import sys
+input = sys.stdin.readline
+from itertools import combinations
+
+t = int(input())
+n = int(input())
+a_lst = list(map(int, input().strip().split()))
+m = int(input())
+b_lst = list(map(int, input().strip().split()))
+
+
+sum_a = []
+for idx, a in enumerate(a_lst):
+    idx += 1
+    sum_a.append(a)
+    while idx < n:
+        a += a_lst[idx]
+        sum_a.append(a)
+        idx += 1
+
+
+sum_b = []
+for idx, b in enumerate(b_lst):
+    idx += 1
+    sum_b.append(b)
+    while idx < m:
+        b += b_lst[idx]
+        sum_b.append(b)
+        idx += 1
+
+sum_a.sort(); sum_b.sort()
+
+
+len_a = len(sum_a); len_b = len(sum_b)
+
+dic_b = dict()
+for num in sum_b:
+    if num in dic_b.keys():
+        dic_b[num] += 1
+    else:
+        dic_b[num] = 1
+
+def binary_search(target):
+    global ans
+    start = 0; end = len_b - 1
+    while start <= end:
+        mid = (start + end) // 2
+        if sum_b[mid] == target:
+            ans += dic_b[target]
+            return
+        elif sum_b[mid] < target:
+            start = mid + 1
+        else:
+            end = mid - 1
+
+    return
+
+ans = 0
+
+for a_thing in sum_a:
+    target = t - a_thing
+    binary_search(target)
+
+print(ans)
