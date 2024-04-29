@@ -1,0 +1,24 @@
+import sys
+input = sys.stdin.readline
+
+n = int(input())
+
+arr = [list(map(int, input().strip().split())) for _ in range(n)]
+dp = [[[float('inf')]*3 for _ in range(3)] for _ in range(n)] # n번 -> 첫번째 것이 무엇인지 -> 그 전 것이 무엇인지
+
+for i in range(3):
+    dp[0][i][i] = arr[0][i]
+
+
+'''첫번째: layer num, 두번째: 첫번째 색깔, 세번째: 그 전 색깔'''
+for j in range(n-1):
+    for k in range(3): # k는 그 전 색, check는 이번에 색
+        full_set = set([0,1,2])
+        full_set.discard(k)
+        while full_set:
+            check = full_set.pop()
+            for l in range(3):
+                dp[j+1][l][check] = min(dp[j+1][l][check], dp[j][l][k] + arr[j+1][check])
+        
+ans = min(dp[-1][0][1], dp[-1][0][2], dp[-1][1][0], dp[-1][1][2], dp[-1][2][0], dp[-1][2][1])
+print(ans)
