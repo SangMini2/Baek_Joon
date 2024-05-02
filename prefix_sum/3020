@@ -1,0 +1,32 @@
+import sys
+input = sys.stdin.readline
+from collections import defaultdict
+
+n, h = map(int, input().strip().split())
+jong_arr = [0] * (h+1)
+seok_arr = [0] * (h+1)
+
+for _ in range(n // 2):
+    seok_arr[int(input())] += 1
+    jong_arr[int(input())] += 1
+
+
+jong_sum_arr = [0] * (h+1) # 위에서 내려오고
+seok_sum_arr = [0] * (h+1) # 밑에서 올라옴 -> 겹치는 것들은 n//2 - seok_sum_arr[i] 임
+
+for i in range(h-1, 0, -1):
+    jong_sum_arr[i] = jong_sum_arr[i+1] + jong_arr[i]
+    seok_sum_arr[i] = seok_sum_arr[i+1] + seok_arr[i]
+
+cnt = 0
+ans = float('inf')
+
+for j in range(1, h+1):
+    check = seok_sum_arr[j] + jong_sum_arr[h-j+1]
+    if ans > check:
+        cnt = 1
+        ans = check
+    elif ans == check:
+        cnt += 1
+
+print(ans, cnt)
