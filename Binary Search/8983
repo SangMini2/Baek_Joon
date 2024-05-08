@@ -1,0 +1,54 @@
+'''100점 코드'''
+import sys
+input = sys.stdin.readline
+from bisect import bisect_left, bisect_right
+
+m, n, l = map(int, input().strip().split()) # 사대, 동물, 사정거리
+lst = list(map(int, input().strip().split())) # 사대
+arr = [list(map(int, input().strip().split())) for _ in range(n)] # 동물
+
+def distance(sadae, animal):
+    return abs(sadae - animal[0]) + animal[1]
+
+lst.sort()
+
+ans = 0
+for i in range(n): # 동물 기준
+    right_idx = bisect_right(lst, arr[i][0])
+    left_idx = bisect_left(lst, arr[i][0])
+    if right_idx == left_idx: # 이러면 해당하는 값이 없다는 뜻
+        if right_idx == m:
+            check_idx = [-1]
+        else:
+            check_idx = [right_idx-1, right_idx]# 앞이랑 자기 자신
+    else:
+        check_idx = [left_idx]
+
+    for idx in check_idx:
+        dist = distance(lst[idx], arr[i])
+        if dist <= l:
+            ans += 1
+            break
+
+print(ans)
+
+''' 60점 코드 '''
+import sys
+input = sys.stdin.readline
+from bisect import bisect_right
+
+m, n, l = map(int, input().strip().split()) # 사대, 동물, 사정거리
+lst = list(map(int, input().strip().split())) # 사대
+arr = [list(map(int, input().strip().split())) for _ in range(n)] # 동물
+
+def distance(sadae, animal):
+    return abs(sadae - animal[0]) + animal[1]
+
+dist = []
+for i in range(n): # 동물별로 가장 가까운 거리
+    animal = [distance(lst[j], arr[i]) for j in range(m)]
+    dist.append(min(animal))
+
+dist.sort()
+
+print(bisect_right(dist, l))
