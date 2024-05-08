@@ -1,0 +1,35 @@
+import sys
+input = sys.stdin.readline
+from collections import defaultdict
+
+'''알게된 점: key들은 set이다. 이들을 굳이 list로 바꾸고 하지 말자'''
+
+n, d, k, c = map(int, input().strip().split())
+sushi = [int(input()) for _ in range(n)]
+start = 0
+end = k-1
+sushi += sushi[:k]
+straight_dic = defaultdict(int)
+
+for i in range(k):
+    straight_dic[sushi[i]] += 1
+
+ans = 0
+while True:
+    if ans == d or end == n + k - 1: # 모든 초밥의 수가 다 나왔을 때
+        break
+
+    if c in straight_dic:
+        ans = max(ans, len(straight_dic))
+    else:
+        ans = max(ans, len(straight_dic) + 1)
+
+    straight_dic[sushi[start]] -= 1
+    if straight_dic[sushi[start]] == 0:
+        del straight_dic[sushi[start]]
+    end += 1
+    start += 1
+
+    straight_dic[sushi[end]] += 1
+
+print(ans)
