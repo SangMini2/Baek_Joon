@@ -1,0 +1,72 @@
+import sys
+input = sys.stdin.readline
+
+arr = [list(map(int, input().strip().split())) for _ in range(10)]
+
+cnt_list = [5] * 6
+cnt_list[0] = 0
+
+
+def check(x, y, by_num):
+    if cnt_list[by_num] <= 0 or x + by_num - 1 >= 10 or y + by_num - 1 >= 10:
+        return 0
+    for i in range(by_num):
+        for j in range(by_num):
+            if arr[x + i][y + j] == 0:
+                return 0
+    return 1
+
+
+def change(x, y, by_num):
+    global cnt_list
+
+    cnt_list[by_num] -= 1
+
+    for i in range(by_num):
+        for j in range(by_num):
+            arr[x + i][y + j] = 0
+
+    return
+
+
+def recover(x, y, by_num):
+    global cnt_list
+
+    cnt_list[by_num] += 1
+
+    for i in range(by_num):
+        for j in range(by_num):
+            arr[x + i][y + j] = 1
+    return
+
+
+cnt = float('inf')
+
+def dfs(start_x, start_y, paper):
+    global cnt, one_cnt
+    if start_x > 9: # start_x 가 커지면 끝
+        cnt = min(cnt, paper)
+        return 0
+
+    if start_y > 9: # 앞 줄로 옮겨서 다시 쳌
+        dfs(start_x + 1, 0, paper)
+        return
+
+    if arr[start_x][start_y] == 1:
+        for length in range(1,6):
+            if check(start_x, start_y, length):
+                change(start_x, start_y, length)
+                dfs(start_x, start_y + length, paper + 1)
+                recover(start_x, start_y, length)
+
+    else:
+        return dfs(start_x, start_y + 1, paper)
+
+
+
+dfs(0, 0, 0)
+
+if cnt == float('inf'):
+    print(-1)
+else:
+    print(cnt)
