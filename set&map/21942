@@ -1,0 +1,45 @@
+import sys
+input = sys.stdin.readline
+from time import mktime
+from datetime import datetime
+from collections import defaultdict
+
+N, L, F = input().strip().split()
+n = int(N); f = int(F)
+
+'''2021년 2월은 28일까지 있다'''
+d = int(L[:3]); h = int(L[4:6]); m = int(L[7:])
+exchange2minute = 60 * h + m  # 분으로 바꿔준다
+exchange2minute += d * 24 * 60
+
+dic = dict()
+return_list = []
+return_dic = defaultdict(int)
+
+for _ in range(n):
+    date, time, product, person = input().strip().split()
+    year, month, day = map(int, date.split("-"))
+    hour, minute = map(int, time.split(":"))
+    full = datetime(year, month, day, hour, minute)
+    epoch_time = int(mktime(full.timetuple())) // 60 # 분으로 바꿔주는 것!
+    
+    if (product, person) in dic: # 계산해야지
+        duration = epoch_time - dic[(product, person)]
+        
+        if duration > exchange2minute:
+            return_dic[person] += f * (duration - exchange2minute)
+        del dic[(product, person)]
+        
+    else:
+        dic[(product, person)] = epoch_time
+
+
+for key, item in return_dic.items():
+    return_list.append((key, item))
+
+return_list.sort()
+if return_list:
+    for lst in return_list:
+        print(*lst)
+else:
+    print(-1)
