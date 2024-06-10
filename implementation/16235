@@ -1,0 +1,84 @@
+import sys
+input = sys.stdin.readline
+from collections import defaultdict
+from copy import deepcopy
+from collections import deque
+
+n, m, k = map(int, input().strip().split())
+# 땅의 크기: N x N
+arr = [[0] * (n+1)]
+arr += [[0] + list(map(int, input().strip().split())) for _ in range(n)]
+
+food_arr = [[5] * (n+1) for _ in range(n+1)]
+
+tree_dic = defaultdict(list)
+tree_arr = [[deque() for _ in range(n+1)] for _ in range(n+1)]
+
+tree_set = set()
+for _ in range(m):
+    x, y, z = map(int, input().strip().split())
+    tree_arr[x][y].append(z)
+    tree_set.add((x,y))
+    # tree_dic[(x,y)] = 1 # 있다는 표시
+
+
+for key, _ in tree_dic.items():
+    tree_arr[key[0]][key[1]] = deque(sorted(tree_arr[key[0]][key[1]]))
+
+start = 0
+tree2food = defaultdict(int)
+dx = [-1, -1, -1, 0, 0, 1, 1, 1]
+dy = [-1, 0, 1, -1, 1, -1, 0, 1]
+
+
+while start < k:
+    after_spring_set = set()
+    
+    summer_dic = defaultdict(int)
+    
+    for key in tree_set:
+        new_q = deque()
+        values = tree_arr[key[0]][key[1]]
+        food_cover = 0
+        while values:
+            value = values.popleft()
+            
+            if food_arr[key[0]][key[1]] + (arr[key[0]][key[1]] * start) < value:
+                food_cover += (value // 2)
+                
+            else:
+                food_arr[key[0]][key[1]] -= value
+                after_spring_set.add(key)
+                new_q.append(value + 1)
+        food_arr[key[0]][key[1]] += food_cover       
+        tree_arr[key[0]][key[1]] = new_q
+    
+    # 가을: 번식
+    tree_set = set()
+    
+    for new_key in after_spring_set:
+        new_val = tree_arr[new_key[0]][new_key[1]]
+        
+        for value in new_val:
+            if value % 5 == 0:
+                x = new_key[0]
+                y = new_key[1]
+                for i in range(8):
+                    nx = x + dx[i]
+                    ny = y + dy[i]
+                    if 1 <= nx <= n and 1 <= ny <= n:
+                        tree_arr[nx][ny].appendleft(1)
+                        tree_set.add((nx, ny))
+    
+    tree_set |= after_spring_set
+    
+    start += 1
+
+answer = 0
+
+
+for i in range(1, n+1):
+    for j in range(1, n+1):
+        answer += len(tree_arr[i][j])
+  
+print(answer)
