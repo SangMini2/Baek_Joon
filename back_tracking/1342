@@ -1,0 +1,45 @@
+import sys
+input = sys.stdin.readline
+from collections import defaultdict
+from itertools import permutations
+
+char_list = list(input().strip())
+total_n = len(char_list)
+dic = defaultdict(int)
+
+for char in char_list:
+    dic[char] += 1
+
+max_num = 0
+
+for key, val in dic.items():
+    if val > max_num:
+        max_num = val
+
+def check(string, num):
+    
+    for idx in range(num-1):
+        if string[idx] == string[idx + 1]:
+            return 0
+    
+    return "".join(string)
+
+if max_num == 1:
+    ans = 1
+    while total_n != 0:
+        ans *= total_n
+        total_n -= 1
+    print(ans)
+
+elif max_num - 1 > total_n - max_num: # 중간에 안끼워야 하는데 안되는 경우
+    print(0)
+
+else:
+    ans = set()
+    for check_list in permutations(char_list, total_n):
+        result = check(check_list, total_n)
+        if result != 0:
+            ans.add(result)
+    
+    print(len(ans))
+        
