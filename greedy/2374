@@ -1,0 +1,45 @@
+import sys
+input = sys.stdin.readline
+from collections import deque
+
+arr = [int(input().strip()) for _ in range(int(input()))]
+
+cnt = 0
+while True:
+    min_idx = 0
+    min_value = arr[0]
+
+    new_arr = [arr[0]]
+    
+    # 양 옆 합쳐주는 작업
+    for num in arr[1:]:
+        if num != new_arr[-1]:
+            if min_value > num:
+                min_value = num
+                min_idx = len(new_arr)
+            
+            new_arr.append(num)
+    
+    full_len = len(new_arr)
+    if full_len == 1:
+        break
+    
+    if min_idx == 0:
+        cnt += (new_arr[min_idx + 1] - new_arr[min_idx])
+        new_arr[min_idx] = new_arr[min_idx + 1]
+    
+    elif min_idx == (full_len - 1):
+        cnt += (new_arr[-2] - new_arr[-1])
+        new_arr[-1] = new_arr[-2]
+    
+    else:
+        if new_arr[min_idx + 1] > new_arr[min_idx - 1]: # 작은걸로 먼저
+            cnt += (new_arr[min_idx - 1] - new_arr[min_idx])
+            new_arr[min_idx] = new_arr[min_idx - 1]
+        else:
+            cnt += (new_arr[min_idx + 1] - new_arr[min_idx])
+            new_arr[min_idx] = new_arr[min_idx + 1]
+    
+    arr = new_arr
+            
+print(cnt)
