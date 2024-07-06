@@ -1,0 +1,16 @@
+import sys
+input = sys.stdin.readline
+
+n = int(input())
+arr = [int(input()) for _ in range(n)]
+cnt = [1] * n
+max_val = 0
+for idx, num in enumerate(arr):
+    plus_num = 0
+    for i in range(idx-1, -1, -1):
+        if arr[i] < num:
+            plus_num = max(plus_num, cnt[i])
+    cnt[idx] += plus_num
+    max_val = max(max_val, cnt[idx])
+
+print(n - max_val)
