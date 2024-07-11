@@ -71,4 +71,74 @@ while True:
         tail_x, tail_y = tail_q.popleft()
         arr[tail_x][tail_y] = 0
         arr[head[0]][head[1]] = -1
+
+'''
+# 함수를 활용하여 코드 줄이기
+
+import sys
+input = sys.stdin.readline
+from collections import deque
+
+n = int(input())
+arr = [[0] * n for _ in range(n)]
+
+for _ in range(int(input())):
+    row, col = map(int, input().strip().split())
+    row -= 1; col -= 1
+    arr[row][col] = 1
+
+start = [0,0]
+
+dx = [0, 1, 0, -1]
+dy = [1, 0, -1, 0]
+# D 면 앞으로 += 1, L이면 뒤로 -= 1
+global_time = 0
+dir = 0 # 처음엔 오른쪽으로
+
+head = [0,0]
+arr[0][0] = -1
+tail_q = deque()
+tail_q.append((0,0))
+
+def go(dir, head):
+    global global_time
     
+    head[0] += dx[dir]
+    head[1] += dy[dir]
+    tail_q.append(head.copy())
+    global_time += 1
+        
+    if head[0] < 0 or head[0] >= n or head[1] < 0 or head[1] >= n:
+        print(global_time)
+        exit()
+        
+    elif arr[head[0]][head[1]] == -1:
+        print(global_time)
+        exit()
+    
+    elif arr[head[0]][head[1]] == 0: # 꼬리 당기기
+        tail_x, tail_y = tail_q.popleft()
+        arr[tail_x][tail_y] = 0
+    
+    arr[head[0]][head[1]] = -1
+    
+    return head
+
+for _ in range(int(input())):
+    time, change = input().strip().split() # time -> 시작 시간으로부터 시간임..
+    time = int(time)
+    
+    while global_time != time:
+        head = go(dir, head)
+    
+    if change == "D":
+        dir += 1
+    else:
+        dir += 3 # -1을 해주면 마이너스가 생기니 차라리 3을 더해주고 4의 나머지를 받아오는게 깔끔할듯
+    
+    dir %= 4    
+    
+
+while True:
+    head = go(dir, head)
+'''
