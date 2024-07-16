@@ -1,0 +1,77 @@
+import sys
+input = sys.stdin.readline
+
+n = int(input())
+
+arr = [list(map(int, input().strip().split())) for _ in range(n)]
+
+dic = {0:1, 1:2, 2:0}
+visited = [[[0, -1] for _ in range(n)] for _ in range(n)] # [이어지는 줄, 지금까지 중에 이어졌을 때 가장 마지막 값]
+'''어차피 가장 마지막 최대 값만 담으면 된다! 다른 경우는 생각할 필요 없음 -> 0 1 2 1 이면 마지막을 2만 알면 되는게 
+-> 0 1 2 1 2 로 마지막 2가 1에 이어진다고 해도 결국 최대 시퀀스 길이는 같고, 그 때의 마지막 값도 같으니까.
+결국 시퀀스는 0 1 2 0 1 2 0 1 2 순서로 이어지니까!'''
+
+if arr[0][0] == 0:
+    visited[0][0][0] = 1
+    visited[0][0][1] = 0
+
+for i in range(1, n):
+    if arr[i][0] == 0:
+        visited[i][0][0] = 1
+        visited[i][0][1] = 0
+    if visited[i-1][0][0] > 0:
+        if dic[visited[i-1][0][1]] == arr[i][0]:
+            visited[i][0][0] = visited[i-1][0][0] + 1
+            visited[i][0][1] = arr[i][0]
+        else:
+            visited[i][0][0] = visited[i-1][0][0]
+            visited[i][0][1] = visited[i-1][0][1]
+            
+
+
+for j in range(1, n):
+    if arr[0][j] == 0:
+        visited[0][j][0] = 1
+        visited[0][j][1] = 0
+    if visited[0][j-1][0] > 0:
+        if dic[visited[0][j-1][1]] == arr[0][j]:
+            visited[0][j][0] = visited[0][j-1][0] + 1
+            visited[0][j][1] = arr[0][j]
+        else:
+            visited[0][j][0] = visited[0][j-1][0]
+            visited[0][j][1] = visited[0][j-1][1]
+
+
+
+for a in range(1, n):
+    for b in range(1, n):
+        if visited[a-1][b][0] > visited[a][b-1][0]: # [a-1][b]가 더 크니까,
+            if dic[visited[a-1][b][1]] == arr[a][b]:
+                visited[a][b][0] = visited[a-1][b][0] + 1
+                visited[a][b][1] = arr[a][b]
+            else:
+                visited[a][b][0] = visited[a-1][b][0]
+                visited[a][b][1] = visited[a-1][b][1]
+        
+        elif visited[a-1][b][0] < visited[a][b-1][0]:
+            if dic[visited[a][b-1][1]] == arr[a][b]:
+                visited[a][b][0] = visited[a][b-1][0] + 1
+                visited[a][b][1] = arr[a][b]
+            
+            else:
+                visited[a][b][0] = visited[a][b-1][0]
+                visited[a][b][1] = visited[a][b-1][1]
+        elif visited[a-1][b][0] == visited[a][b-1][0] and visited[a-1][b][1] != -1:
+            if dic[visited[a-1][b][1]] == arr[a][b]:
+                visited[a][b][0] = visited[a-1][b][0] + 1
+                visited[a][b][1] = arr[a][b]
+            else:
+                visited[a][b][0] = visited[a-1][b][0]
+                visited[a][b][1] = visited[a-1][b][1]
+        
+        else: # 다 -1인 경우
+            if arr[a][b] == 0:
+                visited[a][b][0] = 1
+                visited[a][b][1] = 0
+
+print(visited[-1][-1][0])        
