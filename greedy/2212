@@ -1,0 +1,10 @@
+import sys
+input = sys.stdin.readline
+
+n = int(input())
+k = int(input())
+lst = sorted(list(map(int, input().strip().split())))
+
+dis = sorted([lst[i+1] - lst[i] for i in range(n-1)])
+
+print(sum(dis[:n-k]))
