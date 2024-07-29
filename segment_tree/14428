@@ -1,0 +1,85 @@
+import sys
+input = sys.stdin.readline
+import math
+
+n = int(input())
+lst = list(map(int, input().strip().split()))
+
+height = int(math.log2(n-1)) + 2
+
+tree = [-1] * (2 ** height)
+
+
+def init(start, end, index):
+    if start == end:
+        tree[index] = start
+        return tree[index]
+    
+    mid = (start + end) // 2
+    left = init(start, mid, index * 2)
+    right = init(mid + 1, end, index * 2 + 1)
+    if lst[left] <= lst[right]:
+        tree[index] = left
+    else:
+        tree[index] = right
+    return tree[index]
+    
+
+init(0, n-1, 1)
+
+def find(start, end, goal_start, goal_end, index): # 인덱스를 반환 
+    if end < goal_start or start > goal_end: # 만약에 찾는게 범위 밖이면?
+        return -1
+    
+    if goal_start <= start and end <= goal_end: # 찾는 구간 안이 원하는 목표보다 작으면 그건 그냥 바로 찾는 구간의 최소 인덱스를 반환
+        return tree[index]
+    
+    # 이외의 경우는 갈라져 있는 경우다. (  {   |   } ) 이런 경우 {}: 원하는 찾는 값. 따라서 왼쪽 오른쪽 다 봐줘야 함
+    mid = (start + end) // 2
+    left = find(start, mid, goal_start, goal_end, index * 2)
+    right = find(mid + 1, end, goal_start, goal_end, index * 2 + 1)
+    
+    if left == -1: # 왼쪽에 없는 경우
+        return right
+    if right == -1: # 오른쪽에 없는 경우
+        return left
+    
+    
+    if lst[left] <= lst[right]:
+        return left
+    else:
+        return right
+
+def update(start, end, index, updated_index):
+    if start == end:
+        return start
+    mid = (start + end) // 2
+    
+    if start <= updated_index <= mid: # 왼쪽이면 왼쪽을 업데이트하고, 마지막에 오른쪽과 비교
+        left_idx = update(start, mid, index * 2, updated_index) # 왼쪽 업데이트
+        if lst[left_idx] <= lst[tree[2 * index + 1]]:
+            tree[index] = left_idx
+        else:
+            tree[index] = tree[2 * index + 1]
+        return tree[index]
+    
+    else:
+        right_idx = update(mid + 1, end, index * 2 + 1, updated_index)
+        if lst[right_idx] < lst[tree[2 * index]]:
+            tree[index] = right_idx
+            
+        else:
+            tree[index] = tree[2 * index]
+        return tree[index]
+
+        
+
+for _ in range(int(input())):
+    command, i, j = map(lambda x: int(x) - 1, input().strip().split())
+    
+    if command == 0: # 1을 까줬으니까
+        lst[i] = j + 1
+        update(0, n-1, 1, i)
+        
+    else:
+        print(find(0, n-1, i, j, 1) + 1)
