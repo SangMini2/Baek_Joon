@@ -1,0 +1,52 @@
+import sys
+input = sys.stdin.readline
+from collections import deque
+
+n, d = map(int, input().strip().split())
+lsts = []
+for _ in range(n):
+    start, end, short = map(int, input().strip().split())
+    reduced_dis = end - start - short # 실제로 줄어든 거리
+    if end <= d and reduced_dis > 0:
+        lsts.append((start, end, short, reduced_dis))
+
+q = deque()
+if lsts:
+    q.append([lsts[0]])
+
+    for lst in lsts[1:]:
+        new_q = deque()
+        while q:
+            checks = q.popleft()
+            flag = 0
+            for check in checks:
+                if (lst[0] < check[0] and check[0] < lst[1]) or (lst[0] < check[1] and check[1] < lst[1]) or (lst[0] >= check[0] and lst[1] <= check[1]) or (check[0] >= lst[0] and check[1] <= lst[1]):
+                    flag = 1
+                    break
+            
+            if flag == 0:
+                original = checks.copy()
+                new_q.append(original)
+                checks.append(lst)
+                # checks.sort()
+                
+            else:
+                new_q.append([lst])
+            
+            new_q.append(checks)
+        
+        q = new_q
+            
+    global_ans = float('inf')
+    while q:
+        things = q.popleft()
+        reduced_all = 0
+        for _, _, _, reduced in things:
+            reduced_all += reduced
+        
+        global_ans = min(global_ans, d - reduced_all)
+
+else:
+    global_ans = d
+
+print(global_ans)
