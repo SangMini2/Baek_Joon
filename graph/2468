@@ -1,0 +1,50 @@
+import sys
+input = sys.stdin.readline
+from collections import deque
+
+n = int(input())
+arr = []
+max_num = 0
+min_num = float('inf')
+for _ in range(n):
+    sub_arr = list(map(int, input().strip().split()))
+    max_num = max(max_num, max(sub_arr))
+    min_num = min(min_num, min(sub_arr))
+    arr.append(sub_arr)
+
+dx = [-1, 1, 0 ,0]
+dy = [0, 0, -1, 1]
+
+def area_check():
+    cnt = 0
+    for a in range(n):
+        for b in range(n):
+            q = deque()
+            if dp[a][b] == 1:
+                q.append((a,b))
+                dp[a][b] = 0
+                while q:
+                    x, y = q.popleft()
+                    for k in range(4):
+                        nx = x + dx[k]
+                        ny = y + dy[k]
+                        if 0 <= nx < n and 0 <= ny < n and dp[nx][ny] == 1:
+                            q.append((nx, ny))
+                            dp[nx][ny] = 0
+                cnt += 1
+    
+    return cnt
+                    
+global_ans = 0
+
+for height in range(min_num, max_num+1):
+    dp = [[1] * n for _ in range(n)]
+    for i in range(n):
+        for j in range(n):
+            if arr[i][j] < height:
+                dp[i][j] = 0
+    
+    local_cnt = area_check()
+    global_ans = max(global_ans, local_cnt)
+
+print(global_ans)    
