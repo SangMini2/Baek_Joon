@@ -1,0 +1,41 @@
+import sys
+input = sys.stdin.readline
+from copy import deepcopy
+
+n = int(input())
+original_bulbs = list(map(bool, map(int, input().strip())))
+goal_bulbs = list(map(bool, map(int, input().strip())))
+"""
+1번째 바꾸는 것 or 바꾸지 않는 것으로 도박 걸어보면 됨
+이유: 0번째 바꾸면 그 다음부터는 해당 블록 전꺼를 확정시키는 방향으로 블록을 바꾸면 되기 때문에
+[0, 0, 0] -> [0, 1, 0]으로 만들어줄 때, 0번째를 바꾼다고 하면 [1, 1, 0]인데 1번째 스위치를 킬지 말지는 0번째를 확정시켜주며
+설정할 수 있다. 위의 상황 같은 경우 0번째를 0으로 바꿔줘야하니까 1번째는 무조건 스위치를 눌러야함.
+
+결국 스위치를 해당 스위치를 누르냐 마냐를 판단하면 됨. 2번 누르는거나 0번 누르는거나 같음
+그리고 순서도 상관이 없음. (ex. 0 -> 1 -> 2 & 2 -> 0 -> 1이 같은 결과를 냄)
+"""
+def check(bulbs, start_cnt):
+    
+    for i in range(1, n-1):
+        if bulbs[i-1] != goal_bulbs[i-1]:
+            start_cnt += 1
+            bulbs[i-1], bulbs[i], bulbs[i+1] = not bulbs[i-1], not bulbs[i], not bulbs[i+1]
+
+    if bulbs[n-2] != goal_bulbs[n-2]:
+        start_cnt += 1
+        bulbs[n-1] = not bulbs[n-1]
+
+    if check_bulbs[-1] == goal_bulbs[-1]:
+        return start_cnt
+    return -1
+
+# 0번째 스위치 키지 않는 경우
+check_bulbs = deepcopy(original_bulbs)
+ans = check(check_bulbs, 0)
+if ans == -1:
+    # 0 번째 스위치를 키는 경우
+    check_bulbs = deepcopy(original_bulbs)
+    check_bulbs[0], check_bulbs[1] = not check_bulbs[0], not check_bulbs[1]
+    ans = check(check_bulbs, 1)
+
+print(ans)
