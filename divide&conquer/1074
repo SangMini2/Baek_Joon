@@ -1,0 +1,29 @@
+import sys
+input = sys.stdin.readline
+
+n, r, c = map(int, input().strip().split())
+
+# 크기 (2**n, 2**n)
+m = 2 ** n
+
+def check(length, a, b, cnt):
+    edge = length // 2
+    if a == 0 and b == 0:
+        return cnt
+    
+    if 0 <= a < edge and 0 <= b < edge:
+        return check(length // 2, a, b, cnt)
+    elif 0 <= a < edge and edge <= b:
+        return check(edge, a, b - edge, cnt + (edge ** 2))
+    elif edge <= a and 0 <= b < edge:
+        return check(edge, a-edge, b, cnt + 2 * (edge ** 2))
+    else:
+        return check(edge, a-edge, b-edge, cnt + 3 * (edge ** 2))
+
+if r == m-1 and c == m-1:
+    print(m * m - 1)
+    exit()
+
+else:
+    ans = check(m, r, c, 0)
+    print(ans)
