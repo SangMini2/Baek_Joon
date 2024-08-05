@@ -1,0 +1,51 @@
+import sys
+input = sys.stdin.readline
+sys.setrecursionlimit(10**6)
+
+# 풀이를 참조함
+
+n = int(input())
+first = [1,1]; second = [n,n]
+m = int(input())
+accidents = [list(map(int, input().strip().split())) for _ in range(m)]
+accidents_1 = [(1,1)]+ accidents
+accidents_2 = [(n,n)]+ accidents
+
+def dist(a, b):
+    return abs(a[0] - b[0]) + abs(a[1] - b[1])
+
+dp = [[0] * m for _ in range(m)] # dp[i][j] : 첫번째 차가 i번째에 있고, 두번째 차가 j번째에 있을 때 남은 최소 거리
+trace = [[-1] * m for _ in range(m)]
+
+def sol(i, j):
+    next = max(i, j) + 1
+    if next == m+1: # 마지막에 도착하면, 남은 거리는 0이니까 return 0
+        return 0
+    
+    if dp[i][j]:
+        return dp[i][j]   
+    
+    first_car_move = sol(next, j) + dist(accidents_1[i], accidents_1[next])
+    second_car_move = sol(i, next) + dist(accidents_2[next], accidents_2[j])
+    
+    if first_car_move < second_car_move:
+        trace[i][j] = 1
+        dp[i][j] = first_car_move
+    else:
+        trace[i][j] = 2
+        dp[i][j] = second_car_move
+    
+    return dp[i][j]
+
+
+print(sol(0, 0))
+
+first_idx = 0
+second_idx = 0
+for _ in range(m):
+    print(trace[first_idx][second_idx])
+    next = max(first_idx, second_idx) + 1
+    if trace[first_idx][second_idx] == 1:
+        first_idx = next
+    else:
+        second_idx = next
