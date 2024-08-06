@@ -1,0 +1,17 @@
+import sys
+input = sys.stdin.readline
+
+n, m = map(int, input().strip().split())
+arr = list(map(int, input().strip().split()))
+dp = [0] * (n+1)
+
+for i in range(m):
+    a, b, k = map(int, input().strip().split())
+    a -= 1
+    dp[a] += k
+    dp[b] -= k
+
+change = 0
+for i in range(n):
+    change += dp[i]
+    print(arr[i] + change, end = " ")
