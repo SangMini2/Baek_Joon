@@ -1,0 +1,52 @@
+import sys
+input = sys.stdin.readline
+
+n = int(input())
+cranes = list(map(int, input().strip().split()))
+m = int(input())
+boxes = list(map(int, input().strip().split()))
+
+cranes.sort()
+boxes.sort()
+max_crane = cranes[-1]
+min_crane = cranes[0]
+
+max_box = boxes[-1]
+min_box = boxes[0]
+
+if max_crane < max_box:
+    print(-1)
+    exit()
+
+idx = 0
+flags = [-1]
+for crane in cranes:
+    while idx < m and boxes[idx] <= crane:
+        idx += 1
+    idx -= 1
+    if idx != -1:
+        flags.append(idx)
+    else:
+        idx = 0
+    
+
+necessary = [flags[i+1] - flags[i] for i in range(len(flags)-1)]
+
+ans = 0
+cnt = m
+
+while cnt != 0:
+    for idx, num in enumerate(necessary):
+        if num == 0:
+            for new_idx in range(idx-1, -1, -1):
+                if necessary[new_idx] > 0:
+                    necessary[new_idx] -= 1
+                    cnt -= 1
+                    break
+        else:
+            necessary[idx] -= 1
+            cnt -= 1
+    
+    ans += 1
+
+print(ans)
