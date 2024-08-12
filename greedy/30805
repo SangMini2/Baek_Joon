@@ -1,0 +1,39 @@
+import sys
+input = sys.stdin.readline
+
+n = int(input()) # 1 <= n <= 100
+lst1 = list(map(int, input().strip().split()))
+m = int(input()) # 1 <= m <= 100
+lst2 = list(map(int, input().strip().split()))
+
+ans_lst = []
+
+def sol(func_lst1, func_lst2):
+    global ans_lst
+    sort_lst = sorted(set(func_lst1), reverse=True)
+    sort_lst_size = len(sort_lst)
+    idx = 0
+    flag = 0
+    while idx < sort_lst_size:
+        max_value = sort_lst[idx]
+        if max_value in func_lst2:
+            flag = 1
+            break
+        
+        idx += 1
+    
+    if flag == 0:
+        return 
+    
+    lst1_index = func_lst1.index(max_value)
+    lst2_index = func_lst2.index(max_value)
+    ans_lst.append(max_value)
+    sol(func_lst1[lst1_index+1:], func_lst2[lst2_index+1:])
+    
+sol(lst1, lst2)
+
+if ans_lst:
+    print(len(ans_lst))
+    print(*ans_lst)
+else:
+    print(0)
