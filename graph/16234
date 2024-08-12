@@ -1,0 +1,51 @@
+import sys
+input = sys.stdin.readline
+from collections import deque
+
+N, L, R = map(int, input().strip().split())
+
+arr = [list(map(int, input().strip().split())) for _ in range(N)]
+
+dx = [-1, 1, 0, 0]
+dy = [0, 0, -1, 1]
+cnt = 0
+
+while True:
+    flag = 0
+    visited = [[0] * N for _ in range(N)]
+    for x in range(N):
+        for y in range(N):
+            q = deque()
+            if visited[x][y] == 0:
+                q.append((x,y))
+            idx_lst = deque()
+            num_lst = []
+            while q:
+                cur_x, cur_y = q.popleft()
+                for i in range(4):
+                    nx = cur_x + dx[i]
+                    ny = cur_y + dy[i]
+                    if 0 <= nx < N and 0 <= ny < N and L <= abs(arr[cur_x][cur_y] - arr[nx][ny]) <= R and visited[nx][ny] == 0:
+                        if visited[x][y] == 0:
+                            visited[x][y] = 1
+                            num_lst.append(arr[x][y])
+                            idx_lst.append((x,y))
+                        visited[nx][ny] = 1
+                        num_lst.append(arr[nx][ny])
+                        idx_lst.append((nx, ny))
+                        q.append((nx, ny))
+            
+            if num_lst:
+                change_num = sum(num_lst) // len(num_lst)
+                flag = 1
+            
+            while idx_lst:
+                idx_x, idx_y = idx_lst.pop()
+                arr[idx_x][idx_y] = change_num
+    
+    if flag == 0:
+        break 
+    else:
+        cnt += 1  
+
+print(cnt)
