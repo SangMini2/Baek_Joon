@@ -11,3 +11,26 @@ for _ in range(int(input())):
         ans = max(diff[j+1] + diff[j], ans)
     
     print(ans)
+
+#################################
+
+import sys
+input = sys.stdin.readline
+
+for _ in range(int(input())):
+    n = int(input())
+    logs = sorted(list(map(int, input().strip().split())))
+    lst = [logs[i] for i in range(0, n, 2)]
+    if n % 2 == 1:
+        for j in range(n-2, 0, -2):
+            lst.append(logs[j])
+    else:
+        for j in range(n-1, -1, -2):
+            lst.append(logs[j])
+    
+    lst += [lst[0]]
+    ans = 0
+
+    for k in range(n):
+        ans = max(ans, abs(lst[k+1] - lst[k]))
+    print(ans)
