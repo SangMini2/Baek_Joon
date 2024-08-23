@@ -1,0 +1,43 @@
+import sys
+input = sys.stdin.readline
+from collections import defaultdict
+
+# 수의 최대 길이 = 8 
+
+n = int(input())
+dic = defaultdict(int)
+last_cal = []
+
+for i in range(n):
+    alphabets = input().strip()
+    last_cal.append(list(alphabets))
+    length = len(alphabets)
+    idx = 8 - length
+    for alpha in alphabets:
+        idx += 1
+        dic[alpha] += (10 ** (8 - idx))
+        # dic[alpha].append(idx) # 해당 알파벳에 어떤 인덱스들이 있는지 체크
+
+check = []
+for key, val in dic.items():
+    # val.sort()
+    # val.append(key)
+    
+    check.append([val, key])
+
+check.sort(reverse=True) # 가장 첫번째(가장 앞에 있는 숫자)부터 높은 수를 할당해야 하니까 sort
+
+num = 9 # 9부터 시작해서 낮춤
+last_dic = dict() # 알파벳에 숫자 할당해주는 딕셔너리
+for ans_lst in check:
+    put_alpha = ans_lst[-1]
+    last_dic[put_alpha] = str(num)
+    num -= 1
+
+ans = 0
+for lst in last_cal: # 최종 계산
+    for idx_, alpha_ in enumerate(lst):
+        lst[idx_] = last_dic[alpha_]
+    semi = "".join(lst)
+    ans += int(semi)
+print(ans)
