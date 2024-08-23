@@ -1,0 +1,37 @@
+import sys
+input = sys.stdin.readline
+from collections import deque
+
+n, w, L = map(int, input().strip().split())
+trucks = deque(list(map(int, input().strip().split())))
+
+# w : 다리 길이
+# L : 최대 하중
+cnt = 0
+in_bridge = deque()
+in_bridge_weight = 0
+bridge = [0] * w
+
+def move_bridge(bridge_lst):
+    new_lst = [0] * w
+    out_truck = bridge_lst[0]
+    
+    for idx, truck_in_bridge in enumerate(bridge_lst[1:]):
+        new_lst[idx] = truck_in_bridge
+    
+    return new_lst, out_truck
+
+while True:
+    if len(trucks) == 0 and in_bridge_weight == 0:
+        break
+    
+    bridge, out_truck = move_bridge(bridge)
+    in_bridge_weight -= out_truck
+    if trucks and in_bridge_weight + trucks[0] <= L:
+        add_truck = trucks.popleft()
+        bridge[-1] = add_truck
+        in_bridge_weight += add_truck
+
+    cnt += 1
+    
+print(cnt)
