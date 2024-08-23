@@ -1,0 +1,36 @@
+import sys
+input = sys.stdin.readline
+from collections import deque
+
+n, k = map(int, input().strip().split())
+
+virus_q = [deque() for _ in range(k+1)]
+arr = []
+
+for i in range(n):
+    lst = list(map(int, input().strip().split()))
+    arr.append(lst)
+    for j in range(n):
+        virus_q[lst[j]].append((i,j))
+        
+s, X, Y = map(int, input().strip().split())
+
+dx = [-1, 1, 0, 0]
+dy = [0, 0, -1, 1]
+
+for _ in range(s):
+    for idx, q in enumerate(virus_q[1:]):
+        virus_num = idx + 1
+        new_q = deque()
+        while q:
+            x, y = q.popleft()
+            for k in range(4):
+                nx = x + dx[k]
+                ny = y + dy[k]
+                if 0 <= nx < n and 0 <= ny < n and arr[nx][ny] == 0:
+                    arr[nx][ny] = virus_num
+                    new_q.append((nx, ny))
+        
+        virus_q[virus_num] = new_q
+
+print(arr[X-1][Y-1])
