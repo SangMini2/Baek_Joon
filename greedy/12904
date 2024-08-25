@@ -1,0 +1,28 @@
+import sys
+input = sys.stdin.readline
+from collections import deque, Counter
+
+S = list(input().strip())
+T = list(input().strip())
+len_S = len(S)
+len_T = len(T)
+
+# T -> S로
+flag = 0
+while len_S <= len_T:
+    # T에서 S로 갈 때, 뒤에 있는 것을 제거해주는 식으로 가기 때문에 경우의 수가 생기지 않는다.
+    # 맨 뒤에 있는 값이 A일 때와 B일 때로 나눠서 확인할 수 있는데, 그렇기에 A일 때, B일 때만 분기해주면 되고 경우의 수가 생기진 않는다.
+    if T[-1] == "A": # 맨뒤에가 A일 때
+        T.pop()
+        
+    else: # 맨 뒤에가 B일 때
+        T.pop()
+        T.reverse()
+    
+    len_T -= 1
+    
+    if S == T:
+        flag = 1
+        break
+
+print(flag)
