@@ -1,0 +1,47 @@
+import sys
+input = sys.stdin.readline
+
+n, m = map(int, input().strip().split())
+
+A = [list(map(int, list(input().strip()))) for _ in range(n)]
+B = [list(map(int, list(input().strip()))) for _ in range(n)]
+dic = {0:1, 1:0}
+cnt = 0
+
+def change(x, y):
+    global cnt
+    
+    for i in range(3):
+        for j in range(3):
+            A[x+i][y+j] = dic[A[x+i][y+j]]
+    cnt += 1
+    return 
+
+
+if n < 3 or m < 3:
+    if A == B:
+        print(0)
+    else:
+        print(-1)
+    exit()
+
+for k in range(n-2):
+    for l in range(m-3):
+        if A[k][l] != B[k][l]:
+            change(k, l)
+    
+    # m - 3의 경우는 마지막 체크/ 따로 뺀 이유: for l in range(m-3) 문에 if l == m-3 을 넣으면, 계속 비교해줘야 하므로 마지막 것을 그냥 빼줬음
+    if A[k][m-3] != B[k][m-3]:
+        change(k, m-3)
+    for w in range(m-2, m): #바꿨는데, 뒤에 더이상 바꿀 수 없는데 맞지 않는 경우
+        if A[k][w] != B[k][w]:
+            print(-1)
+            exit()
+
+for q in range(n-2, n): # row 기준으로 바꿀 수 없는 것들을 비교함으로써, 맞지 않으면 -1 반환
+    for e in range(m):
+        if A[q][e] != B[q][e]:
+            print(-1)
+            exit()
+
+print(cnt)
