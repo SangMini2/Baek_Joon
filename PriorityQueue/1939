@@ -1,0 +1,43 @@
+import sys
+input = sys.stdin.readline
+from heapq import heappush, heappop
+
+n, m = map(int, input().strip().split())
+
+dic = dict()
+
+for _ in range(m):
+    a, b, c = map(int, input().strip().split())
+    if a in dic:
+        dic[a][b] = c
+    else:
+        dic[a] = dict()
+        dic[a][b] = c
+    
+    if b in dic:
+        dic[b][a] = c
+    else:
+        dic[b] = dict()
+        dic[b][a] = c
+
+visited = [0] * (n+1)
+
+global_ans = float('inf')
+        
+start, end = map(int, input().strip().split())
+q = [(-float('inf'), start)]
+
+while q:
+    weight, idx = heappop(q)
+    visited[idx] = 1
+    weight = -weight
+    global_ans = min(weight, global_ans)
+    if idx == end:
+        break
+    
+    for key, val in dic[idx].items():
+        if visited[key] == 0:
+            heappush(q, [-val, key])
+    
+
+print(global_ans)
