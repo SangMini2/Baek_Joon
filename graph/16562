@@ -1,0 +1,48 @@
+import sys
+input = sys.stdin.readline
+from heapq import heappush, heappop
+from collections import deque
+
+n, m, k = map(int, input().strip().split()) # 학생, 친구 관계, 돈
+money_lst = list(map(int, input().strip().split()))
+money_heap = []
+for idx, money in enumerate(money_lst):
+    heappush(money_heap, [money, idx + 1])
+
+
+relations = [[] for _ in range(n+1)]
+
+for i in range(m):
+    a, b = map(int, input().strip().split())
+    relations[a].append(b)
+    relations[b].append(a)
+
+visited = [0] * (n+1)
+
+wrong_text = "Oh no"
+
+flag_ans = 0
+
+while money_heap:
+    cost_money, check_idx = heappop(money_heap)
+    if visited[check_idx] == 0: # 안했으면!
+        q = deque()
+        q.append(relations[check_idx])
+        flag_ans += cost_money
+        visited[check_idx] = 1
+        while q:
+            check_lst = q.popleft()
+            for friend_idx in check_lst:
+                if visited[friend_idx] == 0:
+                    visited[friend_idx] = 1
+                    q.append(relations[friend_idx])
+        
+    if k < flag_ans:
+        break   
+
+      
+if flag_ans <= k:
+    print(flag_ans)
+else:
+    print(wrong_text)
+
