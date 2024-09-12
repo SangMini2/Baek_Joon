@@ -1,0 +1,65 @@
+import sys
+input = sys.stdin.readline
+from heapq import heappush, heappop
+from collections import deque
+
+n, m, k = map(int, input().strip().split()) # 학생, 친구 관계, 돈
+money_lst = [0] + list(map(int, input().strip().split()))
+
+family = [i for i in range(n+1)]
+
+# family는 부모를 가리키는 것임! (money가 작은 것을 부모로 해야하네..)
+# 나는 여기서 작은 수가 부모가 되게 해줄 것임 -> 아니면 cycle이 발생할 수 있음
+
+def find(node):
+    if family[node] == node:
+        return node
+    return find(family[node])
+
+def union(a, b):
+    parent_a = find(a)
+    parent_b = find(b)
+    if money_lst[parent_a] < money_lst[parent_b]:
+        family[parent_b] = parent_a
+    elif money_lst[parent_a] == money_lst[parent_b]:
+        if parent_a < parent_b:
+            family[parent_b] = parent_a
+        else:
+            family[parent_a] = parent_b    
+    else:
+        family[parent_a] = parent_b
+
+
+
+relations = [[] for _ in range(n+1)]
+
+for i in range(m):
+    a, b = map(int, input().strip().split())
+    union(a, b)
+
+visited = [0] * (n+1)
+visited[0] = 1
+
+def final_find(node):
+    if visited[node] == 1:
+        return 0
+    
+    visited[node] = 1
+    if family[node] == node:
+        return node
+    return final_find(family[node])
+
+ans = 0
+
+for j in range(1, n+1):
+    idx = find(j)
+    if visited[idx] == 0:
+        ans += money_lst[idx]
+        visited[idx] = 1
+
+
+if ans <= k:
+    print(ans)
+else:
+    print("Oh no")
+    
