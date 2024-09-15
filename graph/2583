@@ -1,0 +1,41 @@
+import sys
+input = sys.stdin.readline
+from collections import deque
+
+n, m, k = map(int, input().strip().split())
+visited = [[0] * n for _ in range(m)]
+
+for _ in range(k):
+    x1, y1, x2, y2 = map(int, input().strip().split())
+
+    for i in range(x1, x2):
+        for j in range(y1, y2):
+            visited[i][j] = 1
+
+cnt = 0
+ans_lst = []
+dx = [-1, 1, 0, 0]
+dy = [0, 0, -1, 1]
+
+for x in range(m):
+    for y in range(n):
+        if visited[x][y] == 0:
+            cnt += 1
+            ans = 1
+            visited[x][y] = 1
+            q = deque()
+            q.append((x,y))
+            while q:
+                ox, oy = q.popleft()
+                for l in range(4):
+                    nx, ny = ox + dx[l], oy + dy[l]
+                    if 0 <= nx < m and 0 <= ny < n and not visited[nx][ny]:
+                        visited[nx][ny] = 1
+                        q.append((nx, ny))
+                        ans += 1
+            
+            ans_lst.append(ans)
+
+print(cnt)
+ans_lst.sort()
+print(*ans_lst)
