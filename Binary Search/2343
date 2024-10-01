@@ -1,0 +1,40 @@
+import sys
+input = sys.stdin.readline
+from collections import deque
+
+n, m = map(int, input().strip().split())
+arr = list(map(int, input().strip().split()))
+
+start = max(arr)
+end = start * n
+
+def check(threshold):
+    local_sum = 0
+    blocks_cnt = 1
+
+    for i in range(n):
+        if local_sum + arr[i] > threshold:
+            local_sum = arr[i]
+            blocks_cnt += 1
+
+            if blocks_cnt > m:
+                return -1 # 개수 초과하면 threshold를 높여줘야 함!
+        else:
+            local_sum += arr[i]
+    
+    return 1
+        
+    
+
+while start < end:
+    mid = (start + end) // 2
+    cnt = 0
+    idx = n-1
+    
+    result = check(mid)
+    if result == -1:
+        start = mid + 1
+    else:
+        end = mid
+
+print(end)
