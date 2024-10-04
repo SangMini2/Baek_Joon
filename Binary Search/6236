@@ -1,0 +1,30 @@
+import sys
+input = sys.stdin.readline
+
+n, m = map(int, input().strip().split())
+lst = [int(input()) for _ in range(n)]
+start = max(lst)
+end = start * n
+
+def check(num):
+    cnt = 1
+    pocket = num
+    
+    for money in lst:
+        if pocket - money < 0:
+            cnt += 1
+            pocket = num
+        
+        pocket -= money
+        if cnt > m:
+            return 0
+    return 1
+
+while start < end:
+    mid = (start + end) // 2
+    if check(mid):
+        end = mid
+    else:
+        start = mid + 1
+
+print(end)
