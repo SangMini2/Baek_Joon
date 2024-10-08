@@ -1,0 +1,30 @@
+import sys
+input = sys.stdin.readline
+from math import ceil
+
+n, m = map(int, input().strip().split())
+colors = [int(input()) for _ in range(m)]
+
+# 최대한 균일한 것들로 나눠주는 것이 좋다!
+# 그러니까 균일하게 끊어줄 수 있는 값들을 찾고, 그 값으로 보석들을 끊어줬을 때 총 몇 명한테 줄 수 있는지를 체크한다
+# n보다 작거나 같은 사람에게 줄 수 있으면, 잘 나눠진 것!
+# n보다 크다면, 더 많은 사람에게 나누어 줄 수 있는 것이니까 균일하게 끊어줄 수 있는 값을 늘려서 균일한 값을 높인다 -> 그래야 하나가 특별히 튀지 않는다.
+
+if n == m:
+    print(max(colors))
+else:
+    start = 0
+    end = max(colors)
+    
+    while start < end:
+        mid = (start + end) // 2
+        cnt = 0
+        for color in colors:
+            cnt += ceil(color / mid)
+
+        if cnt > n:
+            start = mid + 1
+        else:
+            end = mid
+
+    print(end)
