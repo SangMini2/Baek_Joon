@@ -1,0 +1,49 @@
+import sys
+input = sys.stdin.readline
+from collections import defaultdict, deque
+
+n = int(input())
+dic = defaultdict(list)
+for _ in range(n):
+    lst = list(map(int, input().strip().split()))
+    start = lst[0]
+    
+    idx = 1
+    while lst[idx] != -1:
+        dic[start].append((lst[idx], lst[idx+1])) # (위치, 거리)
+        idx += 2
+
+
+def find(start, distance):
+    q = deque()
+    q.append((start, distance))
+    visited = [-1] * (n+1)
+    visited[start] = 0
+
+    while q:
+        pos, dis = q.popleft()
+        for next_pos, next_dis in dic[pos]:
+            if visited[next_pos] == -1:
+                visited[next_pos] = dis + next_dis
+                q.append((next_pos, dis + next_dis))
+
+    max_val = 0
+    max_idx = 0
+    for k in range(len(visited)):
+        if visited[k] > max_val:
+            max_idx = k
+            max_val = visited[k]
+    
+    return max_idx, max_val
+
+first_check = 1
+
+'''
+포인트: 끝과 끝을 찾아야 함. leaf들 간의 거리가 가장 길 것이다.
+가장 긴 거리를 만들어 내는 두 leaf는 어떻게 구할 수 있을까?
+찾는 방법: 아무 노드나 시작점이라고 잡았을 때, 가장 먼 거리에 있는 노드가 해당 트리에서 지름을 만들어 내는 두 노드 중에 하나이다.
+그렇게 아무 점이나 선택해서 두 노드 중 하나를 찾아낸 후, 해당 점에서 가장 긴 거리를 구하면 된다
+'''
+start, _ = find(first_check, 0)
+_, answer = find(start, 0)
+print(answer)
