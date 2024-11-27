@@ -1,0 +1,19 @@
+import sys
+input = sys.stdin.readline
+
+n, k = map(int, input().strip().split())
+
+coins = sorted([int(input()) for _ in range(n)], reverse=True)
+
+try_list = [float('inf')] * (k+1)
+try_list[0] = 0
+money_list = [0] * (k+1)
+
+for num in coins:
+    for idx in range(num, k+1):
+        try_list[idx] = min(try_list[idx - num] + 1, try_list[idx])
+
+if try_list[-1] == float('inf'):
+    try_list[-1] = -1
+
+print(try_list[-1])
