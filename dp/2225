@@ -1,0 +1,23 @@
+# 이 문제는 참고를 함. DP문제는 확실히 쓰면서 규칙성을 찾는 것이 중요한 것 같다!
+
+import sys
+input = sys.stdin.readline
+
+n, k = map(int, input().strip().split())
+
+# 0 ~ n 까지 수를 k개 골라서 더한다 (한 개의 수를 여러 번 써도 된다) -> 합이 n
+# 1 <= n <= 200, 1 <= k <= 200
+# k개를 무조건 골라야 함!
+
+lst = [[0] * (n+1) for _ in range(k)]
+
+for i in range(n+1):
+    lst[0][i] = 1
+for i in range(k):    
+    lst[i][0] = 1
+
+for j in range(1, k):
+    for l in range(1, n+1):
+        lst[j][l] = lst[j-1][l] + lst[j][l-1]
+
+print(lst[-1][-1] % 1000000000)
