@@ -1,0 +1,40 @@
+import sys
+input = sys.stdin.readline
+sys.setrecursionlimit(10**6)
+from collections import deque
+
+n, r, q = map(int, input().strip().split())
+
+# 1~n의 Node..
+# Root: r
+
+edges = [[] for _ in range(n+1)]
+for _ in range(n-1):
+    a, b = map(int, input().strip().split())
+    edges[a].append(b)
+    edges[b].append(a)
+
+queries = [int(input()) for _ in range(q)]
+
+q = deque()
+q.append(r)
+while q:
+    node = q.popleft()
+    for n_node in edges[node]:
+        edges[n_node].remove(node)
+        q.append(n_node)
+
+weight = [0] * (n+1)
+
+def init(x):
+    return_thing = 1
+    for next_node in edges[x]:
+        return_thing += init(next_node)
+    
+    weight[x] = return_thing
+    return return_thing
+
+init(r)
+
+for query in queries:
+    print(weight[query])
