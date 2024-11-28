@@ -1,0 +1,96 @@
+import sys
+input = sys.stdin.readline
+# sys.setrecursionlimit(10**6)
+from collections import deque
+
+'''DFS를 사용해서 덩어리를 계산 -> 시간 초과 / BFS를 사용해서 덩어리 계산 -> 통과 / q에 추가하는 것이 recursion보다 빠른가보다'''
+
+n, m = map(int, input().strip().split())
+
+arr = [list(map(int, input().strip().split())) for _ in range(n)]
+
+lst = []
+
+dx = [-1, 1, 0, 0]
+dy = [0, 0, -1, 1]
+
+def update(lst:list):
+    update_lst = []
+    for x, y in lst:
+        update_value = 0
+        for l in range(4):
+            nx = x + dx[l]
+            ny = y + dy[l]
+            if 0 <= nx < n and 0 <= ny < m and arr[nx][ny] == 0:
+                update_value += 1
+        
+        update_lst.append((x, y, update_value))
+    
+    new_lst = []
+    for x, y, value in update_lst:
+        if arr[x][y] - value <= 0:
+            arr[x][y] = 0
+        else:
+            arr[x][y] -= value
+            new_lst.append((x, y))
+    
+    return new_lst
+
+# check!
+def dfs(start):
+    x, y = start
+    return_thing = 1
+    for i in range(4):
+        nx = x + dx[i]
+        ny = y + dy[i]
+        if 0 <= nx < n and 0 <= ny < m and visited[nx][ny] == 0 and arr[nx][ny] != 0:
+            visited[nx][ny] = 1
+            return_thing += dfs((nx, ny))
+    
+    return return_thing
+
+def bfs(start):
+    x, y = start
+    q = deque()
+    q.append(start)
+    return_thing = 0
+    while q:
+        x, y = q.popleft()
+        return_thing += 1
+        for i in range(4):
+            nx = x + dx[i]
+            ny = y + dy[i]
+            if 0 <= nx < n and 0 <= ny < m and visited[nx][ny] == 0 and arr[nx][ny] != 0:
+                visited[nx][ny] = 1
+                q.append((nx, ny))
+    
+    return return_thing
+          
+
+
+for i in range(n):
+    for j in range(m):
+        if arr[i][j] != 0:
+            lst.append((i, j))
+
+cnt = 0
+flag = 0
+while True:
+    new_lst = update(lst)
+    if len(new_lst) == 0:
+        break
+    cnt += 1
+    visited = [[0] * m for _ in range(n)]
+    
+    start_x, start_y = new_lst[0]
+    visited[start_x][start_y] = 1
+    one_block = bfs(new_lst[0])
+    
+    if len(new_lst) != one_block:
+        flag = 1
+        break
+
+if flag == 1:
+    print(cnt)
+else:
+    print(0)
