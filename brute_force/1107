@@ -1,0 +1,25 @@
+import sys
+input = sys.stdin.readline
+
+'''항상 데이터의 범위를 보고, 완전 탐색을 해도 되는지 파악해야 쉽게 문제를 해결할 수 있다 ...'''
+
+n = input().strip()
+len_n = len(n)
+m = int(input())
+
+limit = abs(int(n) - 100) + int(n) + 1
+ans = abs(int(n) - 100)
+buttons = sorted(input().strip().split()) # 고장난 버튼
+
+for i in range(limit):
+    check = str(i)
+    flag = 1
+    for j in check:
+        if j in buttons:
+            flag = 0
+            break
+    
+    if flag == 1:
+        ans = min(ans, abs(int(i) - int(n)) + len(check))
+            
+print(ans)
