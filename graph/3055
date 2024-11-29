@@ -1,0 +1,63 @@
+import sys
+input = sys.stdin.readline
+from collections import deque
+
+n, m = map(int, input().strip().split())
+
+water = deque()
+arr = []
+water_visited = [[-1] * m for _ in range(n)]
+for i in range(n):
+    lst = list(input().strip())
+    for j in range(m):
+        if lst[j] == "S":
+            pos = (i, j)
+        elif lst[j] == "D":
+            goal = (i, j)
+        elif lst[j] == "*":
+            water.append([i, j])
+            water_visited[i][j] = 0
+    
+    arr.append(lst)
+
+time = 0
+dx = [-1, 1, 0, 0]
+dy = [0, 0, -1, 1]
+    
+            
+q = deque()
+q.append([[pos], 0])
+while q:
+    next_list = set()
+    cur_list, cur_cnt = q.popleft() # list
+    for cur_pos in cur_list:
+        c_x, c_y = cur_pos
+        for l in range(4):
+            nx = c_x + dx[l]
+            ny = c_y + dy[l]
+            if 0 <= nx < n and 0 <= ny < m:
+                if arr[nx][ny] == ".":
+                    next_list.add((nx, ny))
+                elif arr[nx][ny] == "D":
+                    print(cur_cnt + 1)
+                    exit()
+    
+    # 물 변화
+    while water:
+        if water_visited[water[0][0]][water[0][1]] != cur_cnt:
+            break
+        drop_x, drop_y = water.popleft()
+        
+        for j in range(4):
+            drop_nx = drop_x + dx[j]
+            drop_ny = drop_y + dy[j]
+            if 0 <= drop_nx < n and 0 <= drop_ny < m and arr[drop_nx][drop_ny] == '.':
+                arr[drop_nx][drop_ny] = "*"
+                water_visited[drop_nx][drop_ny] = water_visited[drop_x][drop_y] + 1
+                water.append((drop_nx, drop_ny))
+    
+    next_list -= set(water)
+    if next_list:
+        q.append([next_list, cur_cnt + 1])
+         
+print("KAKTUS")
