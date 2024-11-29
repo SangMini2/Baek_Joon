@@ -1,0 +1,47 @@
+import sys
+input = sys.stdin.readline
+from itertools import combinations
+n, k = map(int, input().strip().split())
+
+# 총 단어: n
+# 총 글자: k
+start_word = 'anta'
+end_word = "tica"
+
+start_count = set(start_word + end_word)
+left_cnt = k - len(start_count)
+
+# words = [set(input().strip()[4:-4]) - start_count for _ in range(n)]
+alphabets = set()
+words = []
+for _ in range(n):
+    word_set = set(input().strip()[4:-4]) - start_count
+    visited = 0
+    for char in word_set:
+        num = ord(char) - 97
+        visited |= (1<<num)
+        alphabets.add(num)
+        
+    words.append(visited)
+    
+
+# brute force 느낌인데..
+if k < len(start_count): # 시작과 끝으로 이루어진 것보다 작으면? 아무 것도 못읽지
+    print(0)
+elif left_cnt >= len(alphabets):
+    print(n)
+else:
+    ans = 0
+    for comb in combinations(alphabets, left_cnt):
+        local_ans = 0
+        check_comb = 0
+        for element in comb:
+            check_comb |= (1 << element)
+        
+        for word in words:
+            if word == word & check_comb:
+                local_ans += 1
+        
+        ans = max(ans, local_ans)
+    
+    print(ans)
