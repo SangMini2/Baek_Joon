@@ -1,0 +1,27 @@
+import sys
+input = sys.stdin.readline
+
+n, k = map(int, input().strip().split())
+
+if n <= k:
+    print(0)
+    exit()
+
+positions = []
+index = 0
+
+while n > 0:
+    if n & 1:
+        positions.append(index)
+    
+    n >>= 1
+    index += 1
+
+if len(positions) <= k:
+    print(0)
+    exit()
+
+ans = 2 ** positions[-k] 
+for idx in positions[:-k]:
+    ans -= 2 ** idx
+print(ans)
