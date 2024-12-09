@@ -1,0 +1,71 @@
+import sys
+input = sys.stdin.readline
+
+n = int(input())
+arr = [0] * (2 ** 21) # 1번째를 시작으로 하는 것임
+max_flavor = 1000000
+
+
+def find_leaf(num, start, end, cur_idx): # leaf index 찾기
+    if start == end:
+        return cur_idx
+    
+    mid = (start + end) // 2
+    
+    if num <= mid:
+        return find_leaf(num, start, mid, cur_idx * 2)
+    else:
+        return find_leaf(num, mid+1, end, cur_idx * 2 + 1)
+    
+
+def update(leaf_idx, cnt):
+    while leaf_idx != 1:
+        arr[leaf_idx] += cnt
+        leaf_idx = leaf_idx // 2
+    arr[1] += cnt
+
+def add(num, start, end, cur_idx, cnt):
+    mid = (start + end) // 2
+    arr[cur_idx] += cnt
+    
+    if start == end:
+        return
+    
+    if num <= mid:
+        add(num, start, mid, 2 * cur_idx, cnt)
+    else:
+        add(num, mid + 1, end, cur_idx * 2 + 1, cnt)
+
+def find(num, start, end, cur_idx):
+    if start == end: # leaf node라면?
+        return start, cur_idx
+    
+    mid = (start + end) // 2
+    left = arr[cur_idx * 2]
+    if num <= left:
+        return find(num, start, mid, cur_idx*2)
+    else:
+        return find(num-left, mid+1, end, cur_idx * 2 + 1)
+
+
+for _ in range(n):
+    # print(f"arr: {arr}")
+    lst = list(map(int, input().strip().split()))
+    if len(lst) == 3: # 넣는 경우. B -> 넣을 사탕 맛을 나타내는 정수, C -> 사탕 개수
+        a, b, c = lst
+        if c > 0:
+            add(b, 1, max_flavor, 1, c)
+        else:
+            leaf_node = find_leaf(b, 1, max_flavor, 1)
+            if arr[leaf_node] < -c: # 현재 가지고 있는 것이 더 작으면?
+                remove_thing = arr[leaf_node]
+                update(leaf_node, -remove_thing)
+            else:
+                update(leaf_node, c)       
+
+    else: # A, B -> B의 우선 순위 의미
+        a, b = lst
+        value, idx = find(b, 1, max_flavor, 1)
+        print(value)
+        update(idx, -1)
+        
