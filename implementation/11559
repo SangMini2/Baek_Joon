@@ -1,0 +1,68 @@
+import sys
+input = sys.stdin.readline
+from collections import deque
+
+arr = [list(input().strip()) for _ in range(12)]
+
+dx = [-1, 1, 0, 0]
+dy = [0, 0, -1, 1]
+
+def check(start_x, start_y, char):
+    global visited
+    
+    return_list = []
+    return_list.append((start_x, start_y))
+    
+    q = deque()
+    q.append((start_x, start_y))
+    
+    while q:
+        x, y = q.popleft()
+        for i in range(4):
+            nx = x + dx[i]
+            ny = y + dy[i]
+            if 0 <= nx < 12 and 0 <= ny < 6 and arr[nx][ny] == char and visited[nx][ny] == 0:
+                q.append((nx, ny))
+                return_list.append((nx, ny))
+                visited[nx][ny] = 1
+    
+    return return_list
+
+
+def down(col_idx):
+    pos = 11
+    down_q = deque()
+    for i in range(11, -1, -1):
+        if arr[i][col_idx] != ".":
+            down_q.append(arr[i][col_idx])
+            arr[i][col_idx] = "."
+    
+    while down_q:
+        down_char = down_q.popleft()
+        arr[pos][col_idx] = down_char
+        pos -= 1
+    
+cnt = 0
+while True:  
+    visited = [[0] * 6 for _ in range(12)]
+    flag = 0
+    down_col = set()
+    for i in range(12):
+        for j in range(6):
+            if arr[i][j] != '.' and visited[i][j] == 0:
+                visited[i][j] = 1
+                return_list = check(i, j, arr[i][j])
+                if len(return_list) >= 4:
+                    flag = 1
+                    for a, b in return_list:
+                        arr[a][b] = "."
+                        down_col.add(b)
+                 
+    for change_col_idx in down_col:
+        down(change_col_idx)
+
+    if flag == 0:
+        break
+    
+    cnt += 1
+print(cnt)       
