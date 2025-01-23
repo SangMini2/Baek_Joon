@@ -1,0 +1,54 @@
+import sys
+input = sys.stdin.readline
+
+n = int(input())
+parent_node = list(map(int, input().strip().split()))
+remove_node = int(input())
+
+child_check = [[] for _ in range(n)]
+
+for i in range(n):
+    if parent_node[i] != -1:
+        child_check[parent_node[i]].append(i)
+    else:
+        root_idx = i
+
+def remove_func(node):
+    for node_ in child_check[node]:
+        remove_func(node_)
+    child_check[node] = -1
+    return 0
+
+if remove_node == root_idx:
+    print(0)
+    exit()
+
+remove_func(remove_node)
+child_check[parent_node[remove_node]].remove(remove_node)
+
+ans = 0
+
+for check in child_check:
+    if isinstance(check, list) and not check:
+        ans += 1
+
+print(ans)
+
+'''
+반례
+
+2
+-1 0
+1
+정답: 1
+
+4
+2 2 -1 1
+0
+정답: 1
+
+9
+-1 0 0 5 2 4 4 6 6
+4
+정답: 2
+'''
