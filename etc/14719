@@ -1,0 +1,15 @@
+import sys
+input = sys.stdin.readline
+
+h, w = map(int, input().strip().split())
+lst = list(map(int, input().strip().split()))
+
+ans = 0
+for i in range(1, w-1):
+    cut_height = min(max(lst[:i]), max(lst[i+1:]))
+    if lst[i] < cut_height:
+        ans += (cut_height - lst[i])
+print(ans)
+
+# 현재 기둥 기준으로 오른쪽에서 가장 큰 기둥과 왼쪽에서 가장 큰 기둥을 구하고, 둘 중 작은 게 채워질 최대 높이이다.
+# 그러니까 만약 현재 기둥이 채워질 최대 높이보다 크면, 채워질 수가 없다. 하지만 채워질 최대 높이가 현재 기둥보다 크다면, '채워질 최대 높이 - 현재 기둥'이 채워질 높이다.
