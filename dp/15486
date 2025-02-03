@@ -1,0 +1,19 @@
+import sys
+input = sys.stdin.readline
+
+n = int(input())
+dp = [0] * (n + 1) # n+1까지(마지막꺼까지) 해야 함 -> 그래야 준비 완료 된 것들을 체크할 수 있음.
+duration, value = map(int, input().strip().split())
+if duration < n+1:
+    dp[duration] = value
+
+for i in range(1, n):
+    duration, value = map(int, input().strip().split())
+    dp[i] = max(dp[i], dp[i-1])
+    if i + duration > n:
+        continue
+    dp[i + duration] = max(dp[i + duration], dp[i] + value)
+
+
+dp[-1] = max(dp[-1], dp[-2])
+print(dp[-1])
