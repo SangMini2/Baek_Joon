@@ -1,0 +1,50 @@
+import sys
+input = sys.stdin.readline
+from collections import deque
+
+dx = [-1, 1, 0, 0, 0, 0]
+dy = [0, 0, -1, 1, 0, 0]
+dz = [0, 0, 0, 0, -1, 1]
+
+escape_prompt = "Escaped in {time} minute(s)."
+trapped_prompt = "Trapped!"
+
+while True:
+    L, R, C = map(int, input().strip().split())
+    if L == R == C == 0:
+        break
+    visited = [[[-1] * C for _ in range(R)] for _ in range(L)]
+    arr = []
+    for i in range(L):
+        sub_arr = []
+        for j in range(R):
+            sub_sub_string = input().strip()
+            idx = sub_sub_string.find("S")
+            if idx != -1:
+                start_pos = [i, j, idx]
+                
+            sub_sub_arr = list(sub_sub_string)
+            sub_arr.append(sub_sub_arr)
+        arr.append(sub_arr)            
+        input()
+    q = deque()
+    visited[start_pos[0]][start_pos[1]][start_pos[2]] = 0
+    q.append(start_pos)
+    flag = 0
+    
+    while q:
+        x, y, z = q.popleft()
+        if arr[x][y][z] == "E":
+            flag = 1
+            break
+        for l in range(6):
+            nx, ny, nz = x + dx[l], y + dy[l], z + dz[l]
+            if 0 <= nx < L and 0 <= ny < R and 0 <= nz < C and visited[nx][ny][nz] == -1 and arr[nx][ny][nz] not in set(["S", "#"]):
+                visited[nx][ny][nz] = visited[x][y][z] + 1
+                q.append([nx, ny, nz])
+
+    if flag == 1:
+        print(escape_prompt.format(time=visited[x][y][z]))
+    else:
+        print(trapped_prompt)
+    
