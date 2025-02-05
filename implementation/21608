@@ -1,0 +1,47 @@
+import sys
+input = sys.stdin.readline
+
+n = int(input())
+
+dx = [-1, 1, 0, 0]
+dy = [0, 0, -1, 1]
+visited = [[0] * n for _ in range(n)]
+
+def check(x, y, love_list):
+    cnt = 0
+    love = 0
+    for i in range(4):
+        nx, ny = x + dx[i], y + dy[i]
+        if 0 <= nx < n and 0 <= ny < n:
+            if visited[nx][ny] == 0:
+                cnt += 1
+            elif visited[nx][ny] in love_list:
+                love += 1
+    
+    return cnt, love
+
+student_dic = dict()
+for _ in range(n * n):
+    lst = list(map(int, input().strip().split()))
+    num, love_lst = lst[0], lst[1:]
+    student_dic[num] = love_lst
+    sort_list = []
+    for j in range(n):
+        for l in range(n):
+            cur_cnt, cur_love = check(j, l, love_lst)
+            sort_list.append((cur_love, cur_cnt, j, l))
+    
+    sort_list = sorted(sort_list, key=lambda x: (-x[0], -x[1], x[2], x[3]))
+    for _, _, new_x, new_y in sort_list:
+        if visited[new_x][new_y] == 0:
+            visited[new_x][new_y] = num
+            break
+
+total_love = 0
+love_dic = {0: 0, 1: 1, 2: 10, 3: 100, 4: 1000}
+for a in range(n):
+    for b in range(n):
+        _, love_plus = check(a, b, student_dic[visited[a][b]])
+        total_love += love_dic[love_plus]
+        
+print(total_love)        
