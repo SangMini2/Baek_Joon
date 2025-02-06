@@ -1,0 +1,21 @@
+import sys
+input = sys.stdin.readline
+from collections import deque
+
+n = int(input())
+arr = [(int(input()), i) for i in range(n)]
+
+q = deque()
+
+ans = 0
+for cur_height, cur_idx in arr:
+    while q and q[0][0] <= cur_height:
+        _, pop_idx = q.popleft()
+        ans += (cur_idx - pop_idx - 1)
+    q.appendleft((cur_height, cur_idx))
+
+while q:
+    _, pop_idx = q.popleft()
+    ans += (n - 1 - pop_idx)
+
+print(ans)
