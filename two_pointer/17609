@@ -1,0 +1,30 @@
+import sys
+input = sys.stdin.readline
+
+n = int(input())
+
+def palindrome(check):
+    len_check = len(check)
+    start_idx = 0
+    end_idx = len_check - 1
+    for i in range(len_check // 2):
+        if check[start_idx + i] != check[end_idx - i]:
+            return 0, start_idx + i, end_idx - i
+    return 1, -1, -1
+
+# 좌우반전: 0
+# 하나 빼고 좌우반전: 1
+# 다 아니다: 2
+
+for _ in range(n):
+    string = input().strip()
+    result, start_idx, end_idx = palindrome(string)
+    if result == 1:
+        print(0)
+    else:
+        semi_result1, _, _, = palindrome(string[:start_idx] + string[start_idx + 1:])
+        semi_result2, _, _, = palindrome(string[:end_idx] + string[end_idx+1:])
+        if semi_result1 or semi_result2:
+            print(1)
+        else:
+            print(2)
