@@ -1,0 +1,41 @@
+from collections import deque
+import sys
+input = sys.stdin.readline
+
+
+def func(x, y):
+    global cnt
+    dx = [-1, 1, 0, 0, 1, -1, 1, -1]
+    dy = [0, 0, -1, 1, 1, 1, -1, -1]
+
+    q = deque()
+
+    if arr[x][y] == 1:
+        q.append((x, y))
+        arr[x][y] = 0
+        cnt += 1
+
+    while q:
+        cx, cy = q.popleft()
+        for l in range(8):
+            nx, ny = cx + dx[l], cy + dy[l]
+            if 0 <= nx < h and 0 <= ny < w and arr[nx][ny] == 1:
+                arr[nx][ny] = 0
+                q.append((nx, ny))
+
+    return
+
+
+while True:
+    cnt = 0
+    w, h = map(int, input().strip().split())
+    if w == h == 0:
+        break
+
+    arr = [list(map(int, input().strip().split())) for _ in range(h)]
+    cnt = 0
+    for i in range(h):
+        for j in range(w):
+            func(i, j)
+
+    print(cnt)
