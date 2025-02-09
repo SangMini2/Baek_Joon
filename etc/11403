@@ -1,0 +1,29 @@
+from collections import deque
+import sys
+input = sys.stdin.readline
+
+n = int(input())
+
+arr = [list(map(int, input().strip().split())) for _ in range(n)]
+
+while True:
+    change = 0
+    for i in range(n):
+        for j in range(n):
+            if arr[i][j] == 1:
+                q = deque()
+                q.append(j)
+
+                while q:
+                    x = q.popleft()
+                    for l in range(n):
+                        if arr[x][l] == 1 and arr[i][l] == 0 and l not in q:
+                            arr[i][l] = 1
+                            q.append(l)
+                            change = 1
+
+    if change == 0:
+        break
+
+for ans_lst in arr:
+    print(*ans_lst)
