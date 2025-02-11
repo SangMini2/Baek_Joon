@@ -1,0 +1,17 @@
+from heapq import heappush, heappop
+import sys
+input = sys.stdin.readline
+
+n, m = map(int, input().strip().split())
+# n: 과목 수
+# m: 조건 수
+lst = [[i, 1] for i in range(1, n+1)]
+prerequisite = [1] * (n+1)
+
+compare_list = sorted([list(map(int, input().strip().split()))
+                      for _ in range(m)])
+for a, b in compare_list:
+    prerequisite[b] = max(prerequisite[a] + 1, prerequisite[b])
+
+for l in range(1, n+1):
+    print(prerequisite[l], end=" ")
