@@ -15,3 +15,38 @@ for a, b in compare_list:
 
 for l in range(1, n+1):
     print(prerequisite[l], end=" ")
+
+##############################################
+# New method. 시간이 줄어듦 -> 전체 sort를 없애 주었기 때문
+
+from heapq import heappush, heappop
+import sys
+input = sys.stdin.readline
+
+n, m = map(int, input().strip().split())
+# n: 과목 수
+# m: 조건 수
+lst = [[1, i] for i in range(1, n+1)]
+prerequisite = [1] * (n+1)
+ingredient = [0] * (n+1)
+graph = [[] for _ in range(n+1)]
+
+for _ in range(m):
+    a, b = map(int, input().strip().split())
+    graph[a].append(b)
+    ingredient[b] += 1
+
+lst = []
+for k in range(1, n+1):
+    if ingredient[k] == 0:
+        heappush(lst, [1, k])
+
+while lst:
+    num, idx = heappop(lst)
+    for next_node in graph[idx]:
+        prerequisite[next_node] = max(prerequisite[next_node], num + 1)
+        ingredient[next_node] -= 1
+        if ingredient[next_node] == 0:
+            heappush(lst, [prerequisite[next_node], next_node])
+
+print(*prerequisite[1:])
