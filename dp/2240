@@ -1,0 +1,32 @@
+import sys
+input = sys.stdin.readline
+
+t, w = map(int, input().strip().split())
+arr = [int(input()) for _ in range(t)]
+
+dp = [[0] * (w+1) for _ in range(t)]
+if arr[0] == 1:
+    dp[0][0] = 1  # 이동 0번 했을 때, 즉 처음에 이동하지 않았을 때
+else:
+    dp[0][1] = 1  # 이동 1번 했을 때, 즉 처음부터 이동했을 때
+
+for i in range(1, t):
+    if arr[i] == 1:
+        dp[i][0] = dp[i-1][0] + 1
+
+
+for i in range(1, t):
+    for j in range(1, min(i+1, w+1)):
+        if arr[i] == 1:
+            if j % 2 == 1:  # 현재 위치가 2번 일 때
+                # 이번에 움직임, 움직이지 않고 그대로
+                dp[i][j] = max(dp[i-1][j-1] + 1, dp[i-1][j])
+            else:
+                dp[i][j] = max(dp[i-1][j-1], dp[i-1][j]) + 1
+        else:
+            if j % 2 == 0:
+                dp[i][j] = max(dp[i-1][j-1] + 1, dp[i-1][j])
+            else:
+                dp[i][j] = max(dp[i-1][j-1], dp[i-1][j]) + 1
+
+print(max(dp[-1][:]))
