@@ -1,0 +1,28 @@
+from heapq import heappush, heappop
+from collections import defaultdict
+import sys
+input = sys.stdin.readline
+
+n, m = map(int, input().strip().split())  # n: 헛간, m: 길
+
+dic = defaultdict(list)
+q = []
+for _ in range(m):
+    a, b, c = map(int, input().strip().split())
+    dic[a].append((b, c))
+    dic[b].append((a, c))
+
+dis = [float('inf')] * (n+1)
+dis[1] = 0
+q = [(0, 1)]
+while q:
+    cow, point = heappop(q)
+    if cow > dis[point]:
+        continue
+
+    for next_idx, next_cow in dic[point]:
+        if dis[next_idx] > cow + next_cow:
+            dis[next_idx] = cow + next_cow
+            heappush(q, (next_cow + cow, next_idx)) # 업데이트 되는 값은 다음 기점으로
+
+print(dis[-1])
