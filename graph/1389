@@ -1,0 +1,37 @@
+from collections import defaultdict, deque
+import sys
+input = sys.stdin.readline
+
+n, m = map(int, input().strip().split())
+
+dic = defaultdict(list)
+for _ in range(m):
+    a, b = map(int, input().strip().split())
+    dic[a].append(b)
+    dic[b].append(a)
+
+
+def link(start_node):
+    lst = [-1] * (n+1)
+    q = deque()
+    q.append(start_node)
+    lst[start_node] = 0
+    while q:
+        node = q.popleft()
+        for n_node in dic[node]:
+            if lst[n_node] == -1:
+                q.append(n_node)
+                lst[n_node] = lst[node] + 1
+
+    return sum(lst[1:])
+
+
+value = float('inf')
+
+for i in range(1, n+1):
+    compare = link(i)
+    if value > compare:
+        ans = i
+        value = compare
+
+print(ans)
