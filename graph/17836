@@ -1,0 +1,43 @@
+from collections import deque
+import sys
+input = sys.stdin.readline
+
+n, m, t = map(int, input().strip().split())
+
+arr = [list(map(int, input().strip().split())) for _ in range(n)]
+visited = [[-1] * m for _ in range(n)]
+
+q = deque()
+if arr[0][0] == 2:
+    q.append((0, 0))
+else:
+    q.append((0, 0))
+
+visited[0][0] = 0
+
+dx = [-1, 1, 0, 0]
+dy = [0, 0, -1, 1]
+
+sword_ans = float('inf')
+while q:
+    x, y = q.popleft()
+    if visited[x][y] > t or (x == n-1 and y == m-1):
+        break
+
+    if arr[x][y] == 2:
+        sword_ans = visited[x][y] + n - 1 - x + m - 1 - y
+
+    for i in range(4):
+        nx, ny = x + dx[i], y + dy[i]
+        if 0 <= nx < n and 0 <= ny < m and arr[nx][ny] != 1 and visited[nx][ny] == -1:
+            q.append((nx, ny))
+            visited[nx][ny] = visited[x][y] + 1
+
+
+if visited[-1][-1] == -1:
+    if sword_ans != float('inf') and sword_ans <= t:
+        print(sword_ans)
+    else:
+        print('Fail')
+else:
+    print(min(visited[-1][-1], sword_ans))
