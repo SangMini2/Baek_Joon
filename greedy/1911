@@ -1,0 +1,29 @@
+import sys
+input = sys.stdin.readline
+
+n, l = map(int, input().strip().split())  # n개 웅덩이, l 길이의 널빤지
+
+arr = []
+
+for _ in range(n):
+    s, e = map(int, input().strip().split())
+    arr.append((s, e))
+
+arr.sort()
+
+box_cnt = 0
+box_start_idx = 0
+
+for s, e in arr:
+    # 경우의 수 나누기: 1. box가 끝나고, 새로운 거에 맞춰서 다시 맞추기 / 2. box box 사이에서 끝나기 / 3. 기존의 박스에 현재 웅덩이가 다 포함됨
+    if s > box_start_idx:
+        box_start_idx = s
+
+    fit = (e - box_start_idx) % l
+    cur_cnt = (e - box_start_idx) // l
+    if fit != 0:
+        cur_cnt += 1
+    box_cnt += cur_cnt
+    box_start_idx += l * cur_cnt
+
+print(box_cnt)
