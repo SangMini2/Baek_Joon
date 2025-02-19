@@ -1,0 +1,25 @@
+import sys
+input = sys.stdin.readline
+
+S = input().strip()
+T = input().strip()
+
+
+def find(s, t):
+    if len(s) == len(t):
+        return t == s
+    a_check = 0
+    b_check = 0
+
+    if t[-1] == "A":
+        a_check = find(s, t[:-1])
+
+    if t[0] == 'B':
+        b_check = find(s, t[:0:-1])
+
+    if a_check or b_check:
+        return 1
+    return 0
+
+
+print(find(S, T))
