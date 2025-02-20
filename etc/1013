@@ -1,0 +1,69 @@
+# re library 사용
+import sys
+input = sys.stdin.readline
+import re
+
+T = int(input())
+p = re.compile("(100+1+|01)+")
+for _ in range(T):
+    signal = input().strip()
+    if p.fullmatch(signal):
+        print("YES")
+    else:
+        print("NO")
+
+
+########################
+
+# 그냥 구현
+import sys
+input = sys.stdin.readline
+
+for _ in range(int(input())):
+    num = input().strip()
+    lst = num.split('100')
+    # print(f"lst: {lst}")
+    result = 1
+    if lst[0] and "".join(lst[0].split('01')):
+        result = 0
+
+    else:
+        for splited in lst[1:]:
+            if not splited:
+                result = 0
+                break
+
+            elif not splited.endswith('1'):
+                result = 0
+                break
+
+            elif splited[0] == '1':
+                while splited:
+                    if splited.endswith('01'):
+                        splited = splited[:-2]
+                    else:
+                        break
+
+                if '0' in splited:
+                    result = 0
+                    break
+
+            elif splited[0] == '0':
+                changed = 0
+                while splited:
+                    if splited[0] == '1' and changed == 0:
+                        changed += 1
+
+                    elif splited[0] == '0' and changed > 0:
+                        break
+
+                    splited = splited[1:]
+
+                if "".join(splited.split('01')):
+                    result = 0
+                    break
+
+    if result:
+        print("YES")
+    else:
+        print("NO")
