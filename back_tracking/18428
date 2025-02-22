@@ -1,0 +1,97 @@
+from itertools import combinations
+from copy import deepcopy
+import sys
+input = sys.stdin.readline
+
+n = int(input())
+
+teacher = set()
+student = set()
+
+full = set()
+
+for a in range(n):
+    for b in range(n):
+        full.add((a, b))
+
+
+arr = []
+for i in range(n):
+    lst = list(input().strip().split())
+    for j in range(n):
+        if lst[j] == "S":
+            student.add((i, j))
+        elif lst[j] == "T":
+            teacher.add((i, j))
+    arr.append(lst)
+
+
+# for student_x, student_y in student:
+#     for teacher_x, teacher_y in teacher:
+#         if abs(student_x - teacher_x) + abs(student_y - teacher_y) == 1:
+#             print("NO")
+#             exit()
+
+block = full - student - teacher
+
+
+def check():
+    for teacher_x, teacher_y in teacher:
+        # up 방향 check: teacher_y는 고정 teacher_x를 마이너스 방향
+        check_x = deepcopy(teacher_x)
+        check_x -= 1
+        while check_x >= 0:
+            if arr[check_x][teacher_y] == "S":
+                return 0
+            elif arr[check_x][teacher_y] in {"B", "T"}:
+                break
+            check_x -= 1
+
+        # down 방향 check: teacher_y는 고정 teacher_x를 플러스 방향
+        check_x = deepcopy(teacher_x)
+        check_x += 1
+        while check_x < n:
+            if arr[check_x][teacher_y] == "S":
+                return 0
+            elif arr[check_x][teacher_y] in {"B", "T"}:
+                break
+            check_x += 1
+
+        # left 방향 check: teacher_x는 고정 teacher_y를 마이너스 방향
+        check_y = deepcopy(teacher_y)
+        check_y -= 1
+        while check_y >= 0:
+            if arr[teacher_x][check_y] == "S":
+                return 0
+            elif arr[teacher_x][check_y] in {"B", "T"}:
+                break
+            check_y -= 1
+
+        # right 방향 check: teacher_x는 고정 teacher_Y를 플러스 방향
+        check_y = deepcopy(teacher_y)
+        check_y += 1
+        while check_y < n:
+            if arr[teacher_x][check_y] == "S":
+                return 0
+            elif arr[teacher_x][check_y] in {"B", "T"}:
+                break
+            check_y += 1
+
+    return 1
+
+
+ans = {(0, 3), (1, 1), (2, 2)}
+for b1, b2, b3 in combinations(block, 3):
+    arr[b1[0]][b1[1]] = "B"
+    arr[b2[0]][b2[1]] = "B"
+    arr[b3[0]][b3[1]] = "B"
+
+    if check():
+        print("YES")
+        exit()
+
+    arr[b1[0]][b1[1]] = "X"
+    arr[b2[0]][b2[1]] = "X"
+    arr[b3[0]][b3[1]] = "X"
+
+print("NO")
