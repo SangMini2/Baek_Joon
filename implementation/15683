@@ -1,0 +1,197 @@
+from itertools import product
+from collections import defaultdict
+import sys
+input = sys.stdin.readline
+
+arr = []
+n, m = map(int, input().strip().split())
+dic = defaultdict(list)
+
+
+def left(x, y):
+    changed = []
+    left_idx = 0
+    while y + left_idx >= 0:
+        if arr[x][y + left_idx] == 0:
+            arr[x][y + left_idx] = "#"
+            changed.append((x, y + left_idx))
+        elif arr[x][y + left_idx] == 6:
+            break
+
+        left_idx -= 1
+    return changed
+
+
+def right(x, y):
+    changed = []
+    right_idx = 0
+    while y + right_idx < m:
+        if arr[x][y+right_idx] == 0:
+            arr[x][y+right_idx] = "#"
+            changed.append((x, y + right_idx))
+        elif arr[x][y+right_idx] == 6:
+            break
+
+        right_idx += 1
+
+    return changed
+
+
+def up(x, y):
+    changed = []
+    up_idx = 0
+    while x + up_idx >= 0:
+        if arr[x + up_idx][y] == 0:
+            arr[x + up_idx][y] = "#"
+            changed.append((x + up_idx, y))
+
+        elif arr[x + up_idx][y] == 6:
+            break
+
+        up_idx -= 1
+    return changed
+
+
+def down(x, y):
+    changed = []
+    down_idx = 0
+    while x + down_idx < n:
+        if arr[x + down_idx][y] == 0:
+            arr[x + down_idx][y] = "#"
+            changed.append((x + down_idx, y))
+
+        elif arr[x + down_idx][y] == 6:
+            break
+        down_idx += 1
+
+    return changed
+
+
+def func(x, y, cctv_idx, dir):
+    if cctv_idx == 1:
+        if dir == 0:  # 오른쪽
+            changed = right(x, y)
+        elif dir == 1:  # 왼쪽
+            changed = left(x, y)
+        elif dir == 2:  # 아래쪽
+            changed = down(x, y)
+        else:  # 위쪽
+            changed = up(x, y)
+        return changed
+
+    elif cctv_idx == 2:
+        changed = []
+        if dir == 0:
+            changed.extend(left(x, y))
+            changed.extend(right(x, y))
+
+        else:
+            changed.extend(up(x, y))
+            changed.extend(down(x, y))
+
+        return changed
+
+    elif cctv_idx == 3:
+        changed = []
+        if dir == 0:
+            changed.extend(up(x, y))
+            changed.extend(right(x, y))
+
+        elif dir == 1:
+            changed.extend(right(x, y))
+            changed.extend(down(x, y))
+
+        elif dir == 2:
+            changed.extend(down(x, y))
+            changed.extend(left(x, y))
+
+        else:
+            changed.extend(left(x, y))
+            changed.extend(up(x, y))
+
+        return changed
+
+    elif cctv_idx == 4:
+        changed = []
+        if dir == 0:
+            changed.extend(left(x, y))
+            changed.extend(up(x, y))
+            changed.extend(right(x, y))
+
+        elif dir == 1:
+            changed.extend(up(x, y))
+            changed.extend(right(x, y))
+            changed.extend(down(x, y))
+
+        elif dir == 2:
+            changed.extend(right(x, y))
+            changed.extend(down(x, y))
+            changed.extend(left(x, y))
+
+        else:
+            changed.extend(down(x, y))
+            changed.extend(left(x, y))
+            changed.extend(up(x, y))
+
+        return changed
+
+    else:
+        changed = []
+        changed.extend(left(x, y))
+        changed.extend(up(x, y))
+        changed.extend(right(x, y))
+        changed.extend(down(x, y))
+        return changed
+
+
+space = 0
+for i in range(n):
+    lst = list(map(int, input().strip().split()))
+    for j in range(m):
+        if lst[j] != 0:
+            dic[lst[j]].append((i, j))
+        else:
+            space += 1
+    arr.append(lst)
+
+direction_4 = [a for a in range(4)]
+direction_2 = [b for b in range(2)]
+
+if 5 in dic:
+    for x, y in dic[5]:
+        changed_list = func(x, y, 5, 0)
+        space -= len(changed_list)
+
+direction_4_list = []
+direction_2_list = []
+
+for key, value in dic.items():
+    if key in {1, 3, 4}:
+        for check_x, check_y in value:
+            direction_4_list.append((check_x, check_y, key))
+
+    elif key == 2:
+        for check_x, check_y in value:
+            direction_2_list.append((check_x, check_y, key))
+
+ans = space
+for repeat_list in product(direction_4, repeat=len(direction_4_list)):
+    changed4 = []
+    for idx, check_lst in enumerate(direction_4_list):
+        changed4.extend(
+            func(check_lst[0], check_lst[1], check_lst[2], repeat_list[idx]))
+
+    for repeat_list2 in product(direction_2, repeat=len(direction_2_list)):
+        changed2 = []
+        for idx2, check_lst2 in enumerate(direction_2_list):
+            changed2.extend(
+                func(check_lst2[0], check_lst2[1], check_lst2[2], repeat_list2[idx2]))
+
+        ans = min(ans, space - len(changed4) - len(changed2))
+        for return_x, return_y in changed2:
+            arr[return_x][return_y] = 0
+
+    for return_x4, return_y4 in changed4:
+        arr[return_x4][return_y4] = 0
+
+print(ans)
