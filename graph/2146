@@ -1,0 +1,78 @@
+from collections import deque
+import sys
+input = sys.stdin.readline
+
+n = int(input())
+
+'''
+알고리즘: 테두리에 붙어 있는 지점들만 test 점으로 잡기
+
+
+'''
+
+arr = [list(map(int, input().strip().split())) for _ in range(n)]
+flag_arr = [[0] * n for _ in range(n)]
+
+dx = [-1, 1, 0, 0]
+dy = [0, 0, -1, 1]
+
+area_idx = 0
+test_case = []
+for i in range(n):
+    for j in range(n):
+        if arr[i][j] == 0:
+            for p in range(4):
+                ni, nj = i + dx[p], j + dy[p]
+                if 0 <= ni < n and 0 <= nj < n and arr[ni][nj] == 1:
+                    test_case.append((i, j))
+                    break
+
+        if flag_arr[i][j] == 0 and arr[i][j] == 1:
+            area_idx += 1
+            q = deque()
+            q.append((i, j))
+            flag_arr[i][j] = area_idx
+
+            while q:
+                x, y = q.popleft()
+                for l in range(4):
+                    nx, ny = x + dx[l], y + dy[l]
+                    if 0 <= nx < n and 0 <= ny < n and flag_arr[nx][ny] == 0 and arr[nx][ny] == 1:
+                        flag_arr[nx][ny] = area_idx
+                        q.append((nx, ny))
+
+
+def check(input_x, input_y):
+    neighbor = -1
+    dx = [-1, 1, 0, 0]
+    dy = [0, 0, -1, 1]
+    for i in range(4):
+        input_nx, input_ny = input_x + dx[i], input_y + dy[i]
+        if 0 <= input_nx < n and 0 <= input_ny < n and flag_arr[input_nx][input_ny] != 0:
+            if neighbor != -1 and neighbor != flag_arr[input_nx][input_ny]:
+                return 1
+            neighbor = flag_arr[input_nx][input_ny]
+
+    visited = [[0] * n for _ in range(n)]
+    q = deque()
+    q.append((input_x, input_y))
+    visited[input_x][input_y] = 1
+    while q:
+        output_x, output_y = q.popleft()
+
+        for l in range(4):
+            output_nx, output_ny = output_x + dx[l], output_y + dy[l]
+            if 0 <= output_nx < n and 0 <= output_ny < n and visited[output_nx][output_ny] == 0 and flag_arr[output_nx][output_ny] != neighbor:
+                visited[output_nx][output_ny] = visited[output_x][output_y] + 1
+                if flag_arr[output_nx][output_ny] != 0:
+                    return visited[output_nx][output_ny] - 1
+
+                q.append((output_nx, output_ny))
+
+    return float('inf')
+
+
+ans = float('inf')
+for check_x, check_y in test_case:
+    ans = min(ans, check(check_x, check_y))
+print(ans)
