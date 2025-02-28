@@ -1,0 +1,82 @@
+from itertools import combinations
+import sys
+input = sys.stdin.readline
+
+n, m, h = map(int, input().strip().split())
+
+ladder = [[0] * (n+1) for _ in range(h+1)]
+accepted_ladder = set()
+for i in range(1, n):
+    for j in range(1, h+1):
+        accepted_ladder.add((j, i))
+
+for _ in range(m):
+    row, col = map(int, input().strip().split())
+    ladder[row][col] = 1  # 오른쪽으로 가는 사다리: idx=1
+    ladder[row][col + 1] = 2  # 왼쪽으로 가는 사다리: idx=2
+    accepted_ladder.remove((row, col))
+    if col + 1 != n:
+        accepted_ladder.remove((row, col + 1))
+
+
+def check():
+    global lst
+    for i in range(1, n+1):
+        pos = [0, i]
+        visited = [[0] * (n+1) for _ in range(h+1)]
+        visited[pos[0]][pos[1]] = 1
+        while True:
+            visited[pos[0]][pos[1]] = 1
+            if ladder[pos[0]][pos[1]] == 0:
+                pos[0] += 1
+
+            elif ladder[pos[0]][pos[1]] == 1:
+                if visited[pos[0]][pos[1] + 1] == 0:
+                    pos[1] += 1
+                else:
+                    pos[0] += 1
+
+            elif ladder[pos[0]][pos[1]] == 2:
+                if visited[pos[0]][pos[1] - 1] == 0:
+                    pos[1] -= 1
+                else:
+                    pos[0] += 1
+
+            if pos[0] > h:
+                break
+
+        if i != pos[1]:
+            return 0
+
+    return 1
+
+
+ans = 0
+while True:
+    if ans > 3:
+        print(-1)
+        exit()
+
+    for lst in combinations(accepted_ladder, ans):
+        return_pos = []
+        check_flag = 0
+        for plus_pos in lst:
+            plus_x, plus_y = plus_pos
+            if ladder[plus_x][plus_y] != 0 or ladder[plus_x][plus_y + 1] != 0:
+                check_flag = 1
+                break
+            else:
+                ladder[plus_x][plus_y] = 1
+                ladder[plus_x][plus_y + 1] = 2
+                return_pos.append((plus_x, plus_y))
+
+        if check_flag == 0:
+            if check():
+                print(ans)
+                exit()
+
+        for return_x, return_y in return_pos:
+            ladder[return_x][return_y] = 0
+            ladder[return_x][return_y + 1] = 0
+
+    ans += 1
