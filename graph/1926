@@ -1,0 +1,35 @@
+from collections import deque
+import sys
+input = sys.stdin.readline
+
+n, m = map(int, input().strip().split())
+arr = [list(map(int, input().strip().split())) for _ in range(n)]
+visited = [[0] * m for _ in range(n)]
+
+dx = [-1, 1, 0, 0]
+dy = [0, 0, -1, 1]
+
+global_cnt = 0
+global_dimension = 0
+
+for i in range(n):
+    for j in range(m):
+        if arr[i][j] == 1 and visited[i][j] == 0:
+            global_cnt += 1
+            visited[i][j] = 1
+            cnt = 1
+            q = deque()
+            q.append((i, j))
+            while q:
+                x, y = q.popleft()
+                for l in range(4):
+                    nx, ny = x + dx[l], y + dy[l]
+                    if 0 <= nx < n and 0 <= ny < m and arr[nx][ny] == 1 and visited[nx][ny] == 0:
+                        visited[nx][ny] = 1
+                        q.append((nx, ny))
+                        cnt += 1
+
+            global_dimension = max(global_dimension, cnt)
+
+print(global_cnt)
+print(global_dimension)
