@@ -1,0 +1,56 @@
+# 참고하고 만든 코드
+from heapq import heappush, heappop
+from collections import defaultdict
+import sys
+input = sys.stdin.readline
+
+n = int(input())
+if n == 0:
+    print(0)
+    exit()
+
+dic = defaultdict(list)
+max_d = 0
+for _ in range(n):
+    p, d = map(int, input().strip().split())
+    dic[d].append(p)
+
+q = []
+total_pay = 0
+for idx in range(max(dic.keys()), 0, -1):
+    if idx in dic:
+        for j in dic[idx]:
+            heappush(q, -j)
+
+    if q:
+        total_pay -= heappop(q)
+
+print(total_pay)
+
+################
+# 내가 짠 코드
+from heapq import heappush, heappop
+import sys
+input = sys.stdin.readline
+
+arr = []
+max_d = 0
+for _ in range(int(input())):
+    p, d = map(int, input().strip().split())
+    max_d = max(max_d, d)
+    heappush(arr, (-p, d))
+
+total_lst = [0] * (max_d+1)
+
+
+while arr:
+    check_p, check_d = heappop(arr)
+    if total_lst[check_d] == 0:
+        total_lst[check_d] = -check_p
+    else:
+        for j in range(check_d, 0, -1):
+            if total_lst[j] < -check_p:
+                total_lst[j] = -check_p
+                break
+
+print(sum(total_lst))
