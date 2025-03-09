@@ -1,0 +1,26 @@
+# 참고해서 함 -> 수학과 같기도 하고.. 재귀라서 그런가..
+import sys
+input = sys.stdin.readline
+
+n = int(input())
+
+# n-1개를 2번째에 옮겨놓고 -> 가장 큰 것을 3번째에 옮기고 -> 2번의 n-1을 3번째에 옮기기.
+'''
+1. n-1개의 탑을 2번째에 옮기기 (하노이를 2에 쌓아: 목표가 2)
+2. 가장 큰 것을 3번째에 옮기기 (가장 큰 것을 3에 깔아)
+3. 2번째의 n-1을 3번째에 옮기기 (2번쩨에 있는 하노이를 3번쩨에 쌓아: 목표가 3)
+'''
+
+
+def hanoi(n, start, target, assist):
+    if n == 1:
+        print(start, target)
+        return
+
+    hanoi(n-1, start, assist, target)  # 1번
+    print(start, target)  # 2번
+    hanoi(n-1, assist, target, start)  # 3번
+
+
+print(2**n - 1)
+hanoi(n, 1, 3, 2)
