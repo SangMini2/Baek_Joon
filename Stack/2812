@@ -1,0 +1,21 @@
+# 참고 함
+import sys
+input = sys.stdin.readline
+
+n, k = map(int, input().strip().split())
+number = input().strip()
+
+stack = []
+for idx, num in enumerate(number):
+    while stack and stack[-1] < num and k > 0:
+        stack.pop()
+        k -= 1
+
+    if k == 0:
+        break
+    stack.append(num)
+
+if k > 0:
+    print(''.join(stack[:-k]))
+else:
+    print("".join(stack) + number[idx:])
