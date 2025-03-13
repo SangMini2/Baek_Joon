@@ -1,0 +1,47 @@
+from itertools import combinations
+from collections import deque
+import sys
+input = sys.stdin.readline
+
+arr = [list(input().strip()) for _ in range(5)]
+
+dx = [-1, 1, 0, 0]
+dy = [0, 0, -1, 1]
+
+
+def check(set_lst):
+    flag = 0
+    if set_lst == {(1, 0), (1, 1), (1, 2), (1, 3), (1, 4), (2, 4), (3, 4)}:
+        flag = 1
+    q = deque()
+    first = set_lst.pop()
+    q.append(first)
+    S = 0
+    Y = 0
+    while q:
+        x, y = q.popleft()
+        if arr[x][y] == "S":
+            S += 1
+        else:
+            Y += 1
+
+        for i in range(4):
+            nx, ny = x + dx[i], y + dy[i]
+            if (nx, ny) in set_lst:
+                q.append((nx, ny))
+                set_lst.remove((nx, ny))
+
+    if (not set_lst) and S >= 4:
+        return 1
+    return 0
+
+
+comb_lists = []
+for l in range(5):
+    for k in range(5):
+        comb_lists.append((l, k))
+ans = 0
+for comb_list in combinations(comb_lists, 7):
+    ans += check(set(comb_list))
+
+print(ans)
